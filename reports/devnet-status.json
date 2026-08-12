@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "version": "1.0.0",
+  "configurationReady": true,
+  "deploymentReady": false,
+  "blockers": [
+    "solana.canonicalMint",
+    "solana.bridgeProgramId",
+    "solana.bridgeVault",
+    "solana.tokenVerifierProgramId",
+    "sui.packageId",
+    "sui.coinType",
+    "sui.bridgeControllerId"
+  ]
+}

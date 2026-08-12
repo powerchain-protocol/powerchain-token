@@ -1,149 +1,316 @@
-# PowerChain (PWRC) 1.0.0
+# PowerChain (PWRC) — Token & Bridge Workspace
 
-Production-oriented source, client, bridge, validation, and deployment-evidence workspace.
+**Version:** `1.0.0`
 
-## Canonical profile
+Production-oriented source workspace for the canonical PowerChain token on Solana,
+the Sui `wPWRC` bridge representation, client libraries, IDL contracts, release
+evidence, and fail-closed Mainnet readiness checks.
 
-```text
-PWRC:   Solana mainnet-beta / Token-2022 / 9 decimals
-Mint:   PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
-Supply: 18,446,000,000 PWRC fixed genesis/max
-Fee:    250 bps (2.5%), max 1,000,000 PWRC
-wPWRC:  Sui / 9 decimals / zero genesis / bridge-only
-Ratio:  1 PWRC = 1 wPWRC = identical base-unit amount
-```
+## Canonical PWRC profile
 
-Canonical Token-2022 requires `TransferFeeConfig`, `MetadataPointer`, and `TokenMetadata`. Mint authority is revoked after verified genesis and freeze authority is null.
-
-## Sui capability model
-
-`TreasuryCap<WPWRC>` is wrapped inside the shared `BridgeController`; it is not transferred to an operator/publisher address. The controller starts paused and unconfigured. Bridge minting requires the configured bridge authority and an unconsumed source-message hash. Sui burns use independent permanent burn-reference replay protection.
-
-The `powerchain` address alias remains configuration identity only, not a package ID without deployment evidence.
-
-## Sui RPCs
-
-| Network | RPC |
+| Field | Value |
 |---|---|
-| testnet | `https://fullnode.testnet.sui.io:443` |
-| mainnet | `https://fullnode.mainnet.sui.io:443` |
-| devnet | `https://fullnode.devnet.sui.io:443` |
-| local | `http://127.0.0.1:9000` |
+| Name | PowerChain |
+| Symbol | PWRC |
+| Canonical chain | Solana `mainnet-beta` |
+| Token standard | Token-2022 |
+| Canonical mint | `PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc` |
+| Decimals | `9` |
+| Fixed supply | `18,446,000,000 PWRC` |
+| Fixed supply base units | `18,446,000,000,000,000,000` |
+| Native transfer fee | `250 bps` / `2.5%` |
+| Maximum transfer fee | `1,000,000 PWRC` |
+| Maximum fee base units | `1,000,000,000,000,000` |
+| Mint authority | must be revoked after verified genesis |
+| Freeze authority | must be `null` |
 
-## Workspace
-
-```text
-programs/pwrc-lock/                 active bridge Anchor program
-programs/token/                     canonical PWRC verifier
-contracts/wpwrc/                    active Sui Move package
-packages/native-token-client/       chain client helpers
-packages/bridge-integration/        production integration/readiness helpers
-```
-
-`programs/pwrc-fees` is deprecated source only.
-
-## Production checks
-
-```bash
-pnpm production:check
-```
-
-When workspace dependencies are installed:
-
-```bash
-pnpm production:build
-```
-
-Chain builds are explicit:
-
-```bash
-pnpm production:build:solana
-pnpm production:build:sui
-```
-
-The repository pins Anchor `0.32.1`; its reviewed Agave/Solana qualification target is `2.3.0`. Other toolchains require requalification.
-
-## Mainnet
-
-```bash
-pnpm pwrc:mainnet:status
-pnpm pwrc:mainnet:preflight
-```
-
-Mainnet is fail-closed until verified canonical mint, Solana bridge program/vault, immutable Sui framework revision, Sui package/Currency/controller, governance separation, and post-deployment evidence are installed. IDs are never fabricated.
-
-## Conservation
+Required Token-2022 extensions:
 
 ```text
-PWRC_locked = wPWRC_circulating + pending_Solana_to_Sui + pending_Sui_to_Solana
+TransferFeeConfig
+MetadataPointer
+TokenMetadata
 ```
 
-Both chains use the same 9-decimal base-unit domain. Both pending amounts are nonnegative: locked-but-not-yet-minted for Solana → Sui, and burned-but-not-yet-released for Sui → Solana.
+The canonical profile forbids unrelated extensions such as permanent delegate,
+mint-close authority, default-frozen state, interest-bearing configuration,
+scaled UI amount, pausable, and non-transferable behavior.
 
-## Provenance
+> The canonical mint address is configured in this repository, but Mainnet
+> readiness still requires independent on-chain verification of mint state,
+> supply, authorities, transfer-fee configuration, and authority custody.
 
-```bash
-pnpm pwrc:release:provenance
-```
+## wPWRC on Sui
 
-Static checks and source hashes are evidence, not proof of an on-chain build or deployment.
-
-## IDL
-
-Contract interfaces are centralized under `/idl`.
-
-```bash
-pnpm idl:check
-pnpm idl:hash
-pnpm idl:build
-pnpm idl:sync
-```
-
-The expected Anchor interface is checked in; generated Anchor IDL is only synced
-after a real toolchain build. See `idl/README.md` and `docs/IDL.md`.
-
-## Canonical token verifier program
-
-`programs/token/` now contains the canonical PWRC Token-2022 verification
-program and invariant helpers.
-
-```bash
-pnpm token:check
-pnpm token:manifest:check
-pnpm idl:token:check
-```
-
-The verifier exposes no mint instruction and does not create additional supply. It validates the canonical 250 bps Token-2022 fee profile.
-See `docs/TOKEN_PROGRAM.md`.
-
-
-## Canonical metadata
+`wPWRC` is the 9-decimal Sui bridge representation of PWRC.
 
 ```text
-Mint:       PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
-Metadata:   https://powerchain.energy/metadata/metaplex.json
-Program:    Token-2022
-Fee:        250 bps / 2.5%
-Fee cap:    1,000,000 PWRC
+Genesis supply:      0 wPWRC
+Mint policy:         bridge-only
+Decimal domain:      9 decimals
+Base-unit factor:    1
+Canonical backing:   net spendable PWRC bridge backing
 ```
 
-`metadata/metaplex.json` is the canonical metadata descriptor supplied for
-PWRC. Mainnet mint state is still verified independently against on-chain
-Token-2022 state before release readiness can pass.
+The economic ratio is 1:1 in the common base-unit domain, but Solana transfers
+are fee-bearing.
 
-## Token images and metadata
+### Solana → Sui
+
+```text
+gross PWRC transfer
+- Token-2022 transfer fee
+= net spendable PWRC credited to bridge backing
+= wPWRC minted
+```
+
+### Sui → Solana
+
+```text
+wPWRC burned
+= gross PWRC released from bridge backing
+
+gross release
+- Token-2022 transfer fee
+= net PWRC received by the Solana destination
+```
+
+Transfer-fee withheld amounts are not counted as spendable bridge backing.
+
+## Metadata and token images
+
+Repository assets:
 
 ```text
 public/assets/pwrc.png
 public/assets/wpwrc.png
 ```
 
-Canonical metadata:
+When served from a web application's static `public/` root:
 
 ```text
-https://powerchain.energy/metadata/metaplex.json
-https://token.powerchain.energy/metadata/metadata.json
+/assets/pwrc.png
+/assets/wpwrc.png
 ```
 
-PowerChain links: `powerchain.energy`, `bridge.powerchain.energy`, and
-`app.powerchain.energy`. See `docs/TOKEN_ASSETS.md`.
+Canonical metadata endpoints:
+
+```text
+On-chain metadata URI: https://powerchain.energy/metadata/metaplex.json
+Public metadata JSON:  https://token.powerchain.energy/metadata/metadata.json
+PWRC public image:     https://token.powerchain.energy/assets/tokens/pwrc-logo.png
+wPWRC metadata:        https://token.powerchain.energy/metadata/wpwrc.metadata.json
+```
+
+Official product links:
+
+```text
+Website:    https://powerchain.energy
+Bridge:     https://bridge.powerchain.energy
+App:        https://app.powerchain.energy
+Docs:       https://docs.powerchain.energy
+Whitepaper: https://whitepaper.powerchain.energy
+X:          https://x.com/powerchain_ai
+Telegram:   https://t.me/powerchain_official
+```
+
+## Repository layout
+
+```text
+programs/
+├── pwrc-lock/                  Solana PWRC ↔ wPWRC bridge custody program
+├── token/                      canonical PWRC Token-2022 verifier
+└── pwrc-fees/                  deprecated custom fee-router source
+
+contracts/
+└── wpwrc/                      active Sui Move bridge package
+
+packages/
+├── native-token-client/        exact PWRC client/fee/bridge helpers
+└── bridge-integration/         production integration/readiness helpers
+
+idl/                            expected/generated ABI contracts + release gates
+metadata/                       canonical PWRC/wPWRC metadata
+public/assets/                  local PWRC/wPWRC PNG assets
+config/                         token, bridge, fee, network, Mainnet policies
+scripts/                        validation/build/deployment/release tooling
+```
+
+`programs/pwrc-fees` is deprecated. Canonical transfer fees are implemented by
+Token-2022 `TransferFeeConfig`; there is no second custom protocol-router fee.
+
+## Sui RPC environments
+
+| Network | RPC endpoint | Production target |
+|---|---|---:|
+| testnet | `https://fullnode.testnet.sui.io:443` | |
+| mainnet | `https://fullnode.mainnet.sui.io:443` | **✓** |
+| devnet | `https://fullnode.devnet.sui.io:443` | |
+| local | `http://127.0.0.1:9000` | |
+
+Machine-readable configuration lives under `config/sui/`.
+
+## Production checks
+
+Run the static production suite:
+
+```bash
+pnpm production:check
+```
+
+Useful focused checks:
+
+```bash
+pnpm token:production:check
+pnpm pwrc:fees
+pnpm pwrc:metadata:validate
+pnpm pwrc:metadata:assets-check
+pnpm pwrc:bridge:upgrade-check
+pnpm pwrc:client:check
+pnpm pwrc:idl:check
+pnpm pwrc:mainnet:status
+```
+
+When dependencies and toolchains are installed:
+
+```bash
+pnpm production:build:ts
+pnpm production:build:solana
+pnpm production:build:sui
+```
+
+A full Mainnet build is intentionally gated:
+
+```bash
+pnpm mainnet:build
+```
+
+## Solana programs
+
+### `pwrc-lock`
+
+Escrows canonical PWRC and releases custody only against authenticated,
+replay-protected bridge evidence. Solana → Sui lock accounting records the net
+spendable amount after the Token-2022 transfer fee.
+
+### `pwrc-token`
+
+Verification-only Anchor program for the canonical PWRC Token-2022 mint. It
+exposes no public mint instruction and verifies the canonical mint address,
+fixed supply, authority state, required extensions, and transfer-fee schedules.
+
+Localnet program IDs are development identities only and are not Mainnet
+deployment evidence.
+
+## Sui capability model
+
+`TreasuryCap<WPWRC>` is encapsulated by the shared bridge controller rather than
+being handed to an unrestricted publisher/operator address. The bridge starts
+paused, uses separate authority/governor roles, and permanently consumes replay
+identifiers before bridge mint/release state transitions.
+
+The configured `powerchain` Sui address is an alias/configuration value only.
+It must not be treated as the published package ID without deployment evidence.
+
+## Conservation and reconciliation
+
+All bridge accounting uses the common 9-decimal base-unit domain.
+
+For a reconciled state, `PWRC_backing` means **net spendable canonical PWRC
+controlled by the bridge**, excluding Token-2022 withheld transfer fees.
+
+```text
+PWRC_backing
+=
+wPWRC_circulating
++ pending_Solana_to_Sui
++ pending_Sui_to_Solana
+```
+
+Pending semantics must be state-machine consistent:
+
+- `pending_Solana_to_Sui`: net PWRC backing finalized on Solana but not yet
+  represented by finalized wPWRC minting;
+- `pending_Sui_to_Solana`: wPWRC already burned but corresponding gross PWRC
+  release not yet finalized on Solana.
+
+## IDL and ABI release policy
+
+Expected source interfaces live under `/idl`; toolchain-generated artifacts are
+accepted only after real Anchor/Sui builds.
+
+```bash
+pnpm idl:check-all
+pnpm idl:build
+pnpm idl:sync
+pnpm idl:generated:verify
+pnpm idl:release
+pnpm idl:readiness
+```
+
+Release readiness requires generated IDLs for both `pwrc_lock` and `pwrc_token`,
+plus normalized Sui module evidence. Expected-interface JSON never substitutes
+for generated deployment artifacts.
+
+## Mainnet readiness
+
+```bash
+pnpm pwrc:mainnet:status
+pnpm pwrc:mainnet:preflight
+```
+
+Mainnet remains fail-closed until required evidence is verified, including:
+
+- canonical mint account and exact Token-2022 state;
+- fixed supply and authority revocation;
+- transfer-fee schedules and transfer-fee authority custody;
+- Solana bridge program and vault deployment;
+- generated Anchor IDLs and discriminators;
+- reviewed Sui Move 2024 build, `Move.lock` SHA-256, and Sui CLI version;
+- Sui package, Currency/metadata/controller identities;
+- normalized Sui module ABI;
+- bridge/governance role separation;
+- deployment transaction/checkpoint/slot/signature evidence;
+- release provenance and ABI commitments.
+
+No Mainnet program/package/object identity should be fabricated to satisfy a
+readiness check.
+
+## Provenance
+
+```bash
+pnpm pwrc:release:provenance
+pnpm idl:attestation
+pnpm idl:attestation:verify
+```
+
+Static checks, source hashes, ABI fingerprints, and unsigned attestations are
+release evidence. They are not proof that a chain build or deployment occurred.
+
+## Documentation
+
+Start with:
+
+```text
+docs/README.md
+docs/TOKEN_PROGRAM.md
+docs/TOKEN_ASSETS.md
+docs/WPWRC_SPECIFICATION.md
+docs/BRIDGE_INTENT.md
+docs/SECURITY_MODEL.md
+docs/PRODUCTION_MAINNET.md
+idl/README.md
+```
+
+## Runtime and transaction hardening
+
+The `1.0.0` runtime now centralizes retry/timeout/URL/u64 utilities, SHA-256 replay/idempotency keys, fee-aware Token-2022 transactions, write reconciliation handlers, Devnet/Mainnet preflights and optional Next.js host security configuration.
+
+```bash
+pnpm production:check
+pnpm pwrc:devnet:status
+pnpm pwrc:mainnet:status
+pnpm clean:cache
+```
+
+Mainnet remains fail-closed until deployment and authority evidence is verified.

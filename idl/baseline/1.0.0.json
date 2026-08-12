@@ -233,10 +233,17 @@
     ],
     "events": [
       "BridgeAuthoritiesConfigured",
+      "BridgeAuthorityChangeCancelled",
+      "BridgeAuthorityChangeProposed",
+      "BridgeAuthorityChanged",
       "BridgePauseChanged",
       "BurnedForSolana",
+      "CanonicalBurnIntentCancelled",
       "CanonicalBurnIntentStaged",
       "CanonicalSupplyCeilingLowered",
+      "GovernorChangeCancelled",
+      "GovernorChangeProposed",
+      "GovernorChanged",
       "MintedFromSolana"
     ],
     "asset": {
@@ -252,7 +259,7 @@
   },
   "fingerprint": {
     "domain": "POWERCHAIN_IDL_ABI_V1",
-    "combinedAbiSha256": "20aa02c10a6d991bc366dc82f8af52ef835374e4504bc1dd261f896ab3d2c0bf"
+    "combinedAbiSha256": "5ec0f3f78c6c009c03e1e25e879c0d5abbb76c8b341352814ac6dd27cc83fbe5"
   },
   "canonicalPolicyRevision": "transfer-fee-250bps",
   "canonicalPolicy": {
@@ -294,5 +301,10 @@
         "TokenMetadata"
       ]
     }
+  },
+  "operationsHardening": {
+    "replayKeyHash": "POWERCHAIN_REPLAY_V1",
+    "idempotencyKeyHash": "POWERCHAIN_RELAYER_IDEMPOTENCY_V1",
+    "blindWriteRetries": false
   }
 }

@@ -1,0 +1,729 @@
+{
+  "version": "1.0.0",
+  "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+  "productionStatic": {
+    "ok": true,
+    "version": "1.0.0",
+    "checks": 38,
+    "passed": 38,
+    "failed": 0,
+    "failures": [],
+    "results": [
+      {
+        "script": "scripts/production/check-source-hazards.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/operations/check-runbook.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/production/check-handlers.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "noBlindWriteRetry": true,
+          "ambiguousWriteReconciliation": true,
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/production/check-transactions.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/production/check-runtime-config.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/token/check-program.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "program": "pwrc-token",
+          "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+          "canonicalSupplyBaseUnits": "18446000000000000000",
+          "decimals": 9,
+          "transferFeeBasisPoints": 250,
+          "maximumTransferFeeTokens": "1000000",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/token/check-manifest.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "localProgramId": "HRrDxwZzuFreRmkCLY9oFXNGAy2gjd3diHyyTadxd8s6",
+          "mainnetProgramIdClaimed": false,
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/idl/check-token-program.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "program": "pwrc_token",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/security/check-wpwrc-spec.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "canonical": {
+            "token": "PWRC",
+            "chain": "Solana mainnet-beta",
+            "decimals": 9,
+            "fixedSupply": "18446000000"
+          },
+          "wrapped": {
+            "token": "wPWRC",
+            "chain": "Sui",
+            "decimals": 9,
+            "genesisSupply": "0",
+            "ratio": "1:1",
+            "treasuryCapEncapsulated": true
+          },
+          "alias": {
+            "alias": "powerchain",
+            "address": "0x4a4a81c5e4a520c1b4d7b5b572a0567f48c6c7e85257f0a13e65639cfba49fb1",
+            "assumedPackageId": false
+          },
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/security/check-transfer-fee.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+          "transferFeeBasisPoints": 250,
+          "percentage": "2.5%",
+          "maximumTransferFeeTokens": "1000000",
+          "maximumTransferFeeBaseUnits": "1000000000000000",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/production/check-stale-model.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "staleModelMatches": [],
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/production/check-sui-capability.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "treasuryCapEncapsulated": true,
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/production/check-solana-program.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "activePrograms": [
+            "pwrc-lock",
+            "pwrc-token"
+          ],
+          "transferFeeBasisPoints": 250,
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/production/check-client-bridge.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/integration/check.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "integrationPackage": "@powerchain/bridge-integration",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/security/check-model.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "requiredExtensions": [
+            "TransferFeeConfig",
+            "MetadataPointer",
+            "TokenMetadata"
+          ],
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/security/check-programs.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "programs": {
+            "pwrcLock": "active-fee-aware",
+            "pwrcToken": "active-verifier",
+            "pwrcFees": "deprecated-disabled",
+            "wpwrcSui": "bridge-capability-encapsulated"
+          },
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/security/check-bridge-intent.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "bridgeIntent": {
+            "canonical": "PWRC on Solana mainnet-beta",
+            "wrapped": "wPWRC on Sui",
+            "backing": "1:1",
+            "canonicalDecimals": 9,
+            "wrappedDecimals": 9,
+            "baseUnitFactor": 1
+          },
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/bridge/check-upgrade.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "upgrade": "9-decimal-fee-aware-bridge",
+          "transferFeeBasisPoints": 250,
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/relayer/check.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "relayer": "fail-closed",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/optimization/check.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "optimization": {
+            "sharedBridgeMath": true,
+            "boundedRelayerConcurrency": true,
+            "inFlightReadDedupe": true,
+            "boundedSuiPagination": true,
+            "boundedRpcBatching": true
+          },
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/optimization/check-v2.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "optimizationV2": {
+            "boundedQueueBackpressure": true,
+            "domainSeparatedReplay": true,
+            "canonicalSerialization": true,
+            "strictConfigParsing": true,
+            "bridgeIdentityBundle": true,
+            "accountBoundaryValidation": true
+          },
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/burn/check-epoch.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "startQuarter": "2027 Q1",
+          "startQuarterId": "20271",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/burn/check-quarterly.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "burn": "2% quarterly",
+          "suiAlias": "powerchain",
+          "suiAddress": "0x4a4a81c5e4a520c1b4d7b5b572a0567f48c6c7e85257f0a13e65639cfba49fb1",
+          "firstQuarterIllustration": {
+            "burnBaseUnits": "368920000000000000",
+            "burnPwrc": "368920000",
+            "postBurnSupplyBaseUnits": "18077080000000000000",
+            "postBurnSupplyPwrc": "18077080000"
+          }
+        }
+      },
+      {
+        "script": "scripts/burn/check-race-protection.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "raceProtection": {
+            "suiPausedBeforeSolanaBurn": true,
+            "stagedBurnIntentBeforeSolanaBurn": true,
+            "unpauseAfterReconciliationOnly": true,
+            "sameBaseUnitCeiling": true
+          },
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/release/check-bridge-release.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "releaseState": "configuration-ready",
+          "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+          "transferFeeBasisPoints": 250,
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/metadata/validate-token-metadata.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "canonical": {
+            "asset": "PWRC",
+            "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+            "chain": "solana",
+            "decimals": 9,
+            "transferFeeBasisPoints": 250,
+            "maximumTransferFeeTokens": "1000000"
+          },
+          "wrapped": {
+            "asset": "wPWRC",
+            "chain": "sui",
+            "decimals": 9,
+            "backing": "1:1 net locked PWRC"
+          },
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/metadata/check-assets.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "assets": [
+            {
+              "symbol": "PWRC",
+              "file": "public/assets/pwrc.png",
+              "bytes": 1567738,
+              "sha256": "83e713ea5e8a4409d728f743dff437722c6d0b36d15914131d1426196ce73a30"
+            },
+            {
+              "symbol": "wPWRC",
+              "file": "public/assets/wpwrc.png",
+              "bytes": 1385523,
+              "sha256": "028fc07357acfe2bebe715c62d513bf46f66f4c8f2072121fa025240eab5cdbc"
+            }
+          ],
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/metadata/check-official-links.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "officialLinks": {
+            "website": "https://powerchain.energy",
+            "bridge": "https://bridge.powerchain.energy",
+            "app": "https://app.powerchain.energy",
+            "documentation": "https://docs.powerchain.energy",
+            "whitepaper": "https://whitepaper.powerchain.energy",
+            "x": "https://x.com/powerchain_ai",
+            "telegram": "https://t.me/powerchain_official"
+          },
+          "checkedFiles": [
+            "metadata/metadata.json",
+            "metadata/metaplex.metadata.json",
+            "metadata/token2022.metadata.json",
+            "metadata/wpwrc.metadata.json"
+          ],
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/metadata/check-manifest.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "algorithm": "sha256",
+          "files": 5,
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/sui/check-zero-genesis.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "asset": "wPWRC",
+          "decimals": 9,
+          "genesisSupplyBaseUnits": "0",
+          "issuance": "bridge-only",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/sui/check-networks.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "defaultNetwork": "testnet",
+          "productionNetwork": "mainnet",
+          "networks": {
+            "testnet": "https://fullnode.testnet.sui.io:443",
+            "mainnet": "https://fullnode.mainnet.sui.io:443",
+            "devnet": "https://fullnode.devnet.sui.io:443",
+            "local": "http://127.0.0.1:9000"
+          },
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/native-token-client/check-v2.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "client": {
+            "canonicalDecimals": 9,
+            "wrappedDecimals": 9,
+            "transferFeeBps": 250,
+            "bridgeRatio": "1:1-net-locked"
+          },
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/packages/check-workspace.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "packages": [
+            "@powerchain/bridge-integration",
+            "@powerchain/native-token-client"
+          ],
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/packages/check-exports.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/packages/check-tsconfig.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "configs": [
+            "tsconfig.base.json",
+            "tsconfig.json",
+            "tsconfig.build.json",
+            "tsconfig.scripts.json",
+            "tsconfig.tests.json"
+          ],
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/packages/check-scripts.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "scriptCount": 151,
+          "failures": []
+        }
+      },
+      {
+        "script": "scripts/security/check-manifests.mjs",
+        "ok": true,
+        "status": 0,
+        "result": {
+          "ok": true,
+          "version": "1.0.0",
+          "cargoWorkspace": [
+            "programs/pwrc-lock",
+            "programs/token"
+          ],
+          "excludedPrograms": [
+            "programs/pwrc-fees"
+          ],
+          "anchorPrograms": [
+            "pwrc_lock",
+            "pwrc_token"
+          ],
+          "failures": []
+        }
+      }
+    ]
+  },
+  "syntax": {
+    "typescript": {
+      "ok": true,
+      "files": 199,
+      "failures": []
+    },
+    "tsconfigResolved": true
+  },
+  "dependencyTypecheck": {
+    "passed": false,
+    "nodeModulesPresent": false,
+    "pnpmLockPresent": false,
+    "blockerExcerpt": "error TS2688: Cannot find type definition file for 'node'.\n  The file is in the program because:\n    Entry point of type library 'node' specified in compilerOptions"
+  },
+  "contracts": {
+    "suiMoveEdition": "2024",
+    "suiMoveLockPresent": false,
+    "anchorBuildExecuted": false,
+    "cargoTestsExecuted": false,
+    "suiMoveBuildExecuted": false,
+    "suiMoveTestsExecuted": false
+  },
+  "devnet": {
+    "ok": true,
+    "version": "1.0.0",
+    "configurationReady": true,
+    "deploymentReady": false,
+    "blockers": [
+      "solana.canonicalMint",
+      "solana.bridgeProgramId",
+      "solana.bridgeVault",
+      "solana.tokenVerifierProgramId",
+      "sui.packageId",
+      "sui.coinType",
+      "sui.bridgeControllerId"
+    ]
+  },
+  "mainnet": {
+    "ok": false,
+    "version": "1.0.0",
+    "readyForMainnet": false,
+    "movePackage": {
+      "edition": "2024",
+      "moveLockPresent": false,
+      "actualMoveLockSha256": null
+    },
+    "blockers": [
+      "pnpm-lock.yaml",
+      "sui.Move.lock",
+      "solana.rpcUrl",
+      "solana.bridgeProgramId",
+      "solana.bridgeVault",
+      "sui.packageId",
+      "sui.coinType",
+      "sui.currencyObjectId",
+      "sui.bridgeControllerId",
+      "sui.moveLockSha256",
+      "sui.suiCliVersion",
+      "governance.operator",
+      "governance.governor",
+      "solana.mintVerified",
+      "solana.programVerified",
+      "solana.vaultVerified",
+      "solana.mintAuthorityRevoked",
+      "solana.freezeAuthorityNull",
+      "solana.transferFeeConfigVerified",
+      "solana.transferFeeConfigAuthorityVerified",
+      "solana.withdrawWithheldAuthorityVerified",
+      "solana.bridgeVerifierVerified",
+      "sui.packageVerified",
+      "sui.currencyVerified",
+      "sui.controllerVerified",
+      "sui.bridgeAuthorityVerified",
+      "governance.operatorGovernorSeparated",
+      "idl.releaseManifest:not-ready"
+    ]
+  },
+  "tokenReadiness": {
+    "ok": false,
+    "version": "1.0.0",
+    "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+    "staticConfigurationReady": true,
+    "onchainVerified": false,
+    "blockers": [
+      "mintVerified",
+      "mintAuthorityRevoked",
+      "freezeAuthorityNull",
+      "transferFeeConfigVerified",
+      "transferFeeConfigAuthorityVerified",
+      "withdrawWithheldAuthorityVerified"
+    ]
+  },
+  "idlReadiness": {
+    "version": "1.0.0",
+    "staticReady": true,
+    "buildReady": false,
+    "releaseReady": false,
+    "buildArtifacts": {
+      "pwrcLockAnchorIdl": false,
+      "pwrcTokenAnchorIdl": false,
+      "suiNormalizedModules": false
+    },
+    "mainnetDeploymentReady": false
+  },
+  "bridgeRelease": {
+    "ok": true,
+    "version": "1.0.0",
+    "releaseState": "configuration-ready",
+    "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+    "transferFeeBasisPoints": 250,
+    "failures": []
+  },
+  "cacheClean": {
+    "ok": true,
+    "version": "1.0.0",
+    "removed": [],
+    "preserved": [
+      "node_modules",
+      "pnpm-lock.yaml",
+      "target/idl",
+      "reports"
+    ]
+  },
+  "abiFingerprint": "5ec0f3f78c6c009c03e1e25e879c0d5abbb76c8b341352814ac6dd27cc83fbe5",
+  "tools": {
+    "node": "/opt/nvm/versions/node/v22.16.0/bin/node",
+    "tsc": "/opt/nvm/versions/node/v22.16.0/bin/tsc",
+    "pnpm": null,
+    "corepack": "/opt/nvm/versions/node/v22.16.0/bin/corepack",
+    "cargo": null,
+    "rustc": null,
+    "anchor": null,
+    "solana": null,
+    "sui": null
+  },
+  "packageVersions": {
+    "package.json": "1.0.0",
+    "packages/native-token-client/package.json": "1.0.0",
+    "packages/bridge-integration/package.json": "1.0.0"
+  },
+  "strictGates": {
+    "generatedAnchorIdls": "blocked-missing",
+    "normalizedSuiModules": "blocked-missing",
+    "mainnetPreflight": "blocked-evidence-incomplete",
+    "devnetPreflight": "blocked-deployment-identities-missing"
+  },
+  "claims": {
+    "deployed": false,
+    "onchainMintVerified": false,
+    "auditClaimed": false
+  }
+}

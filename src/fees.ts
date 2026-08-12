@@ -1,9 +1,16 @@
-export const PWRC_TRANSFER_FEE_BPS = 250n;
-export const PWRC_BPS_DENOMINATOR = 10_000n;
-export const PWRC_MAX_TRANSFER_FEE_TOKENS =
-  1_000_000n;
-export const PWRC_MAX_TRANSFER_FEE_BASE_UNITS =
-  1000000000000000n;
+import {
+  PWRC_BPS_DENOMINATOR,
+  PWRC_MAX_TRANSFER_FEE_BASE_UNITS,
+  PWRC_MAX_TRANSFER_FEE_TOKENS,
+  PWRC_TRANSFER_FEE_BPS,
+} from "./constants.js";
+
+export {
+  PWRC_BPS_DENOMINATOR,
+  PWRC_MAX_TRANSFER_FEE_BASE_UNITS,
+  PWRC_MAX_TRANSFER_FEE_TOKENS,
+  PWRC_TRANSFER_FEE_BPS,
+};
 
 export interface PwrcTransferFeeQuote {
   grossBaseUnits: bigint;
@@ -14,60 +21,31 @@ export interface PwrcTransferFeeQuote {
   maximumFeeBaseUnits: bigint;
 }
 
-export function calculateToken2022TransferFeeBaseUnits(
-  amount: bigint,
-): bigint {
-  if (amount <= 0n) {
-    throw new Error("PWRC_AMOUNT_MUST_BE_POSITIVE");
-  }
-
-  const numerator =
-    amount * PWRC_TRANSFER_FEE_BPS;
-
+export function calculateToken2022TransferFeeBaseUnits(amount: bigint): bigint {
+  if (amount <= 0n) throw new Error("PWRC_AMOUNT_MUST_BE_POSITIVE");
   const roundedUp =
-    (numerator +
-      PWRC_BPS_DENOMINATOR -
-      1n) /
+    (amount * PWRC_TRANSFER_FEE_BPS + PWRC_BPS_DENOMINATOR - 1n) /
     PWRC_BPS_DENOMINATOR;
-
-  return roundedUp >
-    PWRC_MAX_TRANSFER_FEE_BASE_UNITS
+  return roundedUp > PWRC_MAX_TRANSFER_FEE_BASE_UNITS
     ? PWRC_MAX_TRANSFER_FEE_BASE_UNITS
     : roundedUp;
 }
 
-export function quoteToken2022TransferFee(
-  amount: bigint,
-): PwrcTransferFeeQuote {
-  const feeBaseUnits =
-    calculateToken2022TransferFeeBaseUnits(
-      amount,
-    );
-
-  if (feeBaseUnits > amount) {
-    throw new Error(
-      "PWRC_TRANSFER_FEE_EXCEEDS_AMOUNT",
-    );
-  }
-
+export function quoteToken2022TransferFee(amount: bigint): PwrcTransferFeeQuote {
+  const feeBaseUnits = calculateToken2022TransferFeeBaseUnits(amount);
+  if (feeBaseUnits > amount) throw new Error("PWRC_TRANSFER_FEE_EXCEEDS_AMOUNT");
   return {
     grossBaseUnits: amount,
     feeBaseUnits,
-    netBaseUnits:
-      amount - feeBaseUnits,
+    netBaseUnits: amount - feeBaseUnits,
     basisPoints: 250,
     percentage: "2.5%",
-    maximumFeeBaseUnits:
-      PWRC_MAX_TRANSFER_FEE_BASE_UNITS,
+    maximumFeeBaseUnits: PWRC_MAX_TRANSFER_FEE_BASE_UNITS,
   };
 }
 
-// Compatibility: there is no second custom protocol-router fee.
-export function calculateProtocolFeeBaseUnits(
-  amount: bigint,
-): 0n {
-  if (amount <= 0n) {
-    throw new Error("PWRC_AMOUNT_MUST_BE_POSITIVE");
-  }
+/** No second custom protocol-router fee is charged. */
+export function calculateProtocolFeeBaseUnits(amount: bigint): 0n {
+  if (amount <= 0n) throw new Error("PWRC_AMOUNT_MUST_BE_POSITIVE");
   return 0n;
 }

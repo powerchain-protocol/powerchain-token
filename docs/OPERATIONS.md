@@ -1,56 +1,37 @@
-# PWRC Operation Semantics
+# PowerChain `1.0.0` Operations
 
-PWRC distinguishes **token settlement** from **protocol/service operations**.
+PowerChain distinguishes read/service operations from monetary settlement.
 
-## Zero-value operations that are valid
+## Read/service operations
 
-No token transfer is required for:
+Authentication, signed messages, health/status, metadata, discovery, price observations, quote previews, simulations, proofs and attestations may omit a token amount. Read-only provider calls may use bounded retry and timeout handlers.
 
-- Solana signed messages
-- authentication challenges
-- wallet ownership proofs
-- service handshakes
-- health/status checks
-- metadata retrieval
-- market discovery
-- Pyth/Birdeye market-data retrieval
-- price observations
-- quote previews
-- simulations
-- proofs and attestations
+## Monetary operations
 
-These operations may carry `0` as a monetary amount or omit an amount entirely.
+Transfers, bridge settlement, swaps, fee settlement, x402 payment and checkout settlement require a strictly positive amount. A zero-value monetary settlement is rejected.
 
-## Operations that require positive token value
+## Write handling
 
-A strictly positive amount is required for:
+Production writes follow the same safety sequence:
 
-- PWRC transfers
-- swap settlement
-- protocol-fee settlement
-- bridge settlement
-- paid x402 settlement
-- checkout settlement
+1. validate configuration, addresses, amount and chain identity;
+2. validate Token-2022 fee expectations when PWRC moves;
+3. simulate when supported;
+4. submit once;
+5. confirm finality;
+6. reconcile ambiguous outcomes using the returned signature or durable source reference;
+7. only retry after idempotency/replay state proves a retry is safe.
 
-This is the correct meaning of the project's "no zero transactions" rule:
-**no zero-value settlement**, not "ban every zero-valued service operation."
+`src/handlers/write-handler.ts` intentionally has no blind-retry loop.
 
-## Signed messages
+## Replay and idempotency
 
-Signed messages are cryptographic operations, not token transfers. They can be
-used for authentication, ownership proof, service authorization, quote
-acceptance and challenge/response without moving PWRC or SOL.
+Bridge replay and relayer idempotency keys use domain-separated SHA-256 values. Persistent implementations must implement atomic `reserve()` / insert-if-absent semantics; a `has()` followed by a separate insert is not sufficient for production concurrency.
 
-## Market IDs
+## Cache and build cleanup
 
-Market identifiers are independent of trade amount.
-
-Examples:
-
-```text
-market:pyth:solana:PWRC/USD
-market:birdeye:solana:PWRC/USD
+```bash
+pnpm clean:cache
 ```
 
-Real DEX market/pool IDs must only be added after the pools exist on-chain.
-Do not fabricate them in configuration.
+removes generated caches such as `.next`, `.turbo`, `.cache`, `coverage`, `dist` and selected Rust incremental data without touching source, deployment evidence or IDL baselines.

@@ -2,6 +2,11 @@ import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 
 const checks = [
+  "scripts/production/check-source-hazards.mjs",
+  "scripts/operations/check-runbook.mjs",
+  "scripts/production/check-handlers.mjs",
+  "scripts/production/check-transactions.mjs",
+  "scripts/production/check-runtime-config.mjs",
   "scripts/token/check-program.mjs",
   "scripts/token/check-manifest.mjs",
   "scripts/idl/check-token-program.mjs",

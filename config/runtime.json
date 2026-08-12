@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "rpc": {
+    "timeoutMs": 10000,
+    "readMaxAttempts": 4,
+    "readBaseDelayMs": 250,
+    "readMaxDelayMs": 4000
+  },
+  "transactions": {
+    "preflightCommitment": "confirmed",
+    "confirmationCommitment": "finalized",
+    "confirmationTimeoutMs": 60000,
+    "maxWriteAttempts": 1,
+    "ambiguousWriteMustReconcile": true
+  },
+  "websocket": {
+    "enabled": true,
+    "reconnectBaseDelayMs": 1000,
+    "reconnectMaxDelayMs": 30000,
+    "maxReconnectAttempts": 10
+  },
+  "cache": {
+    "rpcReadTtlMs": 5000,
+    "metadataTtlMs": 300000,
+    "negativeTtlMs": 2000
+  },
+  "limits": {
+    "maxSignedMessageBytes": 8192,
+    "maxRpcBatchSize": 20,
+    "maxConcurrentReads": 8
+  }
+}

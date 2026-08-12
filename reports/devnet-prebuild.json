@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "version": "1.0.0",
+  "phase": "devnet-prebuild",
+  "deploymentEvidenceRequiredAtThisPhase": false,
+  "failures": []
+}

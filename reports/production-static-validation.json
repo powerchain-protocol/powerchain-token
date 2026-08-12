@@ -1,11 +1,63 @@
 {
   "ok": true,
   "version": "1.0.0",
-  "checks": 33,
-  "passed": 33,
+  "checks": 38,
+  "passed": 38,
   "failed": 0,
   "failures": [],
   "results": [
+    {
+      "script": "scripts/production/check-source-hazards.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/operations/check-runbook.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/production/check-handlers.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "noBlindWriteRetry": true,
+        "ambiguousWriteReconciliation": true,
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/production/check-transactions.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/production/check-runtime-config.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "failures": []
+      }
+    },
     {
       "script": "scripts/token/check-program.mjs",
       "ok": true,
@@ -493,7 +545,7 @@
       "result": {
         "ok": true,
         "version": "1.0.0",
-        "scriptCount": 137,
+        "scriptCount": 151,
         "failures": []
       }
     },

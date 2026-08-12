@@ -30,3 +30,5 @@ public const E_CANONICAL_CEILING_BELOW_WRAPPED: u64 = 27;
 public const E_QUARTER_ID_INVALID: u64 = 28;
 public const E_QUARTER_ID_NOT_CONTIGUOUS: u64 = 29;
 public const E_BURN_EVIDENCE_REPLAY: u64 = 30;
+public const E_ARITHMETIC_OVERFLOW: u64 = 31;
+public const E_NO_PENDING_CHANGE: u64 = 32;

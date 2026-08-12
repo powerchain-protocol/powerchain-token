@@ -1,23 +1,7 @@
-# PowerChain Native Token Client v2
+# Native Token Client
 
-Package version remains `1.0.0`.
+PowerChain version `1.0.0` uses the same 9-decimal base-unit domain on Solana PWRC and Sui wPWRC with base-unit factor `1`.
 
-The upgraded client is split into typed Solana, Sui, bridge, validation, and
-shared type modules.
+Canonical PWRC uses Token-2022 `TransferFeeConfig` at 250 bps (2.5%), capped at 1,000,000 PWRC. Solana→Sui bridge issuance is based on the net PWRC credited as backing after the Token-2022 transfer fee. Sui→Solana burns wPWRC equal to the gross canonical PWRC release; the destination transfer then applies the native Token-2022 fee.
 
-Canonical model:
-
-```text
-PWRC   Solana mainnet-beta / Token-2022 / 9 decimals
-wPWRC  Sui bridged representation / 9 decimals
-ratio  1:1 in base units
-fee    none
-```
-
-The client provides strict Solana address/signature validation, Sui address and
-coin-type validation, bounded JSON-RPC helpers, Token-2022 mint validation,
-checked transfer instructions, Sui balance reads, bridge intent builders, and
-Solscan helpers.
-
-No 1000:1 conversion remains. `TransferFeeConfig` is rejected for canonical
-PWRC.
+Replay protection, deployment identity, finality and conservation checks remain fail-closed. Mainnet IDs and Sui package/object IDs must come from verified deployment evidence.

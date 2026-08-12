@@ -14,6 +14,7 @@ public const DECIMALS: u8 = 9;
 public const MAX_SUPPLY_BASE_UNITS: u64 =
     18_446_000_000_000_000_000;
 public const BURN_POLICY_START_QUARTER_ID: u64 = 20271;
+public const U64_MAX: u64 = 18_446_744_073_709_551_615;
 
 public struct WPWRC has drop {}
 
@@ -58,12 +59,13 @@ fun init(
             ctx,
         );
 
-    coin_registry::finalize_and_delete_metadata_cap(
-        currency,
-        ctx,
-    );
+    // Current Sui coin-registry flow returns a metadata capability when the
+    // currency builder is finalized. Metadata custody is intentionally separate
+    // from the TreasuryCap; the TreasuryCap remains encapsulated below.
+    let metadata_cap = currency.finalize(ctx);
 
     let sender = tx_context::sender(ctx);
+    transfer::public_transfer(metadata_cap, sender);
 
     // Zero genesis supply. TreasuryCap is wrapped in the shared controller,
     // so the publisher receives no unrestricted address-owned mint capability.
@@ -266,6 +268,14 @@ public(package) fun mint_from_verified_message(
         source_message_hash,
         true,
     );
+    assert!(
+        controller.mint_sequence < U64_MAX,
+        errors::E_ARITHMETIC_OVERFLOW,
+    );
+    assert!(
+        amount <= U64_MAX - controller.total_minted,
+        errors::E_ARITHMETIC_OVERFLOW,
+    );
     controller.mint_sequence =
         controller.mint_sequence + 1;
     controller.total_minted =
@@ -312,6 +322,14 @@ public(package) fun burn_for_verified_reference(
         coin_to_burn,
     );
 
+    assert!(
+        controller.burn_sequence < U64_MAX,
+        errors::E_ARITHMETIC_OVERFLOW,
+    );
+    assert!(
+        burned <= U64_MAX - controller.total_burned,
+        errors::E_ARITHMETIC_OVERFLOW,
+    );
     controller.burn_sequence =
         controller.burn_sequence + 1;
     controller.total_burned =
@@ -506,6 +524,10 @@ public(package) fun cancel_bridge_authority(
         tx_context::sender(ctx) == controller.governor,
         errors::E_NOT_GOVERNOR,
     );
+    assert!(
+        controller.has_pending_bridge_authority,
+        errors::E_NO_PENDING_CHANGE,
+    );
 
     controller.pending_bridge_authority = @0x0;
     controller.has_pending_bridge_authority = false;
@@ -571,6 +593,10 @@ public(package) fun cancel_governor(
     assert!(
         tx_context::sender(ctx) == controller.governor,
         errors::E_NOT_GOVERNOR,
+    );
+    assert!(
+        controller.has_pending_governor,
+        errors::E_NO_PENDING_CHANGE,
     );
 
     controller.pending_governor = @0x0;

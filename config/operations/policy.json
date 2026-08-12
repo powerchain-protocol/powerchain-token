@@ -36,5 +36,17 @@
       "quote acceptance",
       "market/service challenge"
     ]
+  },
+  "transactions": {
+    "blindRetriesAllowed": false,
+    "finalizedConfirmationRequired": true,
+    "simulationRecommended": true,
+    "idempotencyRequiredForBridgeWrites": true
+  },
+  "handlers": {
+    "timeoutsRequired": true,
+    "readRetriesAllowed": true,
+    "writeRetriesAllowed": false,
+    "structuredErrorsRequired": true
   }
 }

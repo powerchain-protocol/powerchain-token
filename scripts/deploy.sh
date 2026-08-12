@@ -7,6 +7,10 @@ require_precommitted_mainnet_mint
 configure_cli
 [[ -n "${PWRC_METADATA_URI:-}" ]] || die "PWRC_METADATA_URI required"
 
+if [[ "$PWRC_CLUSTER" == "mainnet-beta" ]]; then
+  die "Automated mainnet mint creation is intentionally disabled. Verify the reviewed canonical mint with scripts/token/verify-mint-state.mjs and complete deployment evidence before enabling release operations."
+fi
+
 OUT="$(deployment_dir)"
 mkdir -p "$OUT/evidence"
 [[ ! -e "$OUT/deployment.env" ]] || die "Deployment already initialized: $OUT/deployment.env"
@@ -20,12 +24,19 @@ if [[ -n "${PWRC_MINT_KEYPAIR:-}" ]]; then
   MINT_KEYPAIR_ARGS+=("$PWRC_MINT_KEYPAIR")
 fi
 
-log "Creating Token-2022 mint with metadata support"
+CREATE_HELP="$(spl-token create-token --help 2>&1)"
+TRANSFER_FEE_ARGS=()
+if grep -q -- '--transfer-fee-basis-points' <<<"$CREATE_HELP" && grep -q -- '--transfer-fee-maximum-fee' <<<"$CREATE_HELP"; then
+  TRANSFER_FEE_ARGS+=(--transfer-fee-basis-points "$PWRC_TRANSFER_FEE_BPS" --transfer-fee-maximum-fee "$PWRC_MAX_TRANSFER_FEE_TOKENS")
+elif grep -q -- '--transfer-fee' <<<"$CREATE_HELP"; then
+  TRANSFER_FEE_ARGS+=(--transfer-fee "$PWRC_TRANSFER_FEE_BPS" "$PWRC_MAX_TRANSFER_FEE_TOKENS")
+else
+  die "Installed spl-token CLI does not expose a supported transfer-fee create-token option"
+fi
+
+log "Creating devnet Token-2022 mint with metadata + required transfer-fee extension"
 CREATE_OUT="$OUT/evidence/create-mint.txt"
-spl-token create-token "${MINT_KEYPAIR_ARGS[@]}" \
-  --program-id "$TOKEN_2022_PROGRAM_ID" \
-  --decimals "$PWRC_DECIMALS" \
-  --enable-metadata | tee "$CREATE_OUT"
+spl-token create-token "${MINT_KEYPAIR_ARGS[@]}"   --program-id "$TOKEN_2022_PROGRAM_ID"   --decimals "$PWRC_DECIMALS"   --enable-metadata   "${TRANSFER_FEE_ARGS[@]}" | tee "$CREATE_OUT"
 
 MINT="$(awk '/Address:/ {print $2}' "$CREATE_OUT" | tail -n1)"
 CREATE_SIG="$(awk '/Signature:/ {print $2}' "$CREATE_OUT" | tail -n1)"
@@ -53,6 +64,9 @@ spl-token mint "$MINT" "$PWRC_SUPPLY" "$TREASURY" | tee "$MINT_OUT"
 GENESIS_SIG="$(awk '/Signature:/ {print $2}' "$MINT_OUT" | tail -n1)"
 journal "GENESIS_MINTED" "MINT_GENESIS" "$GENESIS_SIG"
 
+RPC="$(cluster_url)"
+node scripts/token/verify-mint-state.mjs "$MINT" "$RPC" genesis > "$OUT/evidence/token2022-profile.json"
+
 cat > "$OUT/deployment.env" <<MANIFEST
 PWRC_VERSION=1.0.0
 PWRC_MANIFEST_CLUSTER=$PWRC_CLUSTER
@@ -63,6 +77,8 @@ PWRC_GENESIS_SUPPLY=$PWRC_SUPPLY
 PWRC_RAW_SUPPLY=$PWRC_RAW_SUPPLY
 PWRC_TOKEN_PROGRAM=$TOKEN_2022_PROGRAM_ID
 PWRC_METADATA_URI=$PWRC_METADATA_URI
+PWRC_TRANSFER_FEE_BPS=$PWRC_TRANSFER_FEE_BPS
+PWRC_MAX_TRANSFER_FEE_TOKENS=$PWRC_MAX_TRANSFER_FEE_TOKENS
 PWRC_CREATE_MINT_SIGNATURE=$CREATE_SIG
 PWRC_METADATA_SIGNATURE=$META_SIG
 PWRC_TREASURY_SIGNATURE=$TREASURY_SIG
@@ -71,7 +87,5 @@ PWRC_DEPLOYMENT_STATUS=GENESIS_MINTED
 MANIFEST
 
 node scripts/write-summary.mjs "$PWRC_CLUSTER" "$MINT" "$TREASURY"
-log "Genesis created. Mint: $MINT"
-log "Treasury account: $TREASURY"
 trap - ERR
-log "Mint authority is still active. VERIFY before any finalization."
+log "Devnet genesis created and Token-2022 profile checked. Mint authority remains active until verification/finalization."

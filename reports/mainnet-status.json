@@ -2,9 +2,14 @@
   "ok": false,
   "version": "1.0.0",
   "readyForMainnet": false,
+  "movePackage": {
+    "edition": "2024",
+    "moveLockPresent": false,
+    "actualMoveLockSha256": null
+  },
   "blockers": [
     "pnpm-lock.yaml",
-    "sui.Move.toml:not-pinned-to-immutable-commit",
+    "sui.Move.lock",
     "solana.rpcUrl",
     "solana.bridgeProgramId",
     "solana.bridgeVault",
@@ -12,7 +17,8 @@
     "sui.coinType",
     "sui.currencyObjectId",
     "sui.bridgeControllerId",
-    "sui.frameworkRevision",
+    "sui.moveLockSha256",
+    "sui.suiCliVersion",
     "governance.operator",
     "governance.governor",
     "solana.mintVerified",

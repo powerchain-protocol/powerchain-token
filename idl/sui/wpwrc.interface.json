@@ -46,10 +46,17 @@
       ],
       "events": [
         "BridgeAuthoritiesConfigured",
+        "BridgeAuthorityChangeCancelled",
+        "BridgeAuthorityChangeProposed",
+        "BridgeAuthorityChanged",
         "BridgePauseChanged",
         "BurnedForSolana",
+        "CanonicalBurnIntentCancelled",
         "CanonicalBurnIntentStaged",
         "CanonicalSupplyCeilingLowered",
+        "GovernorChangeCancelled",
+        "GovernorChangeProposed",
+        "GovernorChanged",
         "MintedFromSolana"
       ]
     },
@@ -83,6 +90,8 @@
     "consumedMessageReplayProtection": true,
     "canonicalSupplyCeilingEnforced": true,
     "quarterlyBurnIntentSupported": true,
-    "packageIdRequiresDeploymentEvidence": true
+    "packageIdRequiresDeploymentEvidence": true,
+    "nonzeroMessageDigestsRequired": true,
+    "nonzeroSolanaDestinationRequired": true
   }
 }

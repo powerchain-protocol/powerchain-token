@@ -1,0 +1,9 @@
+{
+  "ok": false,
+  "version": "1.0.0",
+  "phase": "mainnet-prebuild",
+  "deploymentEvidenceRequiredAtThisPhase": false,
+  "failures": [
+    "pnpm-lock.yaml"
+  ]
+}

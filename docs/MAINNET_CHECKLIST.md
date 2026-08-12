@@ -1,59 +1,59 @@
-# PWRC 1.0.0 Mainnet Checklist
+# PowerChain `1.0.0` Mainnet Checklist
 
-## Release qualification
+## Repository and toolchain
 
-- [ ] `pnpm install --frozen-lockfile` succeeds with the committed lockfile.
-- [ ] `pnpm ci` passes.
-- [ ] `pnpm pwrc:doctor` passes.
-- [ ] `pnpm pwrc:toolchain` matches the qualified toolchain.
-- [ ] Devnet deployment completed using the same source/config/metadata inputs.
-- [ ] Devnet transaction confirmations are finalized.
-- [ ] Devnet genesis verification passes.
-- [ ] Devnet finalization proves additional minting authority is absent.
-- [ ] Devnet journal hash chain verifies.
+- [ ] `pnpm-lock.yaml` is committed and `pnpm install --frozen-lockfile` succeeds.
+- [ ] `pnpm production:check`, `pnpm typecheck`, and `pnpm test` pass.
+- [ ] Anchor builds `pwrc_lock` and `pwrc_token` successfully.
+- [ ] Sui Move edition 2024 build and tests pass; generated `Move.lock`, its SHA-256, and Sui CLI version are archived.
+- [ ] Generated Anchor IDLs and normalized Sui modules pass IDL verification.
+- [ ] Release provenance and ABI fingerprints are regenerated from final sources.
 
-## Mainnet preparation
+## Solana canonical mint
 
-- [ ] Metadata JSON and image are production assets.
-- [ ] Metadata URI is reviewed and stable/content-addressed where practical.
-- [ ] Deployment fee-payer key is stored outside the repository.
-- [ ] Mainnet mint keypair is generated and stored outside the repository.
-- [ ] `PWRC_EXPECTED_MINT` equals `solana-keygen pubkey "$PWRC_MINT_KEYPAIR"`.
-- [ ] Expected mint address is reviewed independently before deployment.
-- [ ] RPC endpoint is approved.
-- [ ] Sufficient SOL exists for mint, metadata and treasury account creation.
-- [ ] `PWRC_MAINNET_ENABLED=true` is scoped only to the approved session.
-
-## Genesis
-
-- [ ] Token program owner is Token-2022.
-- [ ] Mint address equals the precommitted expected mint.
+- [ ] Mint equals `PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc`.
+- [ ] Owner is Token-2022.
 - [ ] Decimals equal 9.
-- [ ] Raw genesis supply equals `18446000000000000000`.
-- [ ] UI genesis supply equals `18446000000`.
-- [ ] Treasury token account is recorded.
-- [ ] Metadata name is PowerChain.
-- [ ] Metadata symbol is PWRC.
-- [ ] Freeze authority is absent.
-- [ ] Create-mint transaction is finalized.
-- [ ] Metadata transaction is finalized.
-- [ ] Treasury creation transaction is finalized.
-- [ ] Genesis mint transaction is finalized.
-- [ ] Deployment journal verifies.
-- [ ] Deployment state is `GENESIS_VERIFIED`.
+- [ ] Supply does not exceed `18,446,000,000,000,000,000` base units.
+- [ ] Finalized fixed-supply state has null mint authority.
+- [ ] Freeze authority is null.
+- [ ] Required extensions are exactly `TransferFeeConfig`, `MetadataPointer`, `TokenMetadata`.
+- [ ] Transfer fee is exactly 250 bps.
+- [ ] Maximum fee is exactly 1,000,000 PWRC.
+- [ ] Transfer-fee config authority is recorded and reviewed.
+- [ ] Withdraw-withheld authority is recorded and reviewed.
 
-## Irreversible finalization
+## Solana bridge
 
-- [ ] Independent operator reviews mint, supply, treasury and evidence.
-- [ ] `PWRC_FINALIZATION_ENABLED=true` set only for finalization.
-- [ ] `PWRC_FINALIZATION_CONFIRMATION=PWRC-1.0.0-IRREVERSIBLE` set.
-- [ ] Pre-finalization chain verification passes again immediately before submission.
-- [ ] Mint authority revocation transaction reaches finalized commitment.
-- [ ] Post-finalization mint state is independently re-read.
-- [ ] Mint authority is absent.
-- [ ] Freeze authority remains absent.
-- [ ] Final journal hash chain verifies.
-- [ ] `pnpm pwrc:release` generates release proof.
-- [ ] Canonical registry is updated only after final verification.
+- [ ] `pwrc_lock` Mainnet program ID is an executable verified deployment.
+- [ ] Bridge vault mint/owner and PDA derivation are verified.
+- [ ] Operator and governor are separate reviewed custody identities.
+- [ ] Bridge is paused during governance changes and canonical quarterly-burn reconciliation.
+- [ ] Lock/release replay receipts are tested on Mainnet-compatible simulation.
 
-Never commit a private key, seed phrase or keypair JSON file.
+## Sui wPWRC
+
+- [ ] Published package ID comes from deployment evidence, not the `powerchain` alias.
+- [ ] Coin type, currency object and shared bridge controller IDs are verified.
+- [ ] wPWRC decimals equal 9 and genesis supply equals 0.
+- [ ] TreasuryCap remains encapsulated by the controller.
+- [ ] Minting is bridge-authority only.
+- [ ] Message/burn reference replay protection is verified.
+- [ ] Bridge/governor rotations and pause controls are tested.
+
+## RPC and operations
+
+- [ ] Dedicated HTTPS primary and secondary Solana RPC endpoints are configured.
+- [ ] WSS endpoint is configured where subscriptions are used.
+- [ ] Public Mainnet RPC fallback is disabled in production.
+- [ ] Read retry/timeout policy is active.
+- [ ] Blind write retries are disabled.
+- [ ] Ambiguous writes are reconciled before any resubmission.
+- [ ] Audit logs contain no secrets or key material.
+
+## Final release
+
+- [ ] `pnpm pwrc:mainnet:status` has no blockers.
+- [ ] `pnpm pwrc:mainnet:preflight` passes.
+- [ ] Deployment evidence, source hashes, ABI fingerprints and signer evidence are archived.
+- [ ] No private key, seed phrase, API secret or keypair JSON exists in the repository.

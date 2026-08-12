@@ -29,7 +29,7 @@ if (!queue.includes("PWRC_RELAYER_QUEUE_CAPACITY_EXCEEDED")) {
 if (!queue.includes("PWRC_RELAYER_QUEUE_DUPLICATE_ID")) {
   failures.push("queue:duplicate");
 }
-if (!replay.includes("powerchain")) {
+if (!replay.includes("POWERCHAIN_REPLAY_V1")) {
   failures.push("replay:namespace");
 }
 if (!identity.includes("PWRC_SYSTEM_PROGRAM_IS_NOT_DEPLOYMENT")) {

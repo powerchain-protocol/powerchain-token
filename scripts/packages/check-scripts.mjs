@@ -32,6 +32,12 @@ const required = [
   "token:test",
   "token:production:check",
   "pwrc:fees",
+  "clean:cache",
+  "pwrc:runtime:check",
+  "pwrc:transactions:check",
+  "pwrc:handlers:check",
+  "pwrc:devnet:status",
+  "pwrc:devnet:preflight",
 ];
 
 for (const name of required) {

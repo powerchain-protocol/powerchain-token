@@ -13,7 +13,7 @@ if (sui.version !== "1.0.0") failures.push("sui:version");
 if (expected.canonicalRules.pwrcDecimals !== 9) failures.push("anchor:pwrc-decimals");
 if (expected.canonicalRules.wpwrcDecimals !== 9) failures.push("anchor:wpwrc-decimals");
 if (expected.canonicalRules.baseUnitFactor !== "1") failures.push("anchor:factor");
-if (expected.canonicalRules.transferFeeBps !== 0) failures.push("anchor:fee");
+if (expected.canonicalRules.transferFeeBps !== 250) failures.push("anchor:fee");
 
 const expectedNames = new Set(expected.instructions.map((i)=>i.name));
 for (const name of [

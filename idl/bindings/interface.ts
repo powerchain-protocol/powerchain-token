@@ -9,7 +9,7 @@ export const POWERCHAIN_BINDINGS_VERSION =
   "1.0.0" as const;
 
 export const POWERCHAIN_ABI_FINGERPRINT =
-  "20aa02c10a6d991bc366dc82f8af52ef835374e4504bc1dd261f896ab3d2c0bf" as const;
+  "5ec0f3f78c6c009c03e1e25e879c0d5abbb76c8b341352814ac6dd27cc83fbe5" as const;
 
 export const PWRC_LOCK_INSTRUCTIONS =
   [

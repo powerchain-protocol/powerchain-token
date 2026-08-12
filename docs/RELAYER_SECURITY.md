@@ -46,8 +46,9 @@ effective wrapped exposure
 <= live canonical PWRC supply
 ```
 
-All wPWRC amounts are converted from 6-decimal wrapped units to 9-decimal
-canonical units with the fixed factor `1000`.
+PWRC and wPWRC share the same 9-decimal base-unit domain. The relayer performs
+no decimal scaling. Solana-to-Sui mint authorization uses the **net spendable PWRC**
+credited to bridge backing after the native Token-2022 transfer fee.
 
 Any conservation violation halts new bridge processing.
 

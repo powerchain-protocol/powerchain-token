@@ -1,22 +1,40 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
+import { spawnSync } from "node:child_process";
 
-const [network, packageIdRaw, controllerIdRaw, currencyIdRaw, frameworkRevision] = process.argv.slice(2);
+const [network, packageIdRaw, controllerIdRaw, currencyIdRaw] = process.argv.slice(2);
 if (!["testnet", "mainnet"].includes(network)) {
-  throw new Error("Usage: node write-deployment-manifest.mjs <testnet|mainnet> <packageId> <controllerId> <currencyId> [frameworkRevision]");
+  throw new Error(
+    "Usage: node write-deployment-manifest.mjs <testnet|mainnet> <packageId> <controllerId> <currencyId>",
+  );
 }
 
 function normalizeObjectId(value, name) {
-  if (!value || !/^0x[a-fA-F0-9]{1,64}$/.test(value)) throw new Error(`${name} invalid`);
+  if (!value || !/^0x[a-fA-F0-9]{1,64}$/.test(value)) {
+    throw new Error(`${name} invalid`);
+  }
   return `0x${value.slice(2).toLowerCase().padStart(64, "0")}`;
 }
 
 const packageId = normalizeObjectId(packageIdRaw, "packageId");
 const controllerId = normalizeObjectId(controllerIdRaw, "controllerId");
 const currencyId = normalizeObjectId(currencyIdRaw, "currencyId");
-if (network === "mainnet" && !/^[a-f0-9]{40}$/i.test(frameworkRevision ?? "")) {
-  throw new Error("Mainnet manifest requires immutable 40-hex Sui framework revision");
+const moveLockPath = "contracts/wpwrc/Move.lock";
+
+if (!fs.existsSync(moveLockPath)) {
+  throw new Error("Move.lock missing; build the reviewed Sui package before writing deployment evidence");
 }
+
+const moveLockSha256 = crypto
+  .createHash("sha256")
+  .update(fs.readFileSync(moveLockPath))
+  .digest("hex");
+
+const suiVersionResult = spawnSync("sui", ["--version"], { encoding: "utf8" });
+if (suiVersionResult.error || suiVersionResult.status !== 0) {
+  throw new Error("sui CLI unavailable while writing deployment evidence");
+}
+const suiCliVersion = suiVersionResult.stdout.trim() || suiVersionResult.stderr.trim();
 
 const coinType = `${packageId}::wpwrc::WPWRC`;
 const manifest = {
@@ -34,9 +52,12 @@ const manifest = {
   canonicalAsset: "PWRC on Solana mainnet-beta",
   canonicalDecimals: 9,
   canonicalBaseUnitsPerWrappedBaseUnit: "1",
-  frameworkRevision: frameworkRevision ?? null,
+  moveEdition: "2024",
+  moveLockSha256,
+  suiCliVersion,
   generatedAt: new Date().toISOString(),
 };
+
 const canonical = JSON.stringify(manifest, Object.keys(manifest).sort());
 manifest.sha256 = crypto.createHash("sha256").update(canonical).digest("hex");
 

@@ -1,14 +1,14 @@
-# Mainnet reproducibility template. Use an immutable reviewed 40-hex Git
-# commit for the Sui framework; do not ship a moving framework/mainnet or
-# framework/testnet branch as production provenance.
+# PowerChain wPWRC Mainnet package template for the current Sui Move package
+# manager. The Sui framework is resolved by the Sui toolchain for edition 2024;
+# do not add an explicit Sui git dependency here.
+#
+# Run the reviewed Sui build to generate Move.lock, then preserve the Move.lock
+# SHA-256 and Sui CLI version as release/deployment evidence.
 
 [package]
 name = "wpwrc"
 version = "1.0.0"
-edition = "2024.beta"
+edition = "2024"
 
 [addresses]
 wpwrc = "0x0"
-
-[dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "<40_HEX_REVIEWED_SUI_COMMIT>" }

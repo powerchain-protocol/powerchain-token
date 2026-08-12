@@ -10,7 +10,7 @@ assert_expected_mint "$PWRC_MINT"
 OUT="$(deployment_dir)"
 mkdir -p "$OUT/evidence"
 node scripts/verify-journal.mjs "$OUT/journal.jsonl" > "$OUT/evidence/journal-verification.json"
-node scripts/verify-chain.mjs "$PWRC_MINT" genesis | tee "$OUT/evidence/genesis-verification.json"
+node scripts/verify-chain.mjs "$PWRC_MINT" genesis "$(cluster_url)" | tee "$OUT/evidence/genesis-verification.json"
 
 for item in \
   "create-mint:$PWRC_CREATE_MINT_SIGNATURE" \

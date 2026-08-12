@@ -24,14 +24,17 @@ test("relayer requires conservation before authorization", () => {
   );
 });
 
-test("bridge idempotency key is deterministic", () => {
-  assert.equal(
-    buildBridgeIdempotencyKey({
-      direction: "solana-to-sui",
-      sourceReference: "receipt-1",
-    }),
-    "pwrc:solana-to-sui:receipt-1",
-  );
+test("bridge idempotency key is deterministic and cryptographic", () => {
+  const a = buildBridgeIdempotencyKey({
+    direction: "solana-to-sui",
+    sourceReference: "receipt-1",
+  });
+  const b = buildBridgeIdempotencyKey({
+    direction: "solana-to-sui",
+    sourceReference: "receipt-1",
+  });
+  assert.equal(a, b);
+  assert.match(a, /^[a-f0-9]{64}$/);
 });
 
 test("ambiguous write result is not blindly retried", () => {

@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "version": "1.0.0",
+  "removed": [],
+  "preserved": [
+    "node_modules",
+    "pnpm-lock.yaml",
+    "target/idl",
+    "reports"
+  ]
+}

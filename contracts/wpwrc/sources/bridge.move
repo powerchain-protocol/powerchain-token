@@ -43,6 +43,37 @@ public struct CanonicalSupplyCeilingLowered has copy, drop {
     canonical_burn_evidence_hash: vector<u8>,
 }
 
+
+public struct CanonicalBurnIntentCancelled has copy, drop {
+    governor: address,
+}
+
+public struct BridgeAuthorityChangeProposed has copy, drop {
+    current_authority: address,
+    new_authority: address,
+}
+
+public struct BridgeAuthorityChangeCancelled has copy, drop {
+    governor: address,
+}
+
+public struct BridgeAuthorityChanged has copy, drop {
+    new_authority: address,
+}
+
+public struct GovernorChangeProposed has copy, drop {
+    current_governor: address,
+    new_governor: address,
+}
+
+public struct GovernorChangeCancelled has copy, drop {
+    governor: address,
+}
+
+public struct GovernorChanged has copy, drop {
+    new_governor: address,
+}
+
 public entry fun configure_authorities(
     controller: &mut BridgeController,
     bridge_authority: address,
@@ -134,6 +165,9 @@ public entry fun cancel_canonical_burn_intent(
         controller,
         ctx,
     );
+    event::emit(CanonicalBurnIntentCancelled {
+        governor: tx_context::sender(ctx),
+    });
 }
 
 public entry fun lower_canonical_supply_ceiling(
@@ -163,7 +197,12 @@ public entry fun propose_bridge_authority(
     new_authority: address,
     ctx: &mut TxContext,
 ) {
+    let current_authority = wpwrc::bridge_authority(controller);
     wpwrc::propose_bridge_authority(controller, new_authority, ctx);
+    event::emit(BridgeAuthorityChangeProposed {
+        current_authority,
+        new_authority,
+    });
 }
 
 public entry fun cancel_bridge_authority(
@@ -174,6 +213,9 @@ public entry fun cancel_bridge_authority(
         controller,
         ctx,
     );
+    event::emit(BridgeAuthorityChangeCancelled {
+        governor: tx_context::sender(ctx),
+    });
 }
 
 public entry fun accept_bridge_authority(
@@ -181,6 +223,9 @@ public entry fun accept_bridge_authority(
     ctx: &mut TxContext,
 ) {
     wpwrc::accept_bridge_authority(controller, ctx);
+    event::emit(BridgeAuthorityChanged {
+        new_authority: tx_context::sender(ctx),
+    });
 }
 
 public entry fun propose_governor(
@@ -188,7 +233,12 @@ public entry fun propose_governor(
     new_governor: address,
     ctx: &mut TxContext,
 ) {
+    let current_governor = wpwrc::governor(controller);
     wpwrc::propose_governor(controller, new_governor, ctx);
+    event::emit(GovernorChangeProposed {
+        current_governor,
+        new_governor,
+    });
 }
 
 public entry fun cancel_governor(
@@ -199,6 +249,9 @@ public entry fun cancel_governor(
         controller,
         ctx,
     );
+    event::emit(GovernorChangeCancelled {
+        governor: tx_context::sender(ctx),
+    });
 }
 
 public entry fun accept_governor(
@@ -206,4 +259,7 @@ public entry fun accept_governor(
     ctx: &mut TxContext,
 ) {
     wpwrc::accept_governor(controller, ctx);
+    event::emit(GovernorChanged {
+        new_governor: tx_context::sender(ctx),
+    });
 }

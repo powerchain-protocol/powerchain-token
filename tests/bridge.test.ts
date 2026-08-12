@@ -53,3 +53,15 @@ test("wrapped supply can never exceed canonical max", () => {
   assert.equal(report.valid, false);
   assert.ok(report.errors.includes("WRAPPED_SUPPLY_EXCEEDS_PWRC_MAX"));
 });
+
+test("pending Sui to Solana remains backing exposure until release finalizes", () => {
+  const report = verifyBridgeConservation({
+    lockedCanonicalBaseUnits: 2_000_000_000n,
+    wrappedSupplyBaseUnits: 1_500_000_000n,
+    pendingWrappedToCanonicalBaseUnits: 500_000_000n,
+  });
+
+  assert.equal(report.valid, true);
+  assert.equal(report.wrappedExposureCanonicalBaseUnits, 2_000_000_000n);
+  assert.equal(report.surplusBackingBaseUnits, 0n);
+});

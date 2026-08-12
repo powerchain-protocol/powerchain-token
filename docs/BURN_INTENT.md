@@ -1,62 +1,7 @@
-# Quarterly Burn Intent
+# Burn Intent
 
-Version: `1.0.0`
+PowerChain version `1.0.0` uses the same 9-decimal base-unit domain on Solana PWRC and Sui wPWRC with base-unit factor `1`.
 
-The quarterly burn path is now protected against the cross-chain timing gap
-between a canonical Solana supply burn and the Sui wrapped-supply ceiling.
+Canonical PWRC uses Token-2022 `TransferFeeConfig` at 250 bps (2.5%), capped at 1,000,000 PWRC. Solana→Sui bridge issuance is based on the net PWRC credited as backing after the Token-2022 transfer fee. Sui→Solana burns wPWRC equal to the gross canonical PWRC release; the destination transfer then applies the native Token-2022 fee.
 
-## Required order
-
-```text
-PLANNED
-→ PRECHECKED
-→ SUI_BRIDGE_PAUSE_SUBMITTED
-→ SUI_BRIDGE_PAUSED
-→ SUI_BURN_INTENT_SUBMITTED
-→ SUI_BURN_INTENT_FINALIZED
-→ SOLANA_SIMULATED
-→ SOLANA_SUBMITTED
-→ SOLANA_FINALIZED
-→ SUI_CEILING_SUBMITTED
-→ SUI_CEILING_FINALIZED
-→ RECONCILED
-→ COMPLETED
-```
-
-The Solana burn is forbidden until the Sui bridge is paused and the quarter's
-burn intent has finalized on Sui.
-
-## Intent binding
-
-The intent commits to:
-
-- quarter ID;
-- burn ID;
-- canonical mint;
-- pre-burn canonical supply;
-- exact target burn;
-- expected post-burn canonical supply;
-- expected 6-decimal Sui ceiling;
-- Solana observation slot;
-- Sui checkpoint;
-- immutable plan SHA-256.
-
-The expected Sui ceiling is derived from the post-burn canonical supply using
-the fixed 1000:1 base-unit conversion.
-
-## Cancellation
-
-A staged intent may be cancelled only while the bridge remains paused and
-before the canonical Solana burn is submitted. Once the canonical burn has
-been submitted, operational policy forbids cancellation; the system must
-complete reconciliation or remain blocked.
-
-## Unpause
-
-The bridge is not unpaused until:
-
-1. Solana burn is finalized;
-2. observed canonical supply matches the plan;
-3. Sui ceiling update is finalized;
-4. Sui ceiling matches converted canonical supply;
-5. cross-chain conservation passes.
+Replay protection, deployment identity, finality and conservation checks remain fail-closed. Mainnet IDs and Sui package/object IDs must come from verified deployment evidence.

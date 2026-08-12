@@ -9,6 +9,10 @@ const bridge = fs.readFileSync(
   "contracts/wpwrc/sources/bridge.move",
   "utf8",
 );
+const moveToml = fs.readFileSync(
+  "contracts/wpwrc/Move.toml",
+  "utf8",
+);
 
 for (const required of [
   "treasury_cap: TreasuryCap<WPWRC>",
@@ -21,6 +25,20 @@ for (const required of [
   if (!wpwrc.includes(required)) {
     failures.push(`wpwrc:${required}`);
   }
+}
+
+
+if (!/edition\s*=\s*"2024"/.test(moveToml)) {
+  failures.push("Move.toml:edition-2024");
+}
+if (/^Sui\s*=/m.test(moveToml)) {
+  failures.push("Move.toml:explicit-Sui-dependency");
+}
+if (!wpwrc.includes("currency.finalize(ctx)")) {
+  failures.push("wpwrc:coin-registry-finalize");
+}
+if (!wpwrc.includes("public_transfer(metadata_cap, sender)")) {
+  failures.push("wpwrc:metadata-cap-custody");
 }
 
 if (/public_transfer\s*\(\s*treasury_cap/.test(wpwrc)) {

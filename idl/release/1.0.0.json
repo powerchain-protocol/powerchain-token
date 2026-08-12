@@ -3,7 +3,7 @@
   "status": "blocked",
   "abi": {
     "domain": "POWERCHAIN_IDL_ABI_V1",
-    "combinedAbiSha256": "20aa02c10a6d991bc366dc82f8af52ef835374e4504bc1dd261f896ab3d2c0bf"
+    "combinedAbiSha256": "5ec0f3f78c6c009c03e1e25e879c0d5abbb76c8b341352814ac6dd27cc83fbe5"
   },
   "anchor": {
     "pwrcLock": {
@@ -19,7 +19,7 @@
     "generatedVerification": false
   },
   "sui": {
-    "sourceInterfaceSha256": "d47760dd9381097f5f1d7b39279177ee18830ff4956129e6a5f45c13416dadba",
+    "sourceInterfaceSha256": "7570aceea19fe3376257297024b31de38372454bf7b36407fdcede6e4f8c1901",
     "normalizedModulesPresent": false,
     "normalizedModulesSha256": null
   },
@@ -27,8 +27,8 @@
     "pwrcLockSha256": "b01e05f374d5b7a0c64b2206030514d1e70ff1329d3cab8f25c77dff7605f0d9",
     "pwrcTokenSha256": "59cf6fcf3944b2838f07edb1d4700d6edb1d7588aabc5493d97eab4a0f73b90b",
     "pwrcTokenInvariantsSha256": "308bee011e580c6cf39903855a025502ae8506531a7626249f83a59516f4adb8",
-    "wpwrcSha256": "2e2ddf6b1a4db7c6f10c455a79ad51167ba6895d14e1bf5e16e800952ecf3794",
-    "bridgeSha256": "3fd78fde6faaf38728800c6666d385d3e29b8305399e0c88ef466527fc35007b"
+    "wpwrcSha256": "1e3215f31b1c15a5e6c0f11a8afaeef1d6dcb56eb5466f7cb000154bc57ef50c",
+    "bridgeSha256": "4d491b8f9ed98b5b82566a812230e8a835fcaea9bd21a27def46a20f981a2ab6"
   },
   "checks": {
     "sourceDrift": true,

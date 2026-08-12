@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "token": "PWRC",
+  "program": "Token-2022",
+  "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+  "fee": {
+    "basisPoints": 250,
+    "maximumFeeTokens": "1000000",
+    "maximumFeeBaseUnits": "1000000000000000",
+    "instruction": "TransferCheckedWithFee"
+  },
+  "policy": {
+    "simulateBeforeSend": true,
+    "skipPreflight": false,
+    "preflightCommitment": "confirmed",
+    "confirmCommitment": "finalized",
+    "blindWriteRetries": false,
+    "ambiguousWriteRecovery": "query-signature-status-before-any-resubmission",
+    "blockhashStrategyRequired": true
+  }
+}
