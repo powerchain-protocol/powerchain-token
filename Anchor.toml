@@ -1,0 +1,21 @@
+[toolchain]
+anchor_version = "0.32.1"
+
+[features]
+resolution = true
+skip-lint = false
+
+# This ID is a local development identity only. Devnet/mainnet IDs remain
+# unset until an actual program keypair is generated, built and deployed.
+[programs.localnet]
+pwrc_fees = "9Ty7dY7pLmMAdH9nJHD4FSZxkRCAGbce12fs7AJV4pW7"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "Localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "pnpm test:anchor-program"

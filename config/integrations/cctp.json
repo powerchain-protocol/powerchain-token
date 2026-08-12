@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "protocol": "CCTP",
+  "protocolVersion": "v2",
+  "asset": "USDC",
+  "useForPwrcBridge": false,
+  "uses": [
+    "x402 USDC settlement",
+    "AI compute funding",
+    "cross-chain treasury settlement",
+    "checkout USDC settlement"
+  ],
+  "solana": {
+    "devnet": {
+      "messageTransmitter": null,
+      "tokenMessengerMinter": null
+    },
+    "mainnet-beta": {
+      "messageTransmitter": null,
+      "tokenMessengerMinter": null
+    }
+  },
+  "policy": {
+    "requireCircleAttestation": true,
+    "requireSourceFinality": true,
+    "requireDestinationReceiptVerification": true,
+    "neverTreatCctpAsPwrcBridge": true
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "publicFallbacks": {
+    "localnet": "http://127.0.0.1:8899",
+    "devnet": "https://api.devnet.solana.com",
+    "mainnet-beta": "https://api.mainnet.solana.com"
+  },
+  "production": {
+    "requireDedicatedRpc": true,
+    "primaryEnv": "PWRC_RPC_URL",
+    "secondaryEnv": "PWRC_RPC_URL_SECONDARY",
+    "websocketEnv": "PWRC_WS_URL",
+    "publicRpcAllowed": false
+  },
+  "policy": {
+    "commitment": "finalized",
+    "preflightCommitment": "confirmed",
+    "mainnetHttpsRequired": true,
+    "rpcQuorumForFinalization": 2
+  }
+}

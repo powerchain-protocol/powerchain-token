@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "policy": "context-aware",
+  "zeroAmount": {
+    "allowedFor": [
+      "signed-message",
+      "authentication",
+      "service-handshake",
+      "health-check",
+      "status",
+      "metadata",
+      "market-discovery",
+      "market-data",
+      "quote-preview",
+      "price-observation",
+      "proof",
+      "attestation",
+      "simulation"
+    ],
+    "forbiddenFor": [
+      "transfer",
+      "swap-settlement",
+      "fee-settlement",
+      "bridge-settlement",
+      "x402-settlement",
+      "checkout-settlement"
+    ]
+  },
+  "signedMessages": {
+    "amountRequired": false,
+    "maxMessageBytes": 8192,
+    "purpose": [
+      "authentication",
+      "wallet ownership proof",
+      "service authorization",
+      "quote acceptance",
+      "market/service challenge"
+    ]
+  }
+}

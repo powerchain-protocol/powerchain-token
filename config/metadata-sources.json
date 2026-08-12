@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "domain": "https://token.powerchain.energy",
+  "pwrc": {
+    "primary": "https://token.powerchain.energy/metadata/metadata.json",
+    "secondary": {
+      "provider": "github-raw",
+      "env": "PWRC_GITHUB_METADATA_URI",
+      "requiredForProduction": true
+    },
+    "logo": "https://token.powerchain.energy/assets/tokens/pwrc-logo.png"
+  },
+  "wpwrc": {
+    "primary": "https://token.powerchain.energy/metadata/wpwrc.metadata.json",
+    "secondary": {
+      "provider": "github-raw",
+      "env": "WPWRC_GITHUB_METADATA_URI",
+      "requiredForProduction": true
+    },
+    "logo": "https://token.powerchain.energy/assets/tokens/wpwrc-logo.png"
+  },
+  "policy": {
+    "primaryMustUseHttps": true,
+    "primaryHost": "token.powerchain.energy",
+    "secondaryProvider": "github-raw",
+    "fallbackOrder": [
+      "primary",
+      "secondary"
+    ],
+    "officialWebsiteHost": "powerchain.energy"
+  },
+  "officialWebsite": "https://powerchain.energy"
+}

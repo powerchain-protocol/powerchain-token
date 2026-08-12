@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0",
+  "canonicalAsset": "PWRC",
+  "network": "solana",
+  "markets": [
+    {
+      "id": "market:pyth:solana:PWRC/USD",
+      "provider": "pyth",
+      "baseAsset": "PWRC",
+      "quoteAsset": "USD",
+      "externalId": null,
+      "status": "pending-feed"
+    },
+    {
+      "id": "market:birdeye:solana:PWRC/USD",
+      "provider": "birdeye",
+      "baseAsset": "PWRC",
+      "quoteAsset": "USD",
+      "externalId": null,
+      "status": "pending-indexing"
+    }
+  ],
+  "dexMarkets": [],
+  "note": "DEX pool/market IDs are added only after real on-chain pools exist."
+}

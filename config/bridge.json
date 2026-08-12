@@ -1,0 +1,54 @@
+{
+  "version": "1.0.0",
+  "bridgeAssetId": "powerchain-wpwrc",
+  "canonical": {
+    "name": "PowerChain",
+    "symbol": "PWRC",
+    "chain": "solana",
+    "decimals": 9,
+    "standard": "Token-2022",
+    "metadata": "metadata/metadata.json",
+    "devnet": {
+      "mint": null
+    },
+    "mainnet-beta": {
+      "mint": null
+    }
+  },
+  "wrapped": {
+    "name": "Wrapped PowerChain",
+    "symbol": "wPWRC",
+    "chain": "sui",
+    "decimals": 9,
+    "kind": "wrapped-bridged-token",
+    "backingRatio": "1:1",
+    "metadata": "metadata/wpwrc.metadata.json",
+    "testnet": {
+      "packageId": null,
+      "coinType": null,
+      "metadataObjectId": null
+    },
+    "mainnet": {
+      "packageId": null,
+      "coinType": null,
+      "metadataObjectId": null
+    }
+  },
+  "bridge": {
+    "provider": null,
+    "protocol": null,
+    "manager": null,
+    "canonicalLockContract": null,
+    "wrappedMintController": null
+  },
+  "policy": {
+    "canonicalSupplyFixed": true,
+    "canonicalMaxBaseUnits": "18446000000000000000",
+    "wrappedMintingRequiresLockedPWRC": true,
+    "wrappedBurnRequiredBeforeCanonicalRelease": true,
+    "wrappedSupplyMustNotExceedLockedCanonical": true,
+    "decimalsMustMatch": true,
+    "genesisWrappedSupply": "0"
+  },
+  "status": "template-only"
+}

@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "asset": "PWRC",
+  "chain": "solana",
+  "decimals": 9,
+  "tradeable": true,
+  "zeroAmountTransactionsAllowed": false,
+  "providers": {
+    "pyth": {
+      "enabled": true,
+      "hermesUrl": "https://hermes.pyth.network",
+      "feedId": null,
+      "maxPriceAgeSeconds": 60,
+      "role": "primary-oracle-when-feed-exists",
+      "confidenceValidation": true
+    },
+    "birdeye": {
+      "enabled": true,
+      "apiBaseUrl": "https://public-api.birdeye.so",
+      "apiKeyEnv": "BIRDEYE_API_KEY",
+      "role": "market-data-and-price-fallback",
+      "requiresProviderIndexing": true,
+      "marketDataEndpoint": "/defi/v3/token/market-data",
+      "priceEndpoint": "/defi/price"
+    }
+  },
+  "listing": {
+    "dexPoolRequiredForTrading": true,
+    "liquidityRequired": true,
+    "providerIndexingNotGuaranteedByCode": true
+  },
+  "tokenRestrictions": {
+    "nonTransferable": false,
+    "defaultFrozen": false,
+    "transferHookRequired": false,
+    "allowlistRequired": false
+  },
+  "riskControls": {
+    "maxPriceAgeSeconds": 60,
+    "maxPythConfidenceBps": 500,
+    "maxProviderDivergenceBps": 750,
+    "maxQuoteSlippageBps": 500,
+    "minLiquidityUsd": 10000,
+    "quoteTtlSeconds": 120,
+    "circuitBreakerCooldownSeconds": 60,
+    "requireNonZeroAmounts": true,
+    "settlementUsesBigInt": true
+  },
+  "zeroAmountMarketOperationsAllowed": true,
+  "marketIdRegistry": "config/integrations/markets.json"
+}

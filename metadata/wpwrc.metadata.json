@@ -1,0 +1,60 @@
+{
+  "name": "Wrapped PowerChain",
+  "symbol": "wPWRC",
+  "description": "Wrapped PowerChain (wPWRC) is the bridged wrapped representation of canonical PWRC. Intended 1:1 backed asset for bridge/network interoperability.",
+  "image": "https://token.powerchain.energy/assets/tokens/wpwrc-logo.png",
+  "external_url": "https://powerchain.energy",
+  "attributes": [
+    {
+      "trait_type": "Asset Type",
+      "value": "Wrapped Token"
+    },
+    {
+      "trait_type": "Backing",
+      "value": "1:1 backed by PWRC"
+    },
+    {
+      "trait_type": "Canonical Asset",
+      "value": "PWRC"
+    },
+    {
+      "trait_type": "Bridge Network",
+      "value": "Sui"
+    },
+    {
+      "trait_type": "Version",
+      "value": "1.0.0"
+    }
+  ],
+  "properties": {
+    "category": "wrapped-token",
+    "chain": "sui",
+    "standard": "bridged-asset",
+    "canonical_symbol": "PWRC",
+    "bridge_ratio": "1:1",
+    "files": [
+      {
+        "uri": "assets/wpwrc-logo.png",
+        "type": "image/png",
+        "cdn": false,
+        "purpose": "local-repository-asset"
+      },
+      {
+        "uri": "https://token.powerchain.energy/assets/tokens/wpwrc-logo.png",
+        "type": "image/png",
+        "cdn": true,
+        "purpose": "public-token-logo"
+      }
+    ],
+    "metadata_uri": "https://token.powerchain.energy/metadata/wpwrc.metadata.json",
+    "metadata_sources": {
+      "primary": "https://token.powerchain.energy/metadata/wpwrc.metadata.json",
+      "secondary": {
+        "provider": "github-raw",
+        "environment": "WPWRC_GITHUB_METADATA_URI"
+      }
+    },
+    "official_website": "https://powerchain.energy",
+    "token_domain": "https://token.powerchain.energy"
+  }
+}

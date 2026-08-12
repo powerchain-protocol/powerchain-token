@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "environment": "devnet",
+  "canonical": {
+    "chain": "solana",
+    "cluster": "devnet",
+    "mint": null
+  },
+  "wrapped": {
+    "chain": "sui",
+    "network": "testnet",
+    "packageId": null,
+    "coinType": null
+  },
+  "status": "not-deployed"
+}

@@ -1,0 +1,72 @@
+{
+  "version": "1.0.0",
+  "canonical": {
+    "asset": "PWRC",
+    "chain": "solana",
+    "decimals": 9,
+    "maxSupplyBaseUnits": "18446000000000000000",
+    "mint": null
+  },
+  "wrapped": {
+    "asset": "wPWRC",
+    "name": "Wrapped PowerChain",
+    "chain": "sui",
+    "decimals": 9,
+    "genesisSupply": "0",
+    "maxSupplyBaseUnits": "18446000000000000000",
+    "metadata": "metadata/wpwrc.metadata.json",
+    "icon": "https://token.powerchain.energy/assets/tokens/wpwrc-logo.png"
+  },
+  "networks": {
+    "testnet": {
+      "packageId": null,
+      "coinType": null,
+      "currencyObjectId": null,
+      "bridgeControllerId": null,
+      "bridgeAuthority": "powerchain",
+      "status": "not-deployed"
+    },
+    "mainnet": {
+      "packageId": null,
+      "coinType": null,
+      "currencyObjectId": null,
+      "bridgeControllerId": null,
+      "bridgeAuthority": "powerchain",
+      "status": "not-deployed"
+    }
+  },
+  "security": {
+    "zeroGenesisSupply": true,
+    "normalTransfersUnrestricted": true,
+    "bridgeMintRequiresAuthority": true,
+    "mintReplayProtection": "32-byte-source-message-hash",
+    "burnReplayProtection": "32-byte-burn-reference",
+    "bridgePauseDoesNotFreezeNormalTransfers": true,
+    "metadataImmutable": true,
+    "twoStepAuthorityRotation": true,
+    "supplyCanNeverExceedCanonicalMax": true,
+    "claimHashBinds": [
+      "source chain",
+      "source cluster",
+      "canonical PWRC mint",
+      "Solana lock vault",
+      "Solana signature",
+      "instruction index",
+      "amount base units",
+      "Sui recipient"
+    ],
+    "authorityRotationRequiresPause": true,
+    "crossChainConservationEvidence": true,
+    "deploymentEvidenceSha256": true
+  },
+  "bridgeProvider": {
+    "mode": "operator-attested-controller",
+    "productionRequirement": "replace/secure authority with audited bridge or threshold/multisig verifier"
+  },
+  "registration": {
+    "standard": "Sui Currency Standard",
+    "coinRegistryObject": "0xc",
+    "otwRequiresFinalizeRegistration": true,
+    "metadataCapDeletedAtGenesis": true
+  }
+}

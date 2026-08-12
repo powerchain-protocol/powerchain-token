@@ -1,0 +1,59 @@
+{
+  "name": "PowerChain",
+  "symbol": "PWRC",
+  "description": "PowerChain (PWRC) is the native utility token of the PowerChain ecosystem. Canonical asset on Solana Token-2022 with fixed supply and metadata-linked logo.",
+  "image": "https://token.powerchain.energy/assets/tokens/pwrc-logo.png",
+  "external_url": "https://powerchain.energy",
+  "attributes": [
+    {
+      "trait_type": "Asset Type",
+      "value": "Utility Token"
+    },
+    {
+      "trait_type": "Chain",
+      "value": "Solana"
+    },
+    {
+      "trait_type": "Standard",
+      "value": "Token-2022"
+    },
+    {
+      "trait_type": "Decimals",
+      "value": "9"
+    },
+    {
+      "trait_type": "Version",
+      "value": "1.0.0"
+    }
+  ],
+  "properties": {
+    "category": "fungible-token",
+    "chain": "solana",
+    "standard": "token-2022",
+    "symbol": "PWRC",
+    "files": [
+      {
+        "uri": "assets/pwrc-logo.png",
+        "type": "image/png",
+        "cdn": false,
+        "purpose": "local-repository-asset"
+      },
+      {
+        "uri": "https://token.powerchain.energy/assets/tokens/pwrc-logo.png",
+        "type": "image/png",
+        "cdn": true,
+        "purpose": "public-token-logo"
+      }
+    ],
+    "metadata_uri": "https://token.powerchain.energy/metadata/metadata.json",
+    "metadata_sources": {
+      "primary": "https://token.powerchain.energy/metadata/metadata.json",
+      "secondary": {
+        "provider": "github-raw",
+        "environment": "PWRC_GITHUB_METADATA_URI"
+      }
+    },
+    "official_website": "https://powerchain.energy",
+    "token_domain": "https://token.powerchain.energy"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "protocolVersion": "2",
+  "network": "solana",
+  "enabled": true,
+  "defaultAsset": "USDC",
+  "pwrcPayments": "experimental-disabled",
+  "resourceBaseUrl": "https://token.powerchain.energy",
+  "policy": {
+    "automaticArbitrary402Signing": false,
+    "requireHttps": true,
+    "requireFinalizedSettlement": true,
+    "requireUniquePaymentReference": true,
+    "maxPaymentBaseUnits": null
+  }
+}
