@@ -14,7 +14,11 @@ export const PWRC_MAX_SUPPLY = 18_446_000_000n;
 export const PWRC_MAX_BASE_UNITS =
   18_446_000_000_000_000_000n;
 
-export const PWRC_TRANSFER_FEE_BPS = 0 as const;
+export const PWRC_TRANSFER_FEE_BPS = 250 as const;
+export const PWRC_MAX_TRANSFER_FEE_TOKENS = 1_000_000n;
+export const PWRC_MAX_TRANSFER_FEE_BASE_UNITS = 1000000000000000n;
+export const PWRC_CANONICAL_MINT_ADDRESS = "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc" as const;
+export const PWRC_METADATA_URI = "https://powerchain.energy/metadata/metaplex.json" as const;
 
 export const PWRC_TOKEN_PROGRAM_ID =
   TOKEN_2022_PROGRAM_ID;

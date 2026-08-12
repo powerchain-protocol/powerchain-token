@@ -1,14 +1,19 @@
 import fs from "node:fs";
 
-function exists(file) {
-  return fs.existsSync(file);
-}
+const exists = (file) =>
+  fs.existsSync(file);
 
 function reportOk(file) {
-  if (!exists(file)) return false;
+  if (!exists(file)) {
+    return false;
+  }
+
   try {
     return JSON.parse(
-      fs.readFileSync(file, "utf8"),
+      fs.readFileSync(
+        file,
+        "utf8",
+      ),
     ).ok === true;
   } catch {
     return false;
@@ -16,39 +21,64 @@ function reportOk(file) {
 }
 
 const staticReady =
-  reportOk("reports/idl-source-drift.json") &&
-  reportOk("reports/idl-compatibility.json") &&
-  exists("idl/abi.fingerprint.json") &&
-  exists("idl/bindings/manifest.json");
+  reportOk(
+    "reports/idl-source-drift.json",
+  ) &&
+  reportOk(
+    "reports/idl-compatibility.json",
+  ) &&
+  exists(
+    "idl/abi.fingerprint.json",
+  ) &&
+  exists(
+    "idl/bindings/manifest.json",
+  );
 
 const buildArtifacts = {
-  anchorGeneratedIdl:
-    exists("idl/generated/pwrc_lock.json"),
+  pwrcLockAnchorIdl:
+    exists(
+      "idl/generated/pwrc_lock.json",
+    ),
+  pwrcTokenAnchorIdl:
+    exists(
+      "idl/generated/pwrc_token.json",
+    ),
   suiNormalizedModules:
-    exists("idl/generated/wpwrc.modules.json"),
+    exists(
+      "idl/generated/wpwrc.modules.json",
+    ),
 };
 
 const buildReady =
-  buildArtifacts.anchorGeneratedIdl &&
-  buildArtifacts.suiNormalizedModules &&
+  Object.values(
+    buildArtifacts,
+  ).every(Boolean) &&
   reportOk(
     "reports/idl-generated-verification.json",
   );
 
-const releaseManifestReady =
-  exists("idl/release/1.0.0.json") &&
-  (() => {
-    try {
-      return JSON.parse(
+let releaseManifestReady =
+  false;
+
+if (
+  exists(
+    "idl/release/1.0.0.json",
+  )
+) {
+  try {
+    releaseManifestReady =
+      JSON.parse(
         fs.readFileSync(
           "idl/release/1.0.0.json",
           "utf8",
         ),
-      ).status === "release-idl-ready";
-    } catch {
-      return false;
-    }
-  })();
+      ).status ===
+      "release-idl-ready";
+  } catch {
+    releaseManifestReady =
+      false;
+  }
+}
 
 const result = {
   version: "1.0.0",
@@ -59,17 +89,30 @@ const result = {
     buildReady &&
     releaseManifestReady,
   buildArtifacts,
-  mainnetDeploymentReady: false,
+  mainnetDeploymentReady:
+    false,
 };
 
-fs.mkdirSync("reports", {
-  recursive: true,
-});
+fs.mkdirSync(
+  "reports",
+  {
+    recursive: true,
+  },
+);
+
 fs.writeFileSync(
   "reports/idl-readiness.json",
-  `${JSON.stringify(result, null, 2)}\n`,
+  `${JSON.stringify(
+    result,
+    null,
+    2,
+  )}\n`,
 );
 
 console.log(
-  JSON.stringify(result, null, 2),
+  JSON.stringify(
+    result,
+    null,
+    2,
+  ),
 );

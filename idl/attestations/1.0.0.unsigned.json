@@ -4,17 +4,20 @@
   "signed": false,
   "abi": {
     "domain": "POWERCHAIN_IDL_ABI_V1",
-    "combinedSha256": "96e74184c08f283c4de057b96d8e0a31123c44cd6fa249a0ca37c0cb9944f608"
+    "combinedSha256": "20aa02c10a6d991bc366dc82f8af52ef835374e4504bc1dd261f896ab3d2c0bf"
   },
   "source": {
-    "pwrcLockSha256": "8258722c5e66aa2a8eee1fe0aab9507e4992ef2d64c9d98eb700674510fb9944",
+    "pwrcLockSha256": "b01e05f374d5b7a0c64b2206030514d1e70ff1329d3cab8f25c77dff7605f0d9",
+    "pwrcTokenSha256": "59cf6fcf3944b2838f07edb1d4700d6edb1d7588aabc5493d97eab4a0f73b90b",
+    "pwrcTokenInvariantsSha256": "308bee011e580c6cf39903855a025502ae8506531a7626249f83a59516f4adb8",
     "wpwrcSha256": "2e2ddf6b1a4db7c6f10c455a79ad51167ba6895d14e1bf5e16e800952ecf3794",
     "bridgeSha256": "3fd78fde6faaf38728800c6666d385d3e29b8305399e0c88ef466527fc35007b"
   },
   "interfaces": {
-    "anchorExpectedSha256": "1a8ccd0604bf0e1245a3a0e4b78d097f1af24909b1d1d03caacb224326a35554",
+    "bridgeAnchorExpectedSha256": "db3e4c6f91430c55d2177d9e31de926c8489ba37423664747b8cb4cd5d3f82b2",
+    "tokenAnchorExpectedSha256": "c9c5ff11091a57466ceca88259bbbb8498568c2287a7368b27171a9b741f29af",
     "suiSourceInterfaceSha256": "d47760dd9381097f5f1d7b39279177ee18830ff4956129e6a5f45c13416dadba",
-    "bindingManifestSha256": "c73ffe9860a697363712778a16b938e6e4c6e7936211736f5b5d5b74cad32b6a"
+    "bindingManifestSha256": "c4520f06773777a61b8d72c7d4432a0641d8c8136fd8221643bfd8e2570b72c1"
   },
   "compatibility": {
     "classification": "compatible",
@@ -22,10 +25,11 @@
     "additive": []
   },
   "generatedArtifacts": {
-    "anchorIdlPresent": false,
+    "pwrcLockAnchorIdlPresent": false,
+    "pwrcTokenAnchorIdlPresent": false,
     "suiNormalizedModulesPresent": false
   },
-  "payloadSha256": "87256a399d80a60876b78b645203b294556a1c3ab946efef713bd32d65d2bb53",
+  "payloadSha256": "066869e6db3169290262bb4692587bd2e0577caf278988cf016eaa5370522024",
   "signature": null,
   "signer": null
 }

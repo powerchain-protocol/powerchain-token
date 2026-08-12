@@ -4,7 +4,7 @@ solana_version = "2.3.0"
 package_manager = "pnpm"
 
 [workspace]
-members = ["programs/pwrc-lock"]
+members = ["programs/pwrc-lock", "programs/token"]
 exclude = ["programs/pwrc-fees"]
 
 [features]
@@ -16,6 +16,7 @@ skip-lint = false
 # separately built, deployed, executable, and verified program is published.
 [programs.localnet]
 pwrc_lock = "7JAV3PsxkHh5oKAFDMKqVpKaV2P2P5Vj3Qv15hH8wPwr"
+pwrc_token = "HRrDxwZzuFreRmkCLY9oFXNGAy2gjd3diHyyTadxd8s6"
 
 [registry]
 url = "https://api.apr.dev"

@@ -252,6 +252,47 @@
   },
   "fingerprint": {
     "domain": "POWERCHAIN_IDL_ABI_V1",
-    "combinedAbiSha256": "96e74184c08f283c4de057b96d8e0a31123c44cd6fa249a0ca37c0cb9944f608"
+    "combinedAbiSha256": "20aa02c10a6d991bc366dc82f8af52ef835374e4504bc1dd261f896ab3d2c0bf"
+  },
+  "canonicalPolicyRevision": "transfer-fee-250bps",
+  "canonicalPolicy": {
+    "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+    "transferFeeBasisPoints": 250,
+    "maximumTransferFeeTokens": "1000000",
+    "requiredExtensions": [
+      "TransferFeeConfig",
+      "MetadataPointer",
+      "TokenMetadata"
+    ]
+  },
+  "anchorTokenVerifier": {
+    "instructions": [
+      {
+        "name": "verifyCanonicalMint",
+        "sourceName": "verify_canonical_mint",
+        "args": [],
+        "accounts": [
+          "mint",
+          "verifier"
+        ]
+      }
+    ],
+    "events": [
+      "CanonicalMintVerified"
+    ],
+    "canonicalRules": {
+      "decimals": 9,
+      "fixedSupplyBaseUnits": "18446000000000000000",
+      "transferFeeBps": 250,
+      "publicMintInstructionAllowed": false,
+      "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+      "maximumTransferFeeTokens": "1000000",
+      "maximumTransferFeeBaseUnits": "1000000000000000",
+      "requiredExtensions": [
+        "TransferFeeConfig",
+        "MetadataPointer",
+        "TokenMetadata"
+      ]
+    }
   }
 }

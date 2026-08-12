@@ -1,0 +1,9 @@
+{
+  "ok": false,
+  "version": "1.0.0",
+  "programs": [],
+  "failures": [
+    "pwrc_lock:generated-idl-missing",
+    "pwrc_token:generated-idl-missing"
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "kind": "source-derived-interface-binding",
-  "abiFingerprint": "96e74184c08f283c4de057b96d8e0a31123c44cd6fa249a0ca37c0cb9944f608",
+  "abiFingerprint": "20aa02c10a6d991bc366dc82f8af52ef835374e4504bc1dd261f896ab3d2c0bf",
   "anchor": {
     "program": "pwrc_lock",
     "instructions": [
@@ -43,5 +43,13 @@
     "notGeneratedTransactionCodec": true,
     "notDeploymentEvidence": true,
     "version": "1.0.0"
+  },
+  "anchorTokenVerifier": {
+    "program": "pwrc_token",
+    "instructions": [
+      "verifyCanonicalMint"
+    ],
+    "generatedIdlRequiredForEncoding": true,
+    "generatedIdlPath": "idl/generated/pwrc_token.json"
   }
 }

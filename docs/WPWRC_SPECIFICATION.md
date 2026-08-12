@@ -21,14 +21,16 @@ Version: `1.0.0`
 PWRC on Solana is the only canonical fixed supply. wPWRC starts at zero and
 exists only as a 1:1 Sui bridge representation.
 
-Canonical Token-2022 extensions are intentionally minimal:
+Canonical Token-2022 requires:
 
+- `TransferFeeConfig`
 - `MetadataPointer`
 - `TokenMetadata`
 
-No transfer fee, permanent delegate, mint-close authority, default-frozen
-state, interest-bearing extension, scaled UI amount, pausable extension, or
-non-transferable extension is used.
+The native transfer fee is **250 bps (2.5%)**, capped at **1,000,000 PWRC** per
+Solana transfer. Permanent delegate, mint-close authority, default-frozen state,
+interest-bearing extension, scaled UI amount, pausable, and non-transferable
+extensions remain forbidden.
 
 The configured Sui identity is:
 
@@ -64,3 +66,32 @@ wPWRC_circulating
 + pending_Solana_to_Sui
 + pending_Sui_to_Solana
 ```
+
+
+## Fee-aware bridge boundary
+
+The economic backing remains 1:1 in the common 9-decimal base-unit domain, but
+Solana Token-2022 transfers are fee-bearing.
+
+For Solana → Sui:
+
+```text
+gross PWRC transfer
+- Token-2022 transfer fee
+= net PWRC credited as bridge backing
+= wPWRC minted
+```
+
+For Sui → Solana:
+
+```text
+wPWRC burned
+= gross PWRC released from bridge backing
+
+gross release
+- Token-2022 transfer fee
+= net PWRC received by the Solana destination
+```
+
+This prevents minting wPWRC against fee-withheld PWRC that is not spendable
+bridge backing.

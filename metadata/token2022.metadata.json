@@ -1,13 +1,26 @@
 {
   "name": "PowerChain",
   "symbol": "PWRC",
-  "description": "PowerChain (PWRC) is the native utility token of the PowerChain ecosystem. Canonical asset on Solana Token-2022 with fixed supply and metadata-linked logo.",
+  "description": "PowerChain (PWRC) is the native utility token of the PowerChain ecosystem. Canonical asset on Solana Token-2022 with fixed supply, tokenized renewables and real world asset token (RWA).",
   "image": "https://token.powerchain.energy/assets/tokens/pwrc-logo.png",
   "external_url": "https://powerchain.energy",
+  "uri": "https://powerchain.energy/metadata/metaplex.json",
   "attributes": [
     {
       "trait_type": "Asset Type",
       "value": "Utility Token"
+    },
+    {
+      "trait_type": "Governance",
+      "value": "Enabled"
+    },
+    {
+      "trait_type": "Real World Asset",
+      "value": "RWA"
+    },
+    {
+      "trait_type": "Renewable Energy",
+      "value": "Tokenized Renewables"
     },
     {
       "trait_type": "Chain",
@@ -48,12 +61,20 @@
   ],
   "properties": {
     "category": "fungible-token",
+    "asset_categories": [
+      "utility-token",
+      "governance",
+      "rwa",
+      "tokenized-renewables"
+    ],
     "chain": "solana",
     "standard": "token-2022",
     "symbol": "PWRC",
     "files": [
       {
-        "uri": "assets/pwrc-logo.png",
+        "uri": "assets/pwrc.png",
+        "public_path": "/assets/pwrc.png",
+        "repository_path": "public/assets/pwrc.png",
         "type": "image/png",
         "cdn": false,
         "purpose": "local-repository-asset"
@@ -66,6 +87,7 @@
       }
     ],
     "metadata_uri": "https://token.powerchain.energy/metadata/metadata.json",
+    "onchain_metadata_uri": "https://powerchain.energy/metadata/metaplex.json",
     "metadata_sources": {
       "primary": "https://token.powerchain.energy/metadata/metadata.json",
       "secondary": {
@@ -77,6 +99,8 @@
     "token_domain": "https://token.powerchain.energy",
     "links": {
       "website": "https://powerchain.energy",
+      "bridge": "https://bridge.powerchain.energy",
+      "app": "https://app.powerchain.energy",
       "documentation": "https://docs.powerchain.energy",
       "whitepaper": "https://whitepaper.powerchain.energy",
       "x": "https://x.com/powerchain_ai",
@@ -84,15 +108,87 @@
     },
     "decimals": 9,
     "canonical_asset": true,
-    "wrapped_metadata": "https://token.powerchain.energy/metadata/wpwrc.metadata.json"
+    "wrapped_metadata": "https://token.powerchain.energy/metadata/wpwrc.metadata.json",
+    "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+    "token_program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "transfer_fee": {
+      "extension": "TransferFeeConfig",
+      "basis_points": 250,
+      "percentage": "2.5%",
+      "maximum_fee_tokens": "1000000",
+      "maximum_fee_base_units": "1000000000000000"
+    },
+    "required_extensions": [
+      "TransferFeeConfig",
+      "MetadataPointer",
+      "TokenMetadata"
+    ]
   },
   "official_links": {
     "website": "https://powerchain.energy",
+    "bridge": "https://bridge.powerchain.energy",
+    "app": "https://app.powerchain.energy",
     "documentation": "https://docs.powerchain.energy",
     "whitepaper": "https://whitepaper.powerchain.energy",
     "x": "https://x.com/powerchain_ai",
     "telegram": "https://t.me/powerchain_official"
   },
   "token_standard": "Token-2022",
-  "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+  "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+  "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+  "decimals": 9,
+  "transferFeeBasisPoints": 250,
+  "maximumTransferFeeTokens": "1000000",
+  "extensions": [
+    "TransferFeeConfig",
+    "MetadataPointer",
+    "TokenMetadata"
+  ],
+  "additionalMetadata": [
+    [
+      "specification",
+      "PTK-001"
+    ],
+    [
+      "documentation",
+      "https://docs.powerchain.energy"
+    ],
+    [
+      "asset_class",
+      "fungible"
+    ],
+    [
+      "utility",
+      "true"
+    ],
+    [
+      "governance",
+      "true"
+    ],
+    [
+      "rwa",
+      "true"
+    ],
+    [
+      "tokenized_renewables",
+      "true"
+    ],
+    [
+      "transferable",
+      "true"
+    ],
+    [
+      "tradeable",
+      "true"
+    ],
+    [
+      "x",
+      "https://x.com/powerchain_ai"
+    ],
+    [
+      "telegram",
+      "https://t.me/powerchain_official"
+    ]
+  ],
+  "tokenProgramId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
 }

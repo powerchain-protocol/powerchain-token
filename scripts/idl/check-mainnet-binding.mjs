@@ -23,6 +23,13 @@ if (mainnet.abi?.generatedAnchorIdlRequired !== true) {
 if (mainnet.abi?.suiNormalizedModulesRequired !== true) {
   failures.push("mainnet:sui-normalized-policy");
 }
+if (
+  mainnet.abi?.generatedTokenVerifierIdlRequired !== true
+) {
+  failures.push(
+    "mainnet:token-verifier-idl-policy",
+  );
+}
 
 console.log(JSON.stringify({
   ok: failures.length === 0,

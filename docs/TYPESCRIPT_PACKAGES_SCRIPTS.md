@@ -86,8 +86,8 @@ Those are explicit additional gates.
 
 `pnpm pwrc:fees` now validates that:
 
-- `TransferFeeConfig` is forbidden;
-- protocol transfer fee is disabled;
-- Token-2022 transfer fee is disabled;
+- `TransferFeeConfig` is required and must match the canonical 250 bps / 1,000,000 PWRC cap;
+- protocol native Token-2022 transfer fee is enabled;
+- Token-2022 native Token-2022 transfer fee is enabled;
 - client transfer helpers use `TransferChecked`, not fee transfer instructions;
 - mint verification rejects `TransferFeeConfig`.

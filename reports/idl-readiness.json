@@ -4,7 +4,8 @@
   "buildReady": false,
   "releaseReady": false,
   "buildArtifacts": {
-    "anchorGeneratedIdl": false,
+    "pwrcLockAnchorIdl": false,
+    "pwrcTokenAnchorIdl": false,
     "suiNormalizedModules": false
   },
   "mainnetDeploymentReady": false

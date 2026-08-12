@@ -1,13 +1,11 @@
 {
   "version": "1.0.0",
   "algorithm": "sha256",
-  "canonicalDomain": "https://token.powerchain.energy",
-  "assets": {
-    "metadata/metadata.json": "43981d448ff4f3ff2b8e337e849d639444b93281cd8ba273523fdff8e86bd35d",
-    "metadata/wpwrc.metadata.json": "cee0e3f32f1649e62712ffc64a9d3208ba7e56a3eec1a7321b9a0388ed96d246",
-    "metadata/assets/pwrc-logo.png": "cdf48033160ef24b4288e9deac0d536cd6fb0f800f1f70eced13422934219932",
-    "metadata/assets/wpwrc-logo.png": "85b4569a2d8b49d22d95c5fed9c6278caf93fa892b73bd448a44a6ca4fbfc0a3",
-    "config/metadata-sources.json": "9ad05dd326ac35f58e632349b5180dced5b44a3c633ad4e437c98fb906d103d3"
-  },
-  "officialWebsite": "https://powerchain.energy"
+  "files": {
+    "metadata.json": "9f04cc3f389b4056a38da12a8dc2b696fbfd5f43e79f612c56d366ebf5235bb1",
+    "metaplex.json": "9f04cc3f389b4056a38da12a8dc2b696fbfd5f43e79f612c56d366ebf5235bb1",
+    "metaplex.metadata.json": "9f04cc3f389b4056a38da12a8dc2b696fbfd5f43e79f612c56d366ebf5235bb1",
+    "token2022.metadata.json": "9f04cc3f389b4056a38da12a8dc2b696fbfd5f43e79f612c56d366ebf5235bb1",
+    "wpwrc.metadata.json": "65db55abec0a001cccdae7c504a0869523aee4fabebe4cb3028fd7218872df78"
+  }
 }

@@ -1,5 +1,6 @@
 export * from "./constants.js";
 export * from "./amounts.js";
+export * from "./fees.js";
 export * from "./types/index.js";
 export * from "./validation/solana.js";
 export * from "./validation/sui.js";

@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "programs/pwrc-lock",
+  "programs/token",
 ]
 exclude = [
   "programs/pwrc-fees",

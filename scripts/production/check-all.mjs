@@ -2,8 +2,11 @@ import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 
 const checks = [
+  "scripts/token/check-program.mjs",
+  "scripts/token/check-manifest.mjs",
+  "scripts/idl/check-token-program.mjs",
   "scripts/security/check-wpwrc-spec.mjs",
-  "scripts/security/check-no-transfer-fee.mjs",
+  "scripts/security/check-transfer-fee.mjs",
   "scripts/production/check-stale-model.mjs",
   "scripts/production/check-sui-capability.mjs",
   "scripts/production/check-solana-program.mjs",
@@ -21,6 +24,7 @@ const checks = [
   "scripts/burn/check-race-protection.mjs",
   "scripts/release/check-bridge-release.mjs",
   "scripts/metadata/validate-token-metadata.mjs",
+  "scripts/metadata/check-assets.mjs",
   "scripts/metadata/check-official-links.mjs",
   "scripts/metadata/check-manifest.mjs",
   "scripts/sui/check-zero-genesis.mjs",

@@ -2,6 +2,10 @@ import {
   PWRC_MAX_BASE_UNITS,
 } from "../constants.js";
 import {
+  calculateNetAfterTransferFeeBaseUnits,
+  calculateTransferFeeBaseUnits,
+} from "../fees.js";
+import {
   assertSolanaAddress,
 } from "../validation/solana.js";
 import {
@@ -31,17 +35,35 @@ export function createSolanaToSuiBridgeIntent(
     );
   }
 
+  const transferFeeBaseUnits =
+    calculateTransferFeeBaseUnits(
+      input.canonicalAmountBaseUnits,
+    );
+
+  const wrappedAmountBaseUnits =
+    calculateNetAfterTransferFeeBaseUnits(
+      input.canonicalAmountBaseUnits,
+    );
+
+  if (wrappedAmountBaseUnits <= 0n) {
+    throw new Error(
+      "PWRC_BRIDGE_NET_AMOUNT_ZERO",
+    );
+  }
+
   return {
     direction: "solana-to-sui" as const,
-    canonicalAmountBaseUnits:
+    canonicalGrossAmountBaseUnits:
       input.canonicalAmountBaseUnits,
-    wrappedAmountBaseUnits:
-      input.canonicalAmountBaseUnits,
+    transferFeeBaseUnits,
+    canonicalLockedBaseUnits:
+      wrappedAmountBaseUnits,
+    wrappedAmountBaseUnits,
     recipientSuiAddress:
       assertSuiAddress(
         input.recipientSuiAddress,
       ),
-    ratio: "1:1" as const,
+    backingRatio: "1:1-net-locked" as const,
   };
 }
 
@@ -58,16 +80,28 @@ export function createSuiToSolanaBridgeIntent(
     );
   }
 
+  const transferFeeBaseUnits =
+    calculateTransferFeeBaseUnits(
+      input.wrappedAmountBaseUnits,
+    );
+
+  const expectedRecipientNetBaseUnits =
+    calculateNetAfterTransferFeeBaseUnits(
+      input.wrappedAmountBaseUnits,
+    );
+
   return {
     direction: "sui-to-solana" as const,
     wrappedAmountBaseUnits:
       input.wrappedAmountBaseUnits,
-    canonicalAmountBaseUnits:
+    canonicalGrossReleaseBaseUnits:
       input.wrappedAmountBaseUnits,
+    transferFeeBaseUnits,
+    expectedRecipientNetBaseUnits,
     recipientSolanaAddress:
       assertSolanaAddress(
         input.recipientSolanaAddress,
       ),
-    ratio: "1:1" as const,
+    backingRatio: "1:1-gross-release" as const,
   };
 }

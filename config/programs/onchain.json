@@ -5,10 +5,11 @@
       "localnetProgramId": "9Ty7dY7pLmMAdH9nJHD4FSZxkRCAGbce12fs7AJV4pW7",
       "devnetProgramId": null,
       "mainnetProgramId": null,
-      "status": "deprecated-disabled; canonical PWRC has no transfer fee",
-      "nativeToken2022TransferFeeBpsExpected": 0,
+      "status": "deprecated-disabled; canonical fee uses native Token-2022 TransferFeeConfig",
+      "nativeToken2022TransferFeeBpsExpected": 250,
       "protocolRouterFeeBps": 0,
-      "doubleFeeProtection": true
+      "doubleFeeProtection": true,
+      "nativeToken2022MaximumFeeTokens": "1000000"
     },
     "pwrcLock": {
       "localnetProgramId": "7JAV3PsxkHh5oKAFDMKqVpKaV2P2P5Vj3Qv15hH8wPwr",
@@ -24,6 +25,16 @@
       "canonicalDecimals": 9,
       "wrappedDecimals": 9,
       "canonicalBaseUnitsPerWrappedBaseUnit": "1"
+    },
+    "pwrcToken": {
+      "localnetProgramId": "HRrDxwZzuFreRmkCLY9oFXNGAy2gjd3diHyyTadxd8s6",
+      "devnetProgramId": null,
+      "mainnetProgramId": null,
+      "status": "verification-only; local development identity until separately built/deployed/verified",
+      "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+      "canonicalMintVerificationStatus": "provided-not-onchain-verified",
+      "transferFeeBasisPoints": 250,
+      "maximumTransferFeeTokens": "1000000"
     }
   },
   "sui": {

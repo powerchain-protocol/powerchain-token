@@ -9,9 +9,37 @@ import {
   getTransferFeeConfig,
 } from "@solana/spl-token";
 import {
+  PWRC_CANONICAL_MINT_ADDRESS,
   PWRC_DECIMALS,
   PWRC_MAX_BASE_UNITS,
+  PWRC_MAX_TRANSFER_FEE_BASE_UNITS,
+  PWRC_TRANSFER_FEE_BPS,
 } from "../constants.js";
+
+function assertFeeSchedule(
+  schedule: {
+    transferFeeBasisPoints: number;
+    maximumFee: bigint;
+  },
+): void {
+  if (
+    schedule.transferFeeBasisPoints !==
+    PWRC_TRANSFER_FEE_BPS
+  ) {
+    throw new Error(
+      "PWRC_TRANSFER_FEE_BPS_MISMATCH",
+    );
+  }
+
+  if (
+    schedule.maximumFee !==
+    PWRC_MAX_TRANSFER_FEE_BASE_UNITS
+  ) {
+    throw new Error(
+      "PWRC_TRANSFER_FEE_MAXIMUM_MISMATCH",
+    );
+  }
+}
 
 export async function assertPwrcMint(
   input: {
@@ -20,8 +48,20 @@ export async function assertPwrcMint(
     commitment?: Commitment;
     requireFixedGenesisSupply?: boolean;
     requireMintAuthorityRevoked?: boolean;
+    requireCanonicalMintAddress?: boolean;
   },
 ): Promise<void> {
+  if (
+    (input.requireCanonicalMintAddress ??
+      true) &&
+    input.mint.toBase58() !==
+      PWRC_CANONICAL_MINT_ADDRESS
+  ) {
+    throw new Error(
+      "PWRC_CANONICAL_MINT_ADDRESS_MISMATCH",
+    );
+  }
+
   const mint =
     await getMint(
       input.connection,
@@ -45,9 +85,7 @@ export async function assertPwrcMint(
     );
   }
 
-  if (
-    mint.supply > PWRC_MAX_BASE_UNITS
-  ) {
+  if (mint.supply > PWRC_MAX_BASE_UNITS) {
     throw new Error(
       "PWRC_MINT_SUPPLY_EXCEEDS_MAX",
     );
@@ -69,9 +107,19 @@ export async function assertPwrcMint(
     );
   }
 
-  if (getTransferFeeConfig(mint)) {
+  const feeConfig =
+    getTransferFeeConfig(mint);
+
+  if (!feeConfig) {
     throw new Error(
-      "PWRC_TRANSFER_FEE_CONFIG_MUST_BE_ABSENT",
+      "PWRC_TRANSFER_FEE_CONFIG_REQUIRED",
     );
   }
+
+  assertFeeSchedule(
+    feeConfig.olderTransferFee,
+  );
+  assertFeeSchedule(
+    feeConfig.newerTransferFee,
+  );
 }

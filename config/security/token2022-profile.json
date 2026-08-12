@@ -3,12 +3,12 @@
   "asset": "PWRC",
   "program": "Token-2022",
   "requiredExtensions": [
+    "TransferFeeConfig",
     "MetadataPointer",
     "TokenMetadata"
   ],
   "optionalExtensions": [],
   "forbiddenExtensions": [
-    "TransferFeeConfig",
     "PermanentDelegate",
     "MintCloseAuthority",
     "DefaultAccountState",
@@ -24,8 +24,13 @@
     "defaultEnabled": false
   },
   "transferFeeConfig": {
-    "required": false,
-    "enabled": false,
-    "basisPoints": 0
+    "required": true,
+    "enabled": true,
+    "basisPoints": 250,
+    "percentage": "2.5%",
+    "maximumFeeTokens": "1000000",
+    "maximumFeeBaseUnits": "1000000000000000",
+    "olderAndNewerSchedulesMustMatch": true,
+    "authorityEvidenceRequired": true
   }
 }

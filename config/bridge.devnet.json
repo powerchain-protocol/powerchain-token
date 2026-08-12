@@ -4,7 +4,10 @@
   "canonical": {
     "chain": "solana",
     "cluster": "devnet",
-    "mint": null
+    "mint": null,
+    "transferFeeBasisPoints": 250,
+    "maximumTransferFeeTokens": "1000000",
+    "maximumTransferFeeBaseUnits": "1000000000000000"
   },
   "wrapped": {
     "chain": "sui",
@@ -20,6 +23,7 @@
     "canonicalDecimals": 9,
     "wrappedDecimals": 9,
     "canonicalBaseUnitsPerWrappedBaseUnit": "1",
-    "exactConversionRequired": true
+    "exactConversionRequired": true,
+    "solanaTransferFeeAware": true
   }
 }

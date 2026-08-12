@@ -9,34 +9,36 @@ import {
   validateCanonicalPwrcToken2022Profile,
 } from "../src/security/token2022-profile.js";
 
-test("PWRC and wPWRC use identical 9-decimal base units", () => {
-  assert.equal(PWRC_BASE_UNITS_PER_WPWRC_BASE_UNIT, 1n);
+test("PWRC and wPWRC share the same 9-decimal base-unit scale", () => {
   assert.equal(
-    canonicalToWrappedExact(1_000_000_000n),
+    PWRC_BASE_UNITS_PER_WPWRC_BASE_UNIT,
+    1n,
+  );
+  assert.equal(
+    canonicalToWrappedExact(
+      1_000_000_000n,
+    ),
     1_000_000_000n,
   );
   assert.equal(
-    wrappedToCanonical(1_000_000_000n),
+    wrappedToCanonical(
+      1_000_000_000n,
+    ),
     1_000_000_000n,
   );
 });
 
-test("minimal Token-2022 profile excludes transfer fees", () => {
+test("canonical Token-2022 profile requires transfer fee + metadata", () => {
   assert.doesNotThrow(() =>
     validateCanonicalPwrcToken2022Profile({
-      enabledExtensions: ["MetadataPointer", "TokenMetadata"],
+      enabledExtensions: [
+        "TransferFeeConfig",
+        "MetadataPointer",
+        "TokenMetadata",
+      ],
+      transferFeeBasisPoints: 250,
+      maximumTransferFeeBaseUnits:
+        1_000_000_000_000_000n,
     }),
-  );
-
-  assert.throws(
-    () =>
-      validateCanonicalPwrcToken2022Profile({
-        enabledExtensions: [
-          "MetadataPointer",
-          "TokenMetadata",
-          "TransferFeeConfig",
-        ],
-      }),
-    /PWRC_FORBIDDEN_EXTENSION_ENABLED/,
   );
 });

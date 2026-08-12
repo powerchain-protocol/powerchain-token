@@ -13,6 +13,9 @@ const currentAnchor = JSON.parse(
 const currentSui = JSON.parse(
   fs.readFileSync("idl/sui/wpwrc.interface.json", "utf8"),
 );
+const currentToken = JSON.parse(
+  fs.readFileSync("idl/anchor/pwrc_token.expected.json", "utf8"),
+);
 
 const names = (items) =>
   new Set(items.map((item) =>
@@ -66,6 +69,16 @@ compareSet(
   baseline.sui.events,
   currentSui.modules.bridge.events ?? [],
 );
+compareSet(
+  "anchorToken.instructions",
+  baseline.anchorTokenVerifier.instructions,
+  currentToken.instructions,
+);
+compareSet(
+  "anchorToken.events",
+  baseline.anchorTokenVerifier.events,
+  currentToken.events,
+);
 
 // Compare existing Anchor instruction argument/account order exactly.
 const currentByName = new Map(
@@ -117,6 +130,27 @@ if (
   baseline.sui.asset.ratio
 ) {
   breaking.push("sui.asset.ratio");
+}
+
+
+
+if (
+  currentToken.canonicalRules.canonicalMint !==
+  baseline.anchorTokenVerifier.canonicalRules.canonicalMint
+) {
+  breaking.push("anchorToken.canonicalMint");
+}
+if (
+  currentToken.canonicalRules.transferFeeBps !==
+  baseline.anchorTokenVerifier.canonicalRules.transferFeeBps
+) {
+  breaking.push("anchorToken.transferFeeBps");
+}
+if (
+  currentToken.canonicalRules.maximumTransferFeeTokens !==
+  baseline.anchorTokenVerifier.canonicalRules.maximumTransferFeeTokens
+) {
+  breaking.push("anchorToken.maximumTransferFeeTokens");
 }
 
 if (

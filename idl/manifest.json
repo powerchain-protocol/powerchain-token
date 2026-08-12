@@ -25,7 +25,8 @@
     "baselineHashMustMatch": true,
     "releaseRequiresVerifiedGeneratedAnchorIdl": true,
     "releaseRequiresVerifiedSuiNormalizedModules": true,
-    "mainnetRequiresReleaseIdlReady": true
+    "mainnetRequiresReleaseIdlReady": true,
+    "releaseRequiresGeneratedTokenVerifierIdl": true
   },
   "sourceDriftCheck": "scripts/idl/source-drift.mjs",
   "abiFingerprint": "idl/abi.fingerprint.json",
@@ -49,5 +50,11 @@
   "mainnetBindingCheck": "scripts/idl/check-mainnet-binding.mjs",
   "baselineChecksum": "idl/baseline/1.0.0.sha256",
   "runtimeGuards": "src/idl/runtime.ts",
-  "readinessReport": "reports/idl-readiness.json"
+  "readinessReport": "reports/idl-readiness.json",
+  "anchorTokenVerifier": {
+    "expected": "idl/anchor/pwrc_token.expected.json",
+    "generated": "idl/generated/pwrc_token.json",
+    "source": "programs/token/src/lib.rs",
+    "schema": "idl/schemas/pwrc_token.anchor.schema.json"
+  }
 }

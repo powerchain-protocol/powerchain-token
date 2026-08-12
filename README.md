@@ -6,13 +6,14 @@ Production-oriented source, client, bridge, validation, and deployment-evidence 
 
 ```text
 PWRC:   Solana mainnet-beta / Token-2022 / 9 decimals
+Mint:   PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
 Supply: 18,446,000,000 PWRC fixed genesis/max
-Fee:    none
+Fee:    250 bps (2.5%), max 1,000,000 PWRC
 wPWRC:  Sui / 9 decimals / zero genesis / bridge-only
 Ratio:  1 PWRC = 1 wPWRC = identical base-unit amount
 ```
 
-Canonical Token-2022 uses `MetadataPointer` and `TokenMetadata` only. Mint authority is revoked after verified genesis and freeze authority is null.
+Canonical Token-2022 requires `TransferFeeConfig`, `MetadataPointer`, and `TokenMetadata`. Mint authority is revoked after verified genesis and freeze authority is null.
 
 ## Sui capability model
 
@@ -32,7 +33,8 @@ The `powerchain` address alias remains configuration identity only, not a packag
 ## Workspace
 
 ```text
-programs/pwrc-lock/                 active Anchor program
+programs/pwrc-lock/                 active bridge Anchor program
+programs/token/                     canonical PWRC verifier
 contracts/wpwrc/                    active Sui Move package
 packages/native-token-client/       chain client helpers
 packages/bridge-integration/        production integration/readiness helpers
@@ -99,3 +101,49 @@ pnpm idl:sync
 
 The expected Anchor interface is checked in; generated Anchor IDL is only synced
 after a real toolchain build. See `idl/README.md` and `docs/IDL.md`.
+
+## Canonical token verifier program
+
+`programs/token/` now contains the canonical PWRC Token-2022 verification
+program and invariant helpers.
+
+```bash
+pnpm token:check
+pnpm token:manifest:check
+pnpm idl:token:check
+```
+
+The verifier exposes no mint instruction and does not create additional supply. It validates the canonical 250 bps Token-2022 fee profile.
+See `docs/TOKEN_PROGRAM.md`.
+
+
+## Canonical metadata
+
+```text
+Mint:       PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
+Metadata:   https://powerchain.energy/metadata/metaplex.json
+Program:    Token-2022
+Fee:        250 bps / 2.5%
+Fee cap:    1,000,000 PWRC
+```
+
+`metadata/metaplex.json` is the canonical metadata descriptor supplied for
+PWRC. Mainnet mint state is still verified independently against on-chain
+Token-2022 state before release readiness can pass.
+
+## Token images and metadata
+
+```text
+public/assets/pwrc.png
+public/assets/wpwrc.png
+```
+
+Canonical metadata:
+
+```text
+https://powerchain.energy/metadata/metaplex.json
+https://token.powerchain.energy/metadata/metadata.json
+```
+
+PowerChain links: `powerchain.energy`, `bridge.powerchain.energy`, and
+`app.powerchain.energy`. See `docs/TOKEN_ASSETS.md`.

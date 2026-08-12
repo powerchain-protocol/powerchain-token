@@ -9,6 +9,9 @@ const anchor = JSON.parse(
 const sui = JSON.parse(
   fs.readFileSync("idl/sui/wpwrc.interface.json", "utf8"),
 );
+const token = JSON.parse(
+  fs.readFileSync("idl/anchor/pwrc_token.expected.json", "utf8"),
+);
 
 const breaking = [];
 const additive = [];
@@ -56,6 +59,16 @@ compareNames(
   baseline.sui.events,
   sui.modules.bridge.events ?? [],
 );
+compareNames(
+  "anchorToken.instructions",
+  baseline.anchorTokenVerifier.instructions,
+  token.instructions,
+);
+compareNames(
+  "anchorToken.events",
+  baseline.anchorTokenVerifier.events,
+  token.events,
+);
 
 const currentByName = byName(anchor.instructions);
 for (const previous of baseline.anchor.instructions) {
@@ -84,6 +97,27 @@ if (sui.asset.baseUnitFactor !== baseline.sui.asset.baseUnitFactor) {
 }
 if (sui.asset.ratio !== baseline.sui.asset.ratio) {
   breaking.push("sui.asset.ratio");
+}
+
+
+
+if (
+  token.canonicalRules.canonicalMint !==
+  baseline.anchorTokenVerifier.canonicalRules.canonicalMint
+) {
+  breaking.push("anchorToken.canonicalMint");
+}
+if (
+  token.canonicalRules.transferFeeBps !==
+  baseline.anchorTokenVerifier.canonicalRules.transferFeeBps
+) {
+  breaking.push("anchorToken.transferFeeBps");
+}
+if (
+  token.canonicalRules.maximumTransferFeeTokens !==
+  baseline.anchorTokenVerifier.canonicalRules.maximumTransferFeeTokens
+) {
+  breaking.push("anchorToken.maximumTransferFeeTokens");
 }
 
 const classification =

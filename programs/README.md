@@ -1,34 +1,25 @@
 # PowerChain Solana Programs
 
-Version: `1.0.0`
+Version `1.0.0`.
 
-## Active program
+## Active programs
 
-`programs/pwrc-lock` is the active PowerChain application program in the Cargo
-and Anchor workspace.
+`programs/pwrc-lock` implements the PWRC ↔ wPWRC bridge custody boundary.
 
-It implements the canonical PWRC lock/release boundary used by the Sui bridge.
+`programs/token` is a verification-only Anchor program for the canonical PWRC
+Token-2022 mint. It exposes no public mint path.
 
-Canonical PWRC itself remains a Token-2022 mint and does not require a custom
-program for ordinary transfers.
+Canonical transfers use Token-2022 `TransferFeeConfig` directly at **250 bps
+(2.5%)**, capped at **1,000,000 PWRC** per transfer.
 
 ## Deprecated fee router
 
-`programs/pwrc-fees` is retained only as historical/compatibility source.
+`programs/pwrc-fees` remains deprecated and excluded. It is unnecessary because
+the canonical fee is implemented by Token-2022 itself; there is no additional
+custom protocol-router transfer fee.
 
-It is:
+## Deployment identities
 
-- excluded from the Cargo workspace;
-- not listed in `Anchor.toml`;
-- not a Mainnet program dependency;
-- not part of canonical PWRC transfer semantics.
-
-Canonical PWRC has **no transfer fee**.
-
-## Deployment IDs
-
-The ID under `[programs.localnet]` in `Anchor.toml` is a local-development
-identity only.
-
-Devnet/Mainnet IDs must be written only after actual build, deployment,
-executable-account verification, and release-evidence generation.
+Localnet IDs in `Anchor.toml` are development identities only. Devnet/Mainnet
+program IDs are populated only after actual build, deployment, executable
+account verification, and release evidence.

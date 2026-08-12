@@ -140,3 +140,13 @@ reports three separate states:
 
 Mainnet readiness additionally requires `idl/release/1.0.0.json` to report
 `release-idl-ready`.
+
+
+The token verifier has a separate generated-IDL schema:
+
+```text
+idl/schemas/pwrc_token.anchor.schema.json
+```
+
+Discriminator validation covers both `pwrc_lock` and `pwrc_token` once real
+Anchor-generated IDLs are present.

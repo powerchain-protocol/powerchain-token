@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "kind": "anchor-expected-interface",
+  "program": "pwrc_token",
+  "source": "programs/token/src/lib.rs",
+  "generatedIdlPath": "target/idl/pwrc_token.json",
+  "canonicalRules": {
+    "decimals": 9,
+    "fixedSupplyBaseUnits": "18446000000000000000",
+    "transferFeeBps": 250,
+    "publicMintInstructionAllowed": false,
+    "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+    "maximumTransferFeeTokens": "1000000",
+    "maximumTransferFeeBaseUnits": "1000000000000000",
+    "requiredExtensions": [
+      "TransferFeeConfig",
+      "MetadataPointer",
+      "TokenMetadata"
+    ]
+  },
+  "instructions": [
+    {
+      "name": "verifyCanonicalMint",
+      "sourceName": "verify_canonical_mint",
+      "args": [],
+      "accounts": [
+        "mint",
+        "verifier"
+      ]
+    }
+  ],
+  "events": [
+    "CanonicalMintVerified"
+  ]
+}

@@ -4,10 +4,14 @@ import crypto from "node:crypto";
 const files = [
   "idl/manifest.json",
   "idl/anchor/pwrc_lock.expected.json",
+  "idl/anchor/pwrc_token.expected.json",
   "idl/schemas/pwrc_lock.anchor.schema.json",
+  "idl/schemas/pwrc_token.anchor.schema.json",
   "idl/sui/wpwrc.interface.json",
   "idl/abi.fingerprint.json",
   "programs/pwrc-lock/src/lib.rs",
+  "programs/token/src/lib.rs",
+  "programs/token/src/invariants.rs",
   "contracts/wpwrc/sources/wpwrc.move",
   "contracts/wpwrc/sources/bridge.move",
 ].filter(fs.existsSync);

@@ -41,13 +41,13 @@ const bridge = fs.readFileSync(
 if (!constants.includes("WPWRC_DECIMALS = 9")) {
   failures.push("client:wpwrc-decimals");
 }
-if (!constants.includes("PWRC_TRANSFER_FEE_BPS = 0")) {
-  failures.push("client:no-fee");
+if (!constants.includes("PWRC_TRANSFER_FEE_BPS = 250")) {
+  failures.push("client:fee-bps");
 }
-if (!mint.includes("PWRC_TRANSFER_FEE_CONFIG_MUST_BE_ABSENT")) {
-  failures.push("client:mint-no-fee-validation");
+if (!mint.includes("PWRC_TRANSFER_FEE_CONFIG_REQUIRED")) {
+  failures.push("client:mint-fee-validation");
 }
-if (!transfer.includes("createTransferCheckedInstruction")) {
+if (!transfer.includes("createTransferCheckedWithFeeInstruction")) {
   failures.push("client:checked-transfer");
 }
 if (
@@ -56,8 +56,14 @@ if (
 ) {
   failures.push("client:stale-decimal-conversion");
 }
-if (!bridge.includes('ratio: "1:1"')) {
-  failures.push("client:bridge-ratio");
+if (
+  !bridge.includes(
+    'backingRatio: "1:1-net-locked"',
+  )
+) {
+  failures.push(
+    "client:fee-aware-bridge-ratio",
+  );
 }
 
 console.log(JSON.stringify({
@@ -66,8 +72,8 @@ console.log(JSON.stringify({
   client: {
     canonicalDecimals: 9,
     wrappedDecimals: 9,
-    transferFeeBps: 0,
-    bridgeRatio: "1:1",
+    transferFeeBps: 250,
+    bridgeRatio: "1:1-net-locked",
   },
   failures,
 }, null, 2));

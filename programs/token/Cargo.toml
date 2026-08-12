@@ -1,0 +1,26 @@
+[package]
+name = "pwrc-token"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "PowerChain canonical PWRC Token-2022 initialization and invariant verification program"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "pwrc_token"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = [
+  "anchor-lang/idl-build",
+  "anchor-spl/idl-build",
+]
+
+[dependencies]
+anchor-lang.workspace = true
+anchor-spl.workspace = true

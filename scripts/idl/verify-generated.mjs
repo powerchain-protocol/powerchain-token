@@ -1,72 +1,235 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
 
-const generated = "idl/generated/pwrc_lock.json";
-if (!fs.existsSync(generated)) {
-  console.error(
-    "PWRC_GENERATED_IDL_MISSING: run `pnpm idl:build && pnpm idl:sync`",
-  );
-  process.exit(2);
-}
-
 const failures = [];
-const expected = JSON.parse(
-  fs.readFileSync("idl/anchor/pwrc_lock.expected.json", "utf8"),
-);
-const idl = JSON.parse(fs.readFileSync(generated, "utf8"));
+const results = [];
 
-const sorted = (values) => [...values].sort();
-const sameSet = (a, b) =>
-  JSON.stringify(sorted(a)) === JSON.stringify(sorted(b));
-
-if (idl.metadata?.name !== "pwrc_lock") failures.push("metadata:name");
-if (idl.metadata?.version !== "1.0.0") failures.push("metadata:version");
-
-const generatedInstructions = (idl.instructions ?? []).map((i) => i.name);
-const expectedInstructions = expected.instructions.map((i) => i.name);
-if (!sameSet(generatedInstructions, expectedInstructions)) {
-  failures.push("instructions");
+function sorted(values) {
+  return [...values].sort();
 }
 
-const byName = new Map((idl.instructions ?? []).map((i) => [i.name, i]));
-for (const exp of expected.instructions) {
-  const got = byName.get(exp.name);
-  if (!got) continue;
-
-  const gotArgs = (got.args ?? []).map((a) => a.name);
-  const expArgs = exp.args.map((a) => a.name);
-  if (JSON.stringify(gotArgs) !== JSON.stringify(expArgs)) {
-    failures.push(`args:${exp.name}`);
-  }
-
-  const gotAccounts = (got.accounts ?? []).map((a) => a.name);
-  if (JSON.stringify(gotAccounts) !== JSON.stringify(exp.accounts ?? [])) {
-    failures.push(`accounts:${exp.name}`);
-  }
+function sameSet(a, b) {
+  return JSON.stringify(
+    sorted(a),
+  ) === JSON.stringify(
+    sorted(b),
+  );
 }
 
-const gotAccountTypes = (idl.accounts ?? []).map((a) => a.name);
-if (!sameSet(gotAccountTypes, expected.accounts)) failures.push("account-types");
+for (const program of [
+  {
+    name: "pwrc_lock",
+    expected:
+      "idl/anchor/pwrc_lock.expected.json",
+  },
+  {
+    name: "pwrc_token",
+    expected:
+      "idl/anchor/pwrc_token.expected.json",
+  },
+]) {
+  const generated =
+    `idl/generated/${program.name}.json`;
 
-const gotEvents = (idl.events ?? []).map((e) => e.name);
-if (!sameSet(gotEvents, expected.events)) failures.push("events");
+  if (!fs.existsSync(generated)) {
+    failures.push(
+      `${program.name}:generated-idl-missing`,
+    );
+    continue;
+  }
 
-const sha256 = crypto
-  .createHash("sha256")
-  .update(fs.readFileSync(generated))
-  .digest("hex");
+  const expected = JSON.parse(
+    fs.readFileSync(
+      program.expected,
+      "utf8",
+    ),
+  );
+
+  const idl = JSON.parse(
+    fs.readFileSync(
+      generated,
+      "utf8",
+    ),
+  );
+
+  const localFailures = [];
+
+  if (
+    idl.metadata?.name !==
+    program.name
+  ) {
+    localFailures.push(
+      "metadata:name",
+    );
+  }
+
+  if (
+    idl.metadata?.version !==
+    "1.0.0"
+  ) {
+    localFailures.push(
+      "metadata:version",
+    );
+  }
+
+  const generatedInstructions =
+    (idl.instructions ?? []).map(
+      (item) => item.name,
+    );
+
+  const expectedInstructions =
+    expected.instructions.map(
+      (item) => item.name,
+    );
+
+  if (
+    !sameSet(
+      generatedInstructions,
+      expectedInstructions,
+    )
+  ) {
+    localFailures.push(
+      "instructions",
+    );
+  }
+
+  const byName = new Map(
+    (idl.instructions ?? []).map(
+      (item) => [
+        item.name,
+        item,
+      ],
+    ),
+  );
+
+  for (
+    const exp of
+    expected.instructions
+  ) {
+    const got =
+      byName.get(exp.name);
+
+    if (!got) {
+      continue;
+    }
+
+    const gotArgs =
+      (got.args ?? []).map(
+        (arg) => arg.name,
+      );
+
+    const expectedArgs =
+      exp.args.map(
+        (arg) => arg.name,
+      );
+
+    if (
+      JSON.stringify(
+        gotArgs,
+      ) !==
+      JSON.stringify(
+        expectedArgs,
+      )
+    ) {
+      localFailures.push(
+        `args:${exp.name}`,
+      );
+    }
+
+    const gotAccounts =
+      (got.accounts ?? []).map(
+        (account) =>
+          account.name,
+      );
+
+    if (
+      JSON.stringify(
+        gotAccounts,
+      ) !==
+      JSON.stringify(
+        exp.accounts ?? [],
+      )
+    ) {
+      localFailures.push(
+        `accounts:${exp.name}`,
+      );
+    }
+  }
+
+  const gotEvents =
+    (idl.events ?? []).map(
+      (event) => event.name,
+    );
+
+  if (
+    !sameSet(
+      gotEvents,
+      expected.events,
+    )
+  ) {
+    localFailures.push(
+      "events",
+    );
+  }
+
+  const sha256 = crypto
+    .createHash("sha256")
+    .update(
+      fs.readFileSync(
+        generated,
+      ),
+    )
+    .digest("hex");
+
+  results.push({
+    program: program.name,
+    generated,
+    sha256,
+    failures:
+      localFailures,
+  });
+
+  for (
+    const failure of
+    localFailures
+  ) {
+    failures.push(
+      `${program.name}:${failure}`,
+    );
+  }
+}
 
 const result = {
   ok: failures.length === 0,
   version: "1.0.0",
-  generated,
-  sha256,
+  programs: results,
   failures,
 };
-fs.mkdirSync("reports", { recursive: true });
+
+fs.mkdirSync(
+  "reports",
+  {
+    recursive: true,
+  },
+);
+
 fs.writeFileSync(
   "reports/idl-generated-verification.json",
-  `${JSON.stringify(result, null, 2)}\n`,
+  `${JSON.stringify(
+    result,
+    null,
+    2,
+  )}\n`,
 );
-console.log(JSON.stringify(result, null, 2));
-if (failures.length) process.exit(1);
+
+console.log(
+  JSON.stringify(
+    result,
+    null,
+    2,
+  ),
+);
+
+if (failures.length) {
+  process.exit(2);
+}

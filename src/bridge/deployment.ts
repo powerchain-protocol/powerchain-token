@@ -3,9 +3,12 @@ export interface WpwrcDeployment {
 
   solana: {
     network: "mainnet-beta";
-    pwrcMint: string;
+    pwrcMint:
+      "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc";
     decimals: 9;
     fixedSupply: "18446000000";
+    transferFeeBasisPoints: 250;
+    maximumTransferFeeTokens: "1000000";
   };
 
   sui: {
@@ -20,37 +23,97 @@ export interface WpwrcDeployment {
   bridge: {
     genesisWrappedSupply: "0";
     ratio: "1:1";
+    solanaToSuiAmount:
+      "net-after-transfer-fee";
   };
 }
+
+const SUI_ID =
+  /^0x[a-f0-9]{64}$/i;
 
 export function assertWpwrcDeployment(
   deployment: WpwrcDeployment,
 ): void {
   if (deployment.version !== "1.0.0") {
-    throw new Error("WPWRC_DEPLOYMENT_VERSION_INVALID");
-  }
-  if (deployment.solana.network !== "mainnet-beta") {
-    throw new Error("WPWRC_CANONICAL_NETWORK_INVALID");
-  }
-  if (deployment.solana.decimals !== 9) {
-    throw new Error("WPWRC_CANONICAL_DECIMALS_INVALID");
-  }
-  if (deployment.solana.fixedSupply !== "18446000000") {
-    throw new Error("WPWRC_CANONICAL_SUPPLY_INVALID");
-  }
-  if (deployment.bridge.genesisWrappedSupply !== "0") {
-    throw new Error("WPWRC_GENESIS_WRAPPED_SUPPLY_INVALID");
-  }
-  if (deployment.bridge.ratio !== "1:1") {
-    throw new Error("WPWRC_BRIDGE_RATIO_INVALID");
+    throw new Error(
+      "WPWRC_DEPLOYMENT_VERSION_INVALID",
+    );
   }
 
   if (
-    deployment.sui.packageId ===
-    "0x4a4a81c5e4a520c1b4d7b5b572a0567f48c6c7e85257f0a13e65639cfba49fb1"
+    deployment.solana.network !==
+    "mainnet-beta"
   ) {
     throw new Error(
-      "WPWRC_ALIAS_ADDRESS_MUST_NOT_BE_ASSUMED_PACKAGE_ID",
+      "WPWRC_CANONICAL_NETWORK_INVALID",
+    );
+  }
+
+  if (
+    deployment.solana.pwrcMint !==
+    "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc"
+  ) {
+    throw new Error(
+      "WPWRC_CANONICAL_MINT_INVALID",
+    );
+  }
+
+  if (
+    deployment.solana.decimals !== 9 ||
+    deployment.solana.fixedSupply !==
+      "18446000000"
+  ) {
+    throw new Error(
+      "WPWRC_CANONICAL_POLICY_INVALID",
+    );
+  }
+
+  if (
+    deployment.solana
+      .transferFeeBasisPoints !== 250 ||
+    deployment.solana
+      .maximumTransferFeeTokens !==
+        "1000000"
+  ) {
+    throw new Error(
+      "WPWRC_TRANSFER_FEE_POLICY_INVALID",
+    );
+  }
+
+  if (
+    deployment.bridge
+      .genesisWrappedSupply !== "0" ||
+    deployment.bridge.ratio !== "1:1" ||
+    deployment.bridge
+      .solanaToSuiAmount !==
+        "net-after-transfer-fee"
+  ) {
+    throw new Error(
+      "WPWRC_BRIDGE_POLICY_INVALID",
+    );
+  }
+
+  for (const value of [
+    deployment.sui.packageId,
+    deployment.sui.metadataObjectId,
+    deployment.sui
+      .treasuryCapOrBridgeCapability,
+    deployment.sui.bridgeStateObjectId,
+  ]) {
+    if (!SUI_ID.test(value)) {
+      throw new Error(
+        "WPWRC_SUI_DEPLOYMENT_ID_INVALID",
+      );
+    }
+  }
+
+  if (
+    !deployment.sui.coinType.startsWith(
+      `${deployment.sui.packageId}::`,
+    )
+  ) {
+    throw new Error(
+      "WPWRC_COIN_TYPE_PACKAGE_MISMATCH",
     );
   }
 }

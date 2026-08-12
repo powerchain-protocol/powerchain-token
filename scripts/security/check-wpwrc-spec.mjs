@@ -12,8 +12,8 @@ const errorsMove = fs.readFileSync("contracts/wpwrc/sources/errors.move", "utf8"
 
 if (token.decimals !== 9) failures.push("PWRC decimals");
 if (token.maxSupplyBaseUnits !== "18446000000000000000") failures.push("PWRC base units");
-for (const required of ["MetadataPointer", "TokenMetadata"]) if (!profile.requiredExtensions.includes(required)) failures.push(`required extension:${required}`);
-for (const forbidden of ["TransferFeeConfig","PermanentDelegate","MintCloseAuthority","DefaultAccountState","InterestBearingConfig","ScaledUiAmount","Pausable","NonTransferable"]) if (!profile.forbiddenExtensions.includes(forbidden)) failures.push(`forbidden policy:${forbidden}`);
+for (const required of ["TransferFeeConfig", "MetadataPointer", "TokenMetadata"]) if (!profile.requiredExtensions.includes(required)) failures.push(`required extension:${required}`);
+for (const forbidden of ["PermanentDelegate","MintCloseAuthority","DefaultAccountState","InterestBearingConfig","ScaledUiAmount","Pausable","NonTransferable"]) if (!profile.forbiddenExtensions.includes(forbidden)) failures.push(`forbidden policy:${forbidden}`);
 if (bridge.canonical.decimals !== 9 || bridge.wrapped.decimals !== 9) failures.push("bridge decimals");
 if (bridge.policy.canonicalBaseUnitsPerWrappedBaseUnit !== "1") failures.push("base-unit factor");
 if (sui.wrapped.decimals !== 9) failures.push("Sui decimals");

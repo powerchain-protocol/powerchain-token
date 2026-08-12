@@ -9,7 +9,10 @@
     "pwrcDecimals": 9,
     "wpwrcDecimals": 9,
     "baseUnitFactor": "1",
-    "transferFeeBps": 0
+    "transferFeeBps": 250,
+    "maximumTransferFeeTokens": "1000000",
+    "solanaToSuiAmountSemantics": "wrapped=canonicalGross-transferFee",
+    "suiToSolanaAmountSemantics": "canonicalGrossRelease=wrappedBurn"
   },
   "instructions": [
     {

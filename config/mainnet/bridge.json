@@ -4,7 +4,7 @@
   "solana": {
     "network": "mainnet-beta",
     "rpcUrl": null,
-    "canonicalMint": null,
+    "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
     "bridgeProgramId": null,
     "bridgeVault": null,
     "mintVerified": false,
@@ -12,8 +12,14 @@
     "vaultVerified": false,
     "mintAuthorityRevoked": false,
     "freezeAuthorityNull": false,
-    "transferFeeConfigAbsent": false,
-    "bridgeVerifierVerified": false
+    "bridgeVerifierVerified": false,
+    "mintProvided": true,
+    "transferFeeConfigVerified": false,
+    "transferFeeBasisPoints": 250,
+    "maximumTransferFeeTokens": "1000000",
+    "maximumTransferFeeBaseUnits": "1000000000000000",
+    "transferFeeConfigAuthorityVerified": false,
+    "withdrawWithheldAuthorityVerified": false
   },
   "sui": {
     "network": "mainnet",
@@ -43,13 +49,17 @@
     "ratio": "1:1",
     "baseUnitFactor": "1",
     "wrappedMintPolicy": "bridge-only",
-    "authenticatedBridgeMessagesRequired": true
+    "authenticatedBridgeMessagesRequired": true,
+    "solanaTransferFeeAwareBridge": true,
+    "solanaToSuiWrappedAmount": "gross-transfer-minus-token2022-transfer-fee",
+    "suiToSolanaReleaseAmount": "wrapped-burn-equals-gross-canonical-release"
   },
   "abi": {
     "version": "1.0.0",
-    "combinedSha256": "96e74184c08f283c4de057b96d8e0a31123c44cd6fa249a0ca37c0cb9944f608",
+    "combinedSha256": "20aa02c10a6d991bc366dc82f8af52ef835374e4504bc1dd261f896ab3d2c0bf",
     "releaseManifestPath": "idl/release/1.0.0.json",
     "generatedAnchorIdlRequired": true,
-    "suiNormalizedModulesRequired": true
+    "suiNormalizedModulesRequired": true,
+    "generatedTokenVerifierIdlRequired": true
   }
 }

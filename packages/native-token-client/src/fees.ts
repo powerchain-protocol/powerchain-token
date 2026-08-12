@@ -1,5 +1,45 @@
-export const PWRC_TRANSFER_FEE_BPS = 0 as const;
+import {
+  PWRC_MAX_TRANSFER_FEE_BASE_UNITS,
+  PWRC_TRANSFER_FEE_BPS,
+} from "./constants.js";
 
-export function calculateTransferFeeBaseUnits(): bigint {
-  return 0n;
+const BPS_DENOMINATOR = 10_000n;
+
+export function calculateTransferFeeBaseUnits(
+  amountBaseUnits: bigint,
+): bigint {
+  if (amountBaseUnits <= 0n) {
+    throw new Error(
+      "PWRC_TRANSFER_AMOUNT_MUST_BE_POSITIVE",
+    );
+  }
+
+  const rawFee =
+    (amountBaseUnits *
+      BigInt(PWRC_TRANSFER_FEE_BPS) +
+      BPS_DENOMINATOR -
+      1n) /
+    BPS_DENOMINATOR;
+
+  return rawFee >
+    PWRC_MAX_TRANSFER_FEE_BASE_UNITS
+    ? PWRC_MAX_TRANSFER_FEE_BASE_UNITS
+    : rawFee;
+}
+
+export function calculateNetAfterTransferFeeBaseUnits(
+  amountBaseUnits: bigint,
+): bigint {
+  const fee =
+    calculateTransferFeeBaseUnits(
+      amountBaseUnits,
+    );
+
+  if (fee > amountBaseUnits) {
+    throw new Error(
+      "PWRC_TRANSFER_FEE_EXCEEDS_AMOUNT",
+    );
+  }
+
+  return amountBaseUnits - fee;
 }

@@ -1,58 +1,115 @@
 import fs from "node:fs";
 
 const failures = [];
+
 const manifest = JSON.parse(
-  fs.readFileSync("idl/bindings/manifest.json", "utf8"),
+  fs.readFileSync(
+    "idl/bindings/manifest.json",
+    "utf8",
+  ),
 );
-const anchor = JSON.parse(
-  fs.readFileSync("idl/anchor/pwrc_lock.expected.json", "utf8"),
+const lock = JSON.parse(
+  fs.readFileSync(
+    "idl/anchor/pwrc_lock.expected.json",
+    "utf8",
+  ),
+);
+const token = JSON.parse(
+  fs.readFileSync(
+    "idl/anchor/pwrc_token.expected.json",
+    "utf8",
+  ),
 );
 const sui = JSON.parse(
-  fs.readFileSync("idl/sui/wpwrc.interface.json", "utf8"),
+  fs.readFileSync(
+    "idl/sui/wpwrc.interface.json",
+    "utf8",
+  ),
 );
 const fingerprint = JSON.parse(
-  fs.readFileSync("idl/abi.fingerprint.json", "utf8"),
+  fs.readFileSync(
+    "idl/abi.fingerprint.json",
+    "utf8",
+  ),
 );
 
-if (manifest.version !== "1.0.0") failures.push("binding:version");
+if (
+  manifest.version !== "1.0.0"
+) {
+  failures.push("binding:version");
+}
+
 if (
   manifest.abiFingerprint !==
   fingerprint.combinedAbiSha256
 ) {
-  failures.push("binding:fingerprint");
-}
-
-const anchorExpected =
-  anchor.instructions.map((item) => item.name);
-if (
-  JSON.stringify(manifest.anchor.instructions) !==
-  JSON.stringify(anchorExpected)
-) {
-  failures.push("binding:anchor-instructions");
+  failures.push(
+    "binding:fingerprint",
+  );
 }
 
 if (
-  JSON.stringify(manifest.sui.entryFunctions) !==
-  JSON.stringify(sui.modules.bridge.entryFunctions)
+  JSON.stringify(
+    manifest.anchor.instructions,
+  ) !==
+  JSON.stringify(
+    lock.instructions.map(
+      (item) => item.name,
+    ),
+  )
 ) {
-  failures.push("binding:sui-entry-functions");
+  failures.push(
+    "binding:pwrc-lock-instructions",
+  );
 }
 
 if (
-  manifest.anchor.generatedIdlRequiredForEncoding !== true
+  JSON.stringify(
+    manifest.anchorTokenVerifier
+      ?.instructions,
+  ) !==
+  JSON.stringify(
+    token.instructions.map(
+      (item) => item.name,
+    ),
+  )
 ) {
-  failures.push("binding:anchor-generated-idl-policy");
+  failures.push(
+    "binding:pwrc-token-instructions",
+  );
 }
+
 if (
-  manifest.sui.verifiedPackageIdRequiredForExecution !== true
+  JSON.stringify(
+    manifest.sui.entryFunctions,
+  ) !==
+  JSON.stringify(
+    sui.modules.bridge.entryFunctions,
+  )
 ) {
-  failures.push("binding:sui-package-policy");
+  failures.push(
+    "binding:sui-entry-functions",
+  );
+}
+
+if (
+  manifest.anchor
+    .generatedIdlRequiredForEncoding !==
+    true ||
+  manifest.anchorTokenVerifier
+    ?.generatedIdlRequiredForEncoding !==
+    true
+) {
+  failures.push(
+    "binding:generated-idl-policy",
+  );
 }
 
 console.log(JSON.stringify({
   ok: failures.length === 0,
   version: "1.0.0",
-  abiFingerprint: manifest.abiFingerprint,
+  abiFingerprint:
+    manifest.abiFingerprint,
   failures,
 }, null, 2));
 

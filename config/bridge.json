@@ -12,9 +12,16 @@
       "mint": null
     },
     "mainnet-beta": {
-      "mint": null
+      "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc"
     },
-    "network": "mainnet-beta"
+    "network": "mainnet-beta",
+    "transferFee": {
+      "enabled": true,
+      "basisPoints": 250,
+      "percentage": "2.5%",
+      "maximumFeeTokens": "1000000",
+      "maximumFeeBaseUnits": "1000000000000000"
+    }
   },
   "wrapped": {
     "name": "Wrapped PowerChain",
@@ -61,7 +68,6 @@
     "genesisWrappedSupply": "0",
     "decimalConversionRequired": false,
     "canonicalBaseUnitsPerWrappedBaseUnit": "1",
-    "solanaToSuiAmountMustBeDivisibleBy": "1000",
     "wrappedSupplyComparison": "wPWRC_circulating + pending_Solana_to_Sui + pending_Sui_to_Solana <= PWRC_locked",
     "metadataKeptSeparate": true,
     "canonicalDecimals": 9,
@@ -70,7 +76,10 @@
       "pendingSolanaToSui": "nonnegative canonical PWRC locked and finalized on Solana but not yet minted on Sui",
       "pendingSuiToSolana": "nonnegative wPWRC burned and finalized on Sui but canonical PWRC not yet released on Solana",
       "conservationEquation": "PWRC_locked = wPWRC_circulating + pending_Solana_to_Sui + pending_Sui_to_Solana"
-    }
+    },
+    "solanaTransferFeeAware": true,
+    "solanaToSuiAmountSemantics": "wPWRC_minted = gross_PWRC_transfer - Token2022_transfer_fee",
+    "suiToSolanaAmountSemantics": "gross_PWRC_release = wPWRC_burned; destination receives gross minus Token2022 transfer fee"
   },
   "status": "template-only"
 }

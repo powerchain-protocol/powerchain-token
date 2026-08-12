@@ -12,9 +12,8 @@ const feeCargo = fs.readFileSync(
   "utf8",
 );
 
-if (!cargo.includes('"programs/pwrc-lock"')) {
-  failures.push("cargo:pwrc-lock-missing");
-}
+if (!cargo.includes('"programs/pwrc-lock"')) failures.push("cargo:pwrc-lock-missing");
+if (!cargo.includes('"programs/token"')) failures.push("cargo:token-missing");
 if (!cargo.includes('"programs/pwrc-fees"')) {
   failures.push("cargo:deprecated-fee-exclude-missing");
 }
@@ -27,9 +26,8 @@ if (!cargo.includes('anchor-spl = { version = "=0.32.1"')) {
 if (!cargo.includes("token_2022_extensions")) {
   failures.push("cargo:token2022-extension-validation-feature");
 }
-if (!anchor.includes("pwrc_lock =")) {
-  failures.push("anchor:pwrc-lock");
-}
+if (!anchor.includes("pwrc_lock =")) failures.push("anchor:pwrc-lock");
+if (!anchor.includes("pwrc_token =")) failures.push("anchor:pwrc-token");
 if (anchor.includes("pwrc_fees =")) {
   failures.push("anchor:deprecated-pwrc-fees-present");
 }
@@ -43,9 +41,9 @@ if (!feeCargo.includes('status = "deprecated-disabled"')) {
 console.log(JSON.stringify({
   ok: failures.length === 0,
   version: "1.0.0",
-  cargoWorkspace: ["programs/pwrc-lock"],
+  cargoWorkspace: ["programs/pwrc-lock", "programs/token"],
   excludedPrograms: ["programs/pwrc-fees"],
-  anchorPrograms: ["pwrc_lock"],
+  anchorPrograms: ["pwrc_lock", "pwrc_token"],
   failures,
 }, null, 2));
 

@@ -58,8 +58,12 @@ for (const [name, value] of Object.entries({
     config.solana.mintAuthorityRevoked,
   "solana.freezeAuthorityNull":
     config.solana.freezeAuthorityNull,
-  "solana.transferFeeConfigAbsent":
-    config.solana.transferFeeConfigAbsent,
+  "solana.transferFeeConfigVerified":
+    config.solana.transferFeeConfigVerified,
+  "solana.transferFeeConfigAuthorityVerified":
+    config.solana.transferFeeConfigAuthorityVerified,
+  "solana.withdrawWithheldAuthorityVerified":
+    config.solana.withdrawWithheldAuthorityVerified,
   "solana.bridgeVerifierVerified":
     config.solana.bridgeVerifierVerified,
   "sui.packageVerified":

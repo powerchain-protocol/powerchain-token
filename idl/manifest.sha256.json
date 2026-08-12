@@ -2,12 +2,16 @@
   "version": "1.0.0",
   "algorithm": "sha256",
   "files": {
-    "idl/manifest.json": "0073c3bfacda819919731414abba4c74c2f0cdfedeea4930b330e3df979e272a",
-    "idl/anchor/pwrc_lock.expected.json": "1a8ccd0604bf0e1245a3a0e4b78d097f1af24909b1d1d03caacb224326a35554",
+    "idl/manifest.json": "df25db03f37b6e2e5c75ea63fd813abb81fab4e3a91faecedd1593e1db1aceef",
+    "idl/anchor/pwrc_lock.expected.json": "db3e4c6f91430c55d2177d9e31de926c8489ba37423664747b8cb4cd5d3f82b2",
+    "idl/anchor/pwrc_token.expected.json": "c9c5ff11091a57466ceca88259bbbb8498568c2287a7368b27171a9b741f29af",
     "idl/schemas/pwrc_lock.anchor.schema.json": "bb472825954427f5951be2203ce224f5d0ddda9ce925d55cee7243996d7cbdbf",
+    "idl/schemas/pwrc_token.anchor.schema.json": "a4841e659aeacb89aafbc6eb8ebea6749fdd16d8e42e393ac43b5504ff66a99e",
     "idl/sui/wpwrc.interface.json": "d47760dd9381097f5f1d7b39279177ee18830ff4956129e6a5f45c13416dadba",
-    "idl/abi.fingerprint.json": "0af235229a34777d80bdede66d527f6142b45d91a6e84c1a3dc130535dd89bf1",
-    "programs/pwrc-lock/src/lib.rs": "8258722c5e66aa2a8eee1fe0aab9507e4992ef2d64c9d98eb700674510fb9944",
+    "idl/abi.fingerprint.json": "ad4eec76c629955adb853a646e2fc97678f62a2144ee4ecc5828cd917935010e",
+    "programs/pwrc-lock/src/lib.rs": "b01e05f374d5b7a0c64b2206030514d1e70ff1329d3cab8f25c77dff7605f0d9",
+    "programs/token/src/lib.rs": "59cf6fcf3944b2838f07edb1d4700d6edb1d7588aabc5493d97eab4a0f73b90b",
+    "programs/token/src/invariants.rs": "308bee011e580c6cf39903855a025502ae8506531a7626249f83a59516f4adb8",
     "contracts/wpwrc/sources/wpwrc.move": "2e2ddf6b1a4db7c6f10c455a79ad51167ba6895d14e1bf5e16e800952ecf3794",
     "contracts/wpwrc/sources/bridge.move": "3fd78fde6faaf38728800c6666d385d3e29b8305399e0c88ef466527fc35007b"
   }

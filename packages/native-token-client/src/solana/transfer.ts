@@ -4,7 +4,7 @@ import type {
 } from "@solana/web3.js";
 import {
   TOKEN_2022_PROGRAM_ID,
-  createTransferCheckedInstruction,
+  createTransferCheckedWithFeeInstruction,
 } from "@solana/spl-token";
 import {
   PWRC_DECIMALS,
@@ -12,6 +12,9 @@ import {
 import {
   assertPwrcBaseUnits,
 } from "../amounts.js";
+import {
+  calculateTransferFeeBaseUnits,
+} from "../fees.js";
 
 export function createPwrcTransferInstruction(
   input: {
@@ -34,13 +37,19 @@ export function createPwrcTransferInstruction(
     );
   }
 
-  return createTransferCheckedInstruction(
+  const expectedFee =
+    calculateTransferFeeBaseUnits(
+      amount,
+    );
+
+  return createTransferCheckedWithFeeInstruction(
     input.source,
     input.mint,
     input.destination,
     input.authority,
     amount,
     PWRC_DECIMALS,
+    expectedFee,
     input.multiSigners ?? [],
     TOKEN_2022_PROGRAM_ID,
   );

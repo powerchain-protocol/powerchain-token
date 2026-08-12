@@ -21,6 +21,9 @@ pub const PWRC_DECIMALS: u8 = 9;
 pub const WPWRC_DECIMALS: u8 = 9;
 pub const PWRC_BASE_UNITS_PER_WPWRC_BASE_UNIT: u64 = 1;
 pub const PWRC_MAX_BASE_UNITS: u64 = 18_446_000_000_000_000_000;
+pub const PWRC_TRANSFER_FEE_BASIS_POINTS: u16 = 250;
+pub const PWRC_MAXIMUM_TRANSFER_FEE_BASE_UNITS: u64 = 1000000000000000;
+pub const BPS_DENOMINATOR: u128 = 10_000;
 pub const SUI_CHAIN_ID: u16 = 21;
 
 #[program]
@@ -34,7 +37,7 @@ pub mod pwrc_lock {
     ) -> Result<()> {
         validate_token2022_program(&ctx.accounts.token_program)?;
 
-        validate_no_transfer_fee_config(
+        validate_transfer_fee_config(
             &ctx.accounts.mint.to_account_info(),
         )?;
 
@@ -109,6 +112,9 @@ pub mod pwrc_lock {
         sui_recipient: [u8; 32],
     ) -> Result<()> {
         validate_token2022_program(&ctx.accounts.token_program)?;
+        validate_transfer_fee_config(
+            &ctx.accounts.mint.to_account_info(),
+        )?;
         validate_config(&ctx.accounts.config)?;
         require!(!ctx.accounts.config.paused, BridgeError::BridgePaused);
         require!(amount_base_units > 0, BridgeError::ZeroAmount);
@@ -118,6 +124,25 @@ pub mod pwrc_lock {
         require_keys_eq!(ctx.accounts.source.owner, ctx.accounts.owner.key(), BridgeError::InvalidSourceOwner);
         require_keys_eq!(ctx.accounts.source.mint, ctx.accounts.mint.key(), BridgeError::InvalidMint);
         require_keys_eq!(ctx.accounts.vault.key(), ctx.accounts.config.vault, BridgeError::InvalidVault);
+
+        let transfer_fee_base_units =
+            calculate_transfer_fee_base_units(
+                amount_base_units,
+            )?;
+
+        let wrapped_amount_base_units =
+            amount_base_units
+                .checked_sub(
+                    transfer_fee_base_units,
+                )
+                .ok_or(
+                    BridgeError::MathOverflow,
+                )?;
+
+        require!(
+            wrapped_amount_base_units > 0,
+            BridgeError::NetAmountZero
+        );
 
         transfer_tokens(
             &ctx.accounts.token_program,
@@ -130,8 +155,8 @@ pub mod pwrc_lock {
 
         let config = &mut ctx.accounts.config;
         config.lock_sequence = config.lock_sequence.checked_add(1).ok_or(BridgeError::MathOverflow)?;
-        config.total_locked_base_units = config.total_locked_base_units.checked_add(amount_base_units as u128).ok_or(BridgeError::MathOverflow)?;
-        config.current_locked_base_units = config.current_locked_base_units.checked_add(amount_base_units).ok_or(BridgeError::MathOverflow)?;
+        config.total_locked_base_units = config.total_locked_base_units.checked_add(wrapped_amount_base_units as u128).ok_or(BridgeError::MathOverflow)?;
+        config.current_locked_base_units = config.current_locked_base_units.checked_add(wrapped_amount_base_units).ok_or(BridgeError::MathOverflow)?;
 
         let clock = Clock::get()?;
         let receipt = &mut ctx.accounts.receipt;
@@ -141,7 +166,7 @@ pub mod pwrc_lock {
         receipt.source = ctx.accounts.source.key();
         receipt.vault = ctx.accounts.vault.key();
         receipt.amount_base_units = amount_base_units;
-        receipt.wrapped_amount_base_units = amount_base_units;
+        receipt.wrapped_amount_base_units = wrapped_amount_base_units;
         receipt.transfer_id = transfer_id;
         receipt.sui_recipient = sui_recipient;
         receipt.sequence = config.lock_sequence;
@@ -156,7 +181,7 @@ pub mod pwrc_lock {
             source: receipt.source,
             vault: receipt.vault,
             amount_base_units,
-            wrapped_amount_base_units: amount_base_units,
+            wrapped_amount_base_units,
             transfer_id,
             sui_recipient,
             sequence: receipt.sequence,
@@ -175,6 +200,9 @@ pub mod pwrc_lock {
         expected_recipient_owner: Pubkey,
     ) -> Result<()> {
         validate_token2022_program(&ctx.accounts.token_program)?;
+        validate_transfer_fee_config(
+            &ctx.accounts.mint.to_account_info(),
+        )?;
         validate_config(&ctx.accounts.config)?;
         require!(!ctx.accounts.config.paused, BridgeError::BridgePaused);
         require!(amount_base_units > 0, BridgeError::ZeroAmount);
@@ -316,7 +344,7 @@ pub mod pwrc_lock {
     }
 }
 
-fn validate_no_transfer_fee_config(
+fn validate_transfer_fee_config(
     mint_info: &AccountInfo,
 ) -> Result<()> {
     let data = mint_info.try_borrow_data()?;
@@ -328,12 +356,71 @@ fn validate_no_transfer_fee_config(
             error!(BridgeError::InvalidToken2022MintState)
         })?;
 
-    require!(
-        mint.get_extension::<TransferFeeConfig>().is_err(),
-        BridgeError::TransferFeeConfigForbidden
-    );
+    let config =
+        mint.get_extension::<TransferFeeConfig>()
+            .map_err(|_| {
+                error!(
+                    BridgeError::TransferFeeConfigRequired
+                )
+            })?;
+
+    for fee in [
+        &config.older_transfer_fee,
+        &config.newer_transfer_fee,
+    ] {
+        require_eq!(
+            u16::from(
+                fee.transfer_fee_basis_points,
+            ),
+            PWRC_TRANSFER_FEE_BASIS_POINTS,
+            BridgeError::TransferFeeBasisPointsMismatch
+        );
+
+        require_eq!(
+            u64::from(fee.maximum_fee),
+            PWRC_MAXIMUM_TRANSFER_FEE_BASE_UNITS,
+            BridgeError::MaximumTransferFeeMismatch
+        );
+    }
 
     Ok(())
+}
+
+fn calculate_transfer_fee_base_units(
+    amount_base_units: u64,
+) -> Result<u64> {
+    let numerator =
+        (amount_base_units as u128)
+            .checked_mul(
+                PWRC_TRANSFER_FEE_BASIS_POINTS
+                    as u128,
+            )
+            .ok_or(
+                BridgeError::MathOverflow,
+            )?;
+
+    let rounded =
+        numerator
+            .checked_add(
+                BPS_DENOMINATOR - 1,
+            )
+            .ok_or(
+                BridgeError::MathOverflow,
+            )?
+            / BPS_DENOMINATOR;
+
+    let fee =
+        rounded.min(
+            PWRC_MAXIMUM_TRANSFER_FEE_BASE_UNITS
+                as u128,
+        );
+
+    u64::try_from(fee)
+        .map_err(|_| {
+            error!(
+                BridgeError::MathOverflow
+            )
+        })
 }
 
 fn validate_config(config: &Account<BridgeConfig>) -> Result<()> {
@@ -687,7 +774,10 @@ pub enum BridgeError {
     #[msg("Invalid Token-2022 mint state")]
     InvalidToken2022MintState,
     #[msg("Canonical PWRC must not enable TransferFeeConfig")]
-    TransferFeeConfigForbidden,
+    TransferFeeConfigRequired,
+    TransferFeeBasisPointsMismatch,
+    MaximumTransferFeeMismatch,
+    NetAmountZero,
     #[msg("Arithmetic overflow or underflow")]
     MathOverflow,
 }

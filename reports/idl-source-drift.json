@@ -60,7 +60,7 @@
     ]
   },
   "sourceHashes": {
-    "programs/pwrc-lock/src/lib.rs": "8258722c5e66aa2a8eee1fe0aab9507e4992ef2d64c9d98eb700674510fb9944",
+    "programs/pwrc-lock/src/lib.rs": "b01e05f374d5b7a0c64b2206030514d1e70ff1329d3cab8f25c77dff7605f0d9",
     "contracts/wpwrc/sources/wpwrc.move": "2e2ddf6b1a4db7c6f10c455a79ad51167ba6895d14e1bf5e16e800952ecf3794",
     "contracts/wpwrc/sources/bridge.move": "3fd78fde6faaf38728800c6666d385d3e29b8305399e0c88ef466527fc35007b"
   },

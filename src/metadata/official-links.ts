@@ -1,5 +1,7 @@
 export const POWERCHAIN_OFFICIAL_LINKS = {
   website: "https://powerchain.energy",
+  bridge: "https://bridge.powerchain.energy",
+  app: "https://app.powerchain.energy",
   documentation: "https://docs.powerchain.energy",
   whitepaper: "https://whitepaper.powerchain.energy",
   x: "https://x.com/powerchain_ai",
@@ -9,15 +11,26 @@ export const POWERCHAIN_OFFICIAL_LINKS = {
 export type PowerChainOfficialLinks =
   typeof POWERCHAIN_OFFICIAL_LINKS;
 
-export function assertCanonicalOfficialLinks(input: {
-  external_url?: string;
-  official_links?: Partial<PowerChainOfficialLinks>;
-  properties?: {
-    links?: Partial<PowerChainOfficialLinks>;
-  };
-}): void {
-  if (input.external_url !== POWERCHAIN_OFFICIAL_LINKS.website) {
-    throw new Error("PWRC_METADATA_WEBSITE_MISMATCH");
+export function assertCanonicalOfficialLinks(
+  input: {
+    external_url?: string;
+    official_links?: Partial<
+      PowerChainOfficialLinks
+    >;
+    properties?: {
+      links?: Partial<
+        PowerChainOfficialLinks
+      >;
+    };
+  },
+): void {
+  if (
+    input.external_url !==
+    POWERCHAIN_OFFICIAL_LINKS.website
+  ) {
+    throw new Error(
+      "PWRC_METADATA_WEBSITE_MISMATCH",
+    );
   }
 
   const candidates = [
@@ -27,14 +40,28 @@ export function assertCanonicalOfficialLinks(input: {
 
   for (const links of candidates) {
     if (!links) {
-      throw new Error("PWRC_METADATA_OFFICIAL_LINKS_MISSING");
+      throw new Error(
+        "PWRC_METADATA_OFFICIAL_LINKS_MISSING",
+      );
     }
 
-    for (const [key, expected] of Object.entries(
-      POWERCHAIN_OFFICIAL_LINKS,
-    )) {
-      if ((links as Record<string, string | undefined>)[key] !== expected) {
-        throw new Error(`PWRC_METADATA_LINK_MISMATCH:${key}`);
+    for (
+      const [key, expected] of
+      Object.entries(
+        POWERCHAIN_OFFICIAL_LINKS,
+      )
+    ) {
+      if (
+        (
+          links as Record<
+            string,
+            string | undefined
+          >
+        )[key] !== expected
+      ) {
+        throw new Error(
+          `PWRC_METADATA_LINK_MISMATCH:${key}`,
+        );
       }
     }
   }

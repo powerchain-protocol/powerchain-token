@@ -35,12 +35,16 @@ const payload = {
   },
   source: {
     pwrcLockSha256: sha256("programs/pwrc-lock/src/lib.rs"),
+    pwrcTokenSha256: sha256("programs/token/src/lib.rs"),
+    pwrcTokenInvariantsSha256: sha256("programs/token/src/invariants.rs"),
     wpwrcSha256: sha256("contracts/wpwrc/sources/wpwrc.move"),
     bridgeSha256: sha256("contracts/wpwrc/sources/bridge.move"),
   },
   interfaces: {
-    anchorExpectedSha256:
+    bridgeAnchorExpectedSha256:
       sha256("idl/anchor/pwrc_lock.expected.json"),
+    tokenAnchorExpectedSha256:
+      sha256("idl/anchor/pwrc_token.expected.json"),
     suiSourceInterfaceSha256:
       sha256("idl/sui/wpwrc.interface.json"),
     bindingManifestSha256:
@@ -52,8 +56,10 @@ const payload = {
     additive: classification.additive,
   },
   generatedArtifacts: {
-    anchorIdlPresent:
+    pwrcLockAnchorIdlPresent:
       fs.existsSync("idl/generated/pwrc_lock.json"),
+    pwrcTokenAnchorIdlPresent:
+      fs.existsSync("idl/generated/pwrc_token.json"),
     suiNormalizedModulesPresent:
       fs.existsSync("idl/generated/wpwrc.modules.json"),
   },

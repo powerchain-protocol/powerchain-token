@@ -1,8 +1,16 @@
 import fs from "node:fs";
 
 const failures = [];
-const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
-const scripts = pkg.scripts ?? {};
+
+const pkg = JSON.parse(
+  fs.readFileSync(
+    "package.json",
+    "utf8",
+  ),
+);
+
+const scripts =
+  pkg.scripts ?? {};
 
 const required = [
   "typecheck",
@@ -18,30 +26,77 @@ const required = [
   "ci:sui",
   "program:build",
   "program:test",
+  "token:check",
+  "token:manifest:check",
+  "token:build",
+  "token:test",
+  "token:production:check",
+  "pwrc:fees",
 ];
 
 for (const name of required) {
-  if (!scripts[name]) failures.push(`missing:${name}`);
+  if (!scripts[name]) {
+    failures.push(
+      `missing:${name}`,
+    );
+  }
 }
 
-if (scripts["program:test"]?.includes("pwrc-fees")) {
-  failures.push("program:test targets deprecated pwrc-fees");
+if (
+  scripts["program:test"]
+    ?.includes("pwrc-fees")
+) {
+  failures.push(
+    "program:test targets deprecated pwrc-fees",
+  );
 }
-if (scripts["program:build"] === "anchor build") {
-  failures.push("program:build should target pwrc_lock explicitly");
+
+if (
+  scripts["program:build"] ===
+  "anchor build"
+) {
+  failures.push(
+    "program:build should target pwrc_lock explicitly",
+  );
 }
-if (!scripts["pwrc:fees"]?.includes("check-no-transfer-fee.mjs")) {
-  failures.push("pwrc:fees must validate no-fee canonical policy");
+
+if (
+  !scripts["pwrc:fees"]
+    ?.includes(
+      "check-transfer-fee.mjs",
+    )
+) {
+  failures.push(
+    "pwrc:fees must validate canonical TransferFeeConfig policy",
+  );
 }
-if (scripts.ci?.includes("test:anchor")) {
-  failures.push("default ci should not require optional Anchor toolchain");
+
+if (
+  !scripts["token:build"]
+    ?.includes("pwrc_token")
+) {
+  failures.push(
+    "token:build must target pwrc_token",
+  );
+}
+
+if (
+  scripts.ci
+    ?.includes("test:anchor")
+) {
+  failures.push(
+    "default ci should not require optional Anchor toolchain",
+  );
 }
 
 console.log(JSON.stringify({
   ok: failures.length === 0,
   version: "1.0.0",
-  scriptCount: Object.keys(scripts).length,
+  scriptCount:
+    Object.keys(scripts).length,
   failures,
 }, null, 2));
 
-if (failures.length) process.exit(1);
+if (failures.length) {
+  process.exit(1);
+}

@@ -4,7 +4,11 @@
   "canonical": {
     "chain": "solana",
     "cluster": "mainnet-beta",
-    "mint": null
+    "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+    "mintVerificationStatus": "provided-not-onchain-verified",
+    "transferFeeBasisPoints": 250,
+    "maximumTransferFeeTokens": "1000000",
+    "maximumTransferFeeBaseUnits": "1000000000000000"
   },
   "wrapped": {
     "chain": "sui",
@@ -20,6 +24,8 @@
     "canonicalDecimals": 9,
     "wrappedDecimals": 9,
     "canonicalBaseUnitsPerWrappedBaseUnit": "1",
-    "exactConversionRequired": true
+    "exactConversionRequired": true,
+    "solanaTransferFeeAware": true,
+    "solanaToSuiWrappedAmount": "gross-minus-transfer-fee"
   }
 }
