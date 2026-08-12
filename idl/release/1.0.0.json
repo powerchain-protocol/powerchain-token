@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "status": "blocked",
+  "abi": {
+    "domain": "POWERCHAIN_IDL_ABI_V1",
+    "combinedAbiSha256": "96e74184c08f283c4de057b96d8e0a31123c44cd6fa249a0ca37c0cb9944f608"
+  },
+  "anchor": {
+    "expectedSha256": "1a8ccd0604bf0e1245a3a0e4b78d097f1af24909b1d1d03caacb224326a35554",
+    "generatedPresent": false,
+    "generatedSha256": null,
+    "generatedVerification": false
+  },
+  "sui": {
+    "sourceInterfaceSha256": "d47760dd9381097f5f1d7b39279177ee18830ff4956129e6a5f45c13416dadba",
+    "normalizedModulesPresent": false,
+    "normalizedModulesSha256": null
+  },
+  "source": {
+    "pwrcLockSha256": "8258722c5e66aa2a8eee1fe0aab9507e4992ef2d64c9d98eb700674510fb9944",
+    "wpwrcSha256": "2e2ddf6b1a4db7c6f10c455a79ad51167ba6895d14e1bf5e16e800952ecf3794",
+    "bridgeSha256": "3fd78fde6faaf38728800c6666d385d3e29b8305399e0c88ef466527fc35007b"
+  },
+  "checks": {
+    "sourceDrift": true,
+    "compatibility": true
+  },
+  "failures": [
+    "missing:reports/idl-generated-verification.json",
+    "generated Anchor IDL missing",
+    "normalized Sui modules missing"
+  ]
+}

@@ -1,8 +1,0 @@
-[package]
-name = "wpwrc"
-edition = "2024"
-
-[dependencies]
-
-[addresses]
-wpwrc = "0x0"

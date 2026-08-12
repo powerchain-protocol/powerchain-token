@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "sourceDriftValidated": true,
+  "compatibilityValidated": true,
+  "abiFingerprintGenerated": true,
+  "generatedAnchorIdlPresent": false,
+  "suiNormalizedModulesPresent": false,
+  "releaseReady": false,
+  "blockedChecks": {
+    "generated-idl": 2,
+    "discriminators": 2,
+    "sui-normalized": 2,
+    "release": 2
+  },
+  "mainnetDeploymentClaimed": false
+}

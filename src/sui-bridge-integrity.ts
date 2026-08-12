@@ -36,7 +36,7 @@ export function verifyCrossChainSupply(
 
   const exposure =
     observation.suiWrappedSupplyBaseUnits +
-    observation.pendingSolanaToSuiBaseUnits -
+    observation.pendingSolanaToSuiBaseUnits +
     observation.pendingSuiToSolanaBaseUnits;
 
   if (exposure < 0n) errors.push("NEGATIVE_WRAPPED_EXPOSURE");

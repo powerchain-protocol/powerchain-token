@@ -1,0 +1,31 @@
+{
+  "version": "1.0.0",
+  "asset": "PWRC",
+  "program": "Token-2022",
+  "requiredExtensions": [
+    "MetadataPointer",
+    "TokenMetadata"
+  ],
+  "optionalExtensions": [],
+  "forbiddenExtensions": [
+    "TransferFeeConfig",
+    "PermanentDelegate",
+    "MintCloseAuthority",
+    "DefaultAccountState",
+    "InterestBearingConfig",
+    "ScaledUiAmount",
+    "Pausable",
+    "NonTransferable"
+  ],
+  "optionalEnablementPolicy": {
+    "governanceApprovalRequired": true,
+    "securityReviewRequired": true,
+    "deploymentManifestEvidenceRequired": true,
+    "defaultEnabled": false
+  },
+  "transferFeeConfig": {
+    "required": false,
+    "enabled": false,
+    "basisPoints": 0
+  }
+}

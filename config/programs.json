@@ -20,7 +20,12 @@
       "idempotency": "receipt-pda-v1",
       "feeCollectorOwner": "FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy",
       "feeVault": null,
-      "feeVaultDerivation": "Token-2022 ATA"
+      "feeVaultDerivation": "Token-2022 ATA",
+      "mainnetStatus": "not-deployed-or-not-verified",
+      "mainnetRequirement": "Must be a separately deployed, executable, verified PowerChain SBF program. The Solana System Program is never a valid PowerChain deployment.",
+      "forbiddenDeploymentProgramIds": [
+        "11111111111111111111111111111111"
+      ]
     }
   }
 }

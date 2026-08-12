@@ -1,7 +1,7 @@
 {
-  "name": "Wrapped PowerChain",
+  "name": "PowerChain",
   "symbol": "wPWRC",
-  "description": "Wrapped PowerChain (wPWRC) is the bridged wrapped representation of canonical PWRC. Intended 1:1 backed asset for bridge/network interoperability.",
+  "description": "wPWRC is the 1:1 Sui bridged representation of canonical PowerChain (PWRC) on Solana mainnet-beta. It has zero genesis supply and can be minted only after an authenticated bridge message proves canonical PWRC is locked.",
   "image": "https://token.powerchain.energy/assets/tokens/wpwrc-logo.png",
   "external_url": "https://powerchain.energy",
   "attributes": [
@@ -24,6 +24,38 @@
     {
       "trait_type": "Version",
       "value": "1.0.0"
+    },
+    {
+      "trait_type": "Official Website",
+      "value": "https://powerchain.energy"
+    },
+    {
+      "trait_type": "Documentation",
+      "value": "https://docs.powerchain.energy"
+    },
+    {
+      "trait_type": "Whitepaper",
+      "value": "https://whitepaper.powerchain.energy"
+    },
+    {
+      "trait_type": "X",
+      "value": "https://x.com/powerchain_ai"
+    },
+    {
+      "trait_type": "Telegram",
+      "value": "https://t.me/powerchain_official"
+    },
+    {
+      "trait_type": "Decimals",
+      "value": "9"
+    },
+    {
+      "trait_type": "Canonical Decimals",
+      "value": "9"
+    },
+    {
+      "trait_type": "Base Unit Conversion",
+      "value": "1:1 base units"
     }
   ],
   "properties": {
@@ -55,6 +87,29 @@
       }
     },
     "official_website": "https://powerchain.energy",
-    "token_domain": "https://token.powerchain.energy"
+    "token_domain": "https://token.powerchain.energy",
+    "links": {
+      "website": "https://powerchain.energy",
+      "documentation": "https://docs.powerchain.energy",
+      "whitepaper": "https://whitepaper.powerchain.energy",
+      "x": "https://x.com/powerchain_ai",
+      "telegram": "https://t.me/powerchain_official"
+    },
+    "decimals": 9,
+    "canonical_decimals": 9,
+    "canonical_chain": "solana",
+    "wrapped_chain": "sui",
+    "canonical_base_units_per_wrapped_base_unit": "1",
+    "backing_invariant": "wPWRC base units * 1000 <= locked PWRC base units",
+    "metadata_separate_from_canonical": true,
+    "canonical_network": "mainnet-beta",
+    "genesis_supply": "0"
+  },
+  "official_links": {
+    "website": "https://powerchain.energy",
+    "documentation": "https://docs.powerchain.energy",
+    "whitepaper": "https://whitepaper.powerchain.energy",
+    "x": "https://x.com/powerchain_ai",
+    "telegram": "https://t.me/powerchain_official"
   }
 }

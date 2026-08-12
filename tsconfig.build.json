@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": ".",
+    "outDir": "dist",
+    "tsBuildInfoFile": "node_modules/.cache/pwrc-build.tsbuildinfo"
+  },
+  "include": [
+    "src/**/*.ts",
+    "client/**/*.ts",
+    "packages/**/*.ts"
+  ],
+  "exclude": [
+    "tests/**",
+    "scripts/**",
+    "node_modules",
+    "dist",
+    "coverage"
+  ]
+}

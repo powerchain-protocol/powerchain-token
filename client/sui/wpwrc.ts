@@ -3,6 +3,9 @@ import { Transaction } from "@mysten/sui/transactions";
 
 export const WPWRC_DECIMALS = 9 as const;
 export const WPWRC_MAX_BASE_UNITS = 18_446_000_000_000_000_000n;
+export const PWRC_CANONICAL_DECIMALS = 9 as const;
+export const PWRC_BASE_UNITS_PER_WPWRC_BASE_UNIT = 1n;
+export const PWRC_CANONICAL_MAX_BASE_UNITS = 18_446_000_000_000_000_000n;
 
 export interface WpwrcDeployment {
   packageId: string;
@@ -63,11 +66,39 @@ export function assertSolanaPwrcLockClaim(claim: SolanaPwrcLockClaim): void {
     throw new Error("WPWRC_CLAIM_INSTRUCTION_INDEX_INVALID");
   }
   if (claim.amountBaseUnits <= 0n) throw new Error("WPWRC_CLAIM_ZERO_AMOUNT");
-  if (claim.amountBaseUnits > WPWRC_MAX_BASE_UNITS) throw new Error("WPWRC_CLAIM_EXCEEDS_MAX");
+  if (claim.amountBaseUnits > PWRC_CANONICAL_MAX_BASE_UNITS) throw new Error("WPWRC_CLAIM_EXCEEDS_CANONICAL_MAX");
   if (!/^0x[a-fA-F0-9]{1,64}$/.test(claim.suiRecipient)) {
     throw new Error("WPWRC_CLAIM_SUI_RECIPIENT_INVALID");
   }
 }
+
+
+export function canonicalAmountToWrappedAmountExact(
+  canonicalBaseUnits: bigint,
+): bigint {
+  if (canonicalBaseUnits <= 0n) {
+    throw new Error(
+      "WPWRC_CANONICAL_AMOUNT_MUST_BE_POSITIVE",
+    );
+  }
+  if (canonicalBaseUnits > WPWRC_MAX_BASE_UNITS) {
+    throw new Error("WPWRC_AMOUNT_EXCEEDS_MAX");
+  }
+  return canonicalBaseUnits;
+}
+
+export function wrappedAmountToCanonicalAmount(
+  wrappedBaseUnits: bigint,
+): bigint {
+  if (wrappedBaseUnits < 0n) {
+    throw new Error("WPWRC_WRAPPED_AMOUNT_NEGATIVE");
+  }
+  if (wrappedBaseUnits > WPWRC_MAX_BASE_UNITS) {
+    throw new Error("WPWRC_AMOUNT_EXCEEDS_MAX");
+  }
+  return wrappedBaseUnits;
+}
+
 
 /**
  * Domain-separated bridge claim hash.
@@ -119,56 +150,96 @@ export function newBurnReference(): Uint8Array {
 export function buildWpwrcMintTransaction(input: {
   deployment: WpwrcDeployment;
   sourceMessageHash: Uint8Array;
-  amountBaseUnits: bigint;
+  wrappedAmountBaseUnits: bigint;
   recipient: string;
 }): Transaction {
   assertObjectId(input.deployment.packageId, "WPWRC_PACKAGE_ID_INVALID");
   assertObjectId(input.deployment.bridgeControllerId, "WPWRC_CONTROLLER_ID_INVALID");
+  assertObjectId(input.recipient, "WPWRC_RECIPIENT_INVALID");
   if (input.sourceMessageHash.length !== 32) throw new Error("WPWRC_SOURCE_HASH_INVALID");
-  if (input.amountBaseUnits <= 0n) throw new Error("WPWRC_MINT_ZERO_AMOUNT");
-  if (input.amountBaseUnits > WPWRC_MAX_BASE_UNITS) throw new Error("WPWRC_MINT_EXCEEDS_MAX");
+  if (input.wrappedAmountBaseUnits <= 0n) throw new Error("WPWRC_MINT_ZERO_AMOUNT");
+  if (input.wrappedAmountBaseUnits > WPWRC_MAX_BASE_UNITS) throw new Error("WPWRC_MINT_EXCEEDS_MAX");
 
   const tx = new Transaction();
   tx.moveCall({
-    target: `${input.deployment.packageId}::wpwrc::mint_from_bridge`,
+    target: `${input.deployment.packageId}::bridge::mint_from_bridge`,
     arguments: [
       tx.object(input.deployment.bridgeControllerId),
-      tx.pure.vector("u8", [...input.sourceMessageHash]),
-      tx.pure.u64(input.amountBaseUnits),
+      tx.pure.u64(input.wrappedAmountBaseUnits),
       tx.pure.address(input.recipient),
+      tx.pure.vector("u8", [...input.sourceMessageHash]),
     ],
   });
   return tx;
 }
 
+
+/**
+ * Preferred bridge mint builder.
+ *
+ * Claim amounts and Sui mint amounts use the same 9-decimal base-unit domain.
+ * No decimal conversion or rounding is performed.
+ */
+export function buildWpwrcMintFromBridgeClaim(input: {
+  deployment: WpwrcDeployment;
+  claim: SolanaPwrcLockClaim;
+}): Transaction {
+  assertSolanaPwrcLockClaim(input.claim);
+
+  const sourceMessageHash =
+    solanaPwrcLockClaimHash(input.claim);
+  const wrappedAmountBaseUnits =
+    canonicalAmountToWrappedAmountExact(
+      input.claim.amountBaseUnits,
+    );
+
+  return buildWpwrcMintTransaction({
+    deployment: input.deployment,
+    sourceMessageHash,
+    wrappedAmountBaseUnits,
+    recipient: input.claim.suiRecipient,
+  });
+}
+
 export function buildWpwrcBurnTransaction(input: {
   deployment: WpwrcDeployment;
   coinObjectId: string;
-  destinationChain: number;
-  destination: Uint8Array;
+  destinationSolanaAddressBytes: Uint8Array;
   burnReference?: Uint8Array;
 }): Transaction {
-  assertObjectId(input.deployment.packageId, "WPWRC_PACKAGE_ID_INVALID");
-  assertObjectId(input.deployment.bridgeControllerId, "WPWRC_CONTROLLER_ID_INVALID");
-  assertObjectId(input.coinObjectId, "WPWRC_COIN_OBJECT_ID_INVALID");
-  if (!Number.isInteger(input.destinationChain) || input.destinationChain < 0 || input.destinationChain > 65535) {
-    throw new Error("WPWRC_DESTINATION_CHAIN_INVALID");
-  }
-  if (input.destination.length === 0 || input.destination.length > 128) {
-    throw new Error("WPWRC_DESTINATION_INVALID");
+  assertObjectId(
+    input.deployment.packageId,
+    "WPWRC_PACKAGE_ID_INVALID",
+  );
+  assertObjectId(
+    input.deployment.bridgeControllerId,
+    "WPWRC_CONTROLLER_ID_INVALID",
+  );
+  assertObjectId(
+    input.coinObjectId,
+    "WPWRC_COIN_OBJECT_ID_INVALID",
+  );
+  if (input.destinationSolanaAddressBytes.length !== 32) {
+    throw new Error(
+      "WPWRC_SOLANA_DESTINATION_BYTES_INVALID",
+    );
   }
 
-  const reference = input.burnReference ?? newBurnReference();
-  if (reference.length !== 32) throw new Error("WPWRC_BURN_REFERENCE_INVALID");
+  const reference =
+    input.burnReference ?? newBurnReference();
+  assertWpwrcBurnReference(reference);
 
   const tx = new Transaction();
   tx.moveCall({
-    target: `${input.deployment.packageId}::wpwrc::burn_for_bridge`,
+    target:
+      `${input.deployment.packageId}::bridge::burn_for_solana`,
     arguments: [
       tx.object(input.deployment.bridgeControllerId),
       tx.object(input.coinObjectId),
-      tx.pure.u16(input.destinationChain),
-      tx.pure.vector("u8", [...input.destination]),
+      tx.pure.vector(
+        "u8",
+        [...input.destinationSolanaAddressBytes],
+      ),
       tx.pure.vector("u8", [...reference]),
     ],
   });
@@ -193,4 +264,32 @@ export function buildWpwrcFinalizeRegistrationTransaction(input: {
     ],
   });
   return tx;
+}
+
+export function assertWpwrcBurnReference(
+  burnReference: Uint8Array,
+): void {
+  if (burnReference.length !== 32) {
+    throw new Error("WPWRC_BURN_REFERENCE_LENGTH_INVALID");
+  }
+}
+
+export function buildWpwrcBurnForSolana(input: {
+  deployment: WpwrcDeployment;
+  coinObjectId: string;
+  destinationSolanaAddressBytes: Uint8Array;
+  burnReference: Uint8Array;
+}): Transaction {
+  if (input.destinationSolanaAddressBytes.length !== 32) {
+    throw new Error("WPWRC_SOLANA_DESTINATION_BYTES_INVALID");
+  }
+  assertWpwrcBurnReference(input.burnReference);
+
+  return buildWpwrcBurnTransaction({
+    deployment: input.deployment,
+    coinObjectId: input.coinObjectId,
+    destinationSolanaAddressBytes:
+      input.destinationSolanaAddressBytes,
+    burnReference: input.burnReference,
+  });
 }

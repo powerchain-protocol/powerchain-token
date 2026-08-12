@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "idlStaticReady": true,
+  "bindingsValidated": true,
+  "compatibilityClassification": "compatible",
+  "abiFingerprint": "96e74184c08f283c4de057b96d8e0a31123c44cd6fa249a0ca37c0cb9944f608",
+  "unsignedAttestationPresent": true,
+  "generatedAnchorIdlPresent": false,
+  "suiNormalizedModulesPresent": false,
+  "releaseReady": false,
+  "mainnetDeploymentClaimed": false,
+  "blocked": {
+    "generated-idl": 2,
+    "discriminators": 2,
+    "sui-normalized": 2,
+    "idl-release": 2
+  }
+}

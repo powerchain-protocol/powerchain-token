@@ -1,0 +1,2 @@
+import test from "node:test"; import assert from "node:assert/strict"; import {validateCanonicalPwrcToken2022Profile} from "../src/security/token2022-profile.js";
+test("minimal canonical extensions",()=>{assert.doesNotThrow(()=>validateCanonicalPwrcToken2022Profile({enabledExtensions:["MetadataPointer","TokenMetadata"]})); assert.throws(()=>validateCanonicalPwrcToken2022Profile({enabledExtensions:["MetadataPointer","TokenMetadata","TransferFeeConfig"]}),/PWRC_FORBIDDEN_EXTENSION_ENABLED/);});

@@ -1,0 +1,33 @@
+{
+  "ok": false,
+  "version": "1.0.0",
+  "readyForMainnet": false,
+  "blockers": [
+    "pnpm-lock.yaml",
+    "sui.Move.toml:not-pinned-to-immutable-commit",
+    "solana.rpcUrl",
+    "solana.canonicalMint",
+    "solana.bridgeProgramId",
+    "solana.bridgeVault",
+    "sui.packageId",
+    "sui.coinType",
+    "sui.currencyObjectId",
+    "sui.bridgeControllerId",
+    "sui.frameworkRevision",
+    "governance.operator",
+    "governance.governor",
+    "solana.mintVerified",
+    "solana.programVerified",
+    "solana.vaultVerified",
+    "solana.mintAuthorityRevoked",
+    "solana.freezeAuthorityNull",
+    "solana.transferFeeConfigAbsent",
+    "solana.bridgeVerifierVerified",
+    "sui.packageVerified",
+    "sui.currencyVerified",
+    "sui.controllerVerified",
+    "sui.bridgeAuthorityVerified",
+    "governance.operatorGovernorSeparated",
+    "idl.releaseManifest:not-ready"
+  ]
+}

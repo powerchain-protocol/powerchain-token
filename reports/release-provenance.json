@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "sourceTreeSha256": "069a2fdcf36140954886b584c1321e213a7893a2d1c8fab6a65c5b2b7a4d60c5",
+  "generatedAt": "2026-08-12T11:31:03.576Z",
+  "packageJsonSha256": "2ebc9bde37dab118be87d3adc09028c008278a70d84f407ebf7b0225f049f27a",
+  "tokenConfigSha256": "a52006e8c5595b60cdc799829e0e2c5928f268fe26e7421314c9e84ed2ecf475",
+  "bridgeConfigSha256": "06969bde4021207e4e0e604765609dc529df40e0b90214f34c2bc084dd70e4fb",
+  "mainnetConfigSha256": "a4f573fef0470fa601d213c47dbf11f25a92a0abbe20e2ca596268603bb20fb6",
+  "suiMovePackageSha256": "2e2ddf6b1a4db7c6f10c455a79ad51167ba6895d14e1bf5e16e800952ecf3794",
+  "suiBridgeModuleSha256": "3fd78fde6faaf38728800c6666d385d3e29b8305399e0c88ef466527fc35007b",
+  "solanaLockProgramSha256": "8258722c5e66aa2a8eee1fe0aab9507e4992ef2d64c9d98eb700674510fb9944",
+  "nativeClientPackageSha256": "56e79e05d73ac788386cabdf92879915e3fe3ff6df9a8bbc39eec6965790a1eb",
+  "bridgeIntegrationPackageSha256": "2a2e76423f267b5ec355963d29d71166f79522d55b0b2a34845199445df68421",
+  "metadataSha256": "43981d448ff4f3ff2b8e337e849d639444b93281cd8ba273523fdff8e86bd35d",
+  "wrappedMetadataSha256": "cee0e3f32f1649e62712ffc64a9d3208ba7e56a3eec1a7321b9a0388ed96d246",
+  "changelogSha256": "9ca8d4cddfb8abafdeb12a260848ae123fd923b8a8eb798d27508faa3cf8ae2c"
+}

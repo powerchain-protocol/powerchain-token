@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "status": "blocked-until-deployment-evidence",
+  "solana": {
+    "network": "mainnet-beta",
+    "rpcUrl": null,
+    "canonicalMint": null,
+    "bridgeProgramId": null,
+    "bridgeVault": null,
+    "mintVerified": false,
+    "programVerified": false,
+    "vaultVerified": false,
+    "mintAuthorityRevoked": false,
+    "freezeAuthorityNull": false,
+    "transferFeeConfigAbsent": false,
+    "bridgeVerifierVerified": false
+  },
+  "sui": {
+    "network": "mainnet",
+    "rpcUrl": "https://fullnode.mainnet.sui.io:443",
+    "packageId": null,
+    "coinType": null,
+    "currencyObjectId": null,
+    "bridgeControllerId": null,
+    "packageVerified": false,
+    "currencyVerified": false,
+    "controllerVerified": false,
+    "genesisWrappedSupplyBaseUnits": "0",
+    "decimals": 9,
+    "treasuryCapEncapsulated": true,
+    "frameworkRevision": null,
+    "bridgeAuthorityVerified": false
+  },
+  "governance": {
+    "operator": null,
+    "governor": null,
+    "operatorGovernorSeparated": false,
+    "bridgeAuthorityCustody": "unconfigured"
+  },
+  "policy": {
+    "canonicalDecimals": 9,
+    "wrappedDecimals": 9,
+    "ratio": "1:1",
+    "baseUnitFactor": "1",
+    "wrappedMintPolicy": "bridge-only",
+    "authenticatedBridgeMessagesRequired": true
+  },
+  "abi": {
+    "version": "1.0.0",
+    "combinedSha256": "96e74184c08f283c4de057b96d8e0a31123c44cd6fa249a0ca37c0cb9944f608",
+    "releaseManifestPath": "idl/release/1.0.0.json",
+    "generatedAnchorIdlRequired": true,
+    "suiNormalizedModulesRequired": true
+  }
+}

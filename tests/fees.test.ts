@@ -1,16 +1,2 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import { calculateProtocolFeeBaseUnits, splitProtocolFee } from "../src/fees.js";
-
-test("250 bps equals 2.5 percent at 9 decimals", () => {
-  const onePwrc = 1_000_000_000n;
-  assert.equal(calculateProtocolFeeBaseUnits(onePwrc), 25_000_000n);
-});
-
-test("fee split preserves gross amount", () => {
-  const gross = 100_000_000_000n;
-  const split = splitProtocolFee(gross);
-  assert.equal(split.feeBaseUnits, 2_500_000_000n);
-  assert.equal(split.netBaseUnits, 97_500_000_000n);
-  assert.equal(split.netBaseUnits + split.feeBaseUnits, gross);
-});
+import test from "node:test"; import assert from "node:assert/strict"; import {calculateProtocolFeeBaseUnits,quoteProtocolFee} from "../src/fees.js";
+test("canonical transfer fee is zero",()=>{assert.equal(calculateProtocolFeeBaseUnits(1_000_000_000n),0n);assert.deepEqual(quoteProtocolFee(1_000_000_000n),{grossBaseUnits:1_000_000_000n,feeBaseUnits:0n,netBaseUnits:1_000_000_000n,basisPoints:0,percentage:"0%"});});

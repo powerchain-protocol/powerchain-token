@@ -1,3 +1,5 @@
+import { PublicKey } from "@solana/web3.js";
+
 export const SOLANA_SYSTEM_PROGRAM_ID =
   "11111111111111111111111111111111" as const;
 
@@ -25,6 +27,45 @@ export const SOLANA_PUBLIC_RPC: Record<SolanaCluster, string> = {
   "mainnet-beta": "https://api.mainnet.solana.com",
 };
 
+
+export const POWERCHAIN_FORBIDDEN_DEPLOYMENT_PROGRAM_IDS =
+  new Set<string>([
+    SOLANA_SYSTEM_PROGRAM_ID,
+    SOLANA_TOKEN_PROGRAM_ID,
+    SOLANA_TOKEN_2022_PROGRAM_ID,
+    SOLANA_ASSOCIATED_TOKEN_PROGRAM_ID,
+    METAPLEX_TOKEN_METADATA_PROGRAM_ID,
+  ]);
+
+export function assertPowerChainDeploymentProgramId(
+  value: string,
+  cluster: SolanaCluster,
+): string {
+  let key: PublicKey;
+  try {
+    key = new PublicKey(value.trim());
+  } catch {
+    throw new Error("PWRC_PROGRAM_ID_INVALID");
+  }
+
+  const normalized = key.toBase58();
+  if (POWERCHAIN_FORBIDDEN_DEPLOYMENT_PROGRAM_IDS.has(normalized)) {
+    if (normalized === SOLANA_SYSTEM_PROGRAM_ID) {
+      throw new Error("PWRC_SYSTEM_PROGRAM_IS_NOT_DEPLOYMENT");
+    }
+    throw new Error("PWRC_RESERVED_PROGRAM_IS_NOT_DEPLOYMENT");
+  }
+
+  if (
+    cluster === "mainnet-beta" &&
+    normalized === PWRC_FEES_DEVELOPMENT_PROGRAM_ID
+  ) {
+    throw new Error("PWRC_DEVELOPMENT_PROGRAM_ID_FORBIDDEN_ON_MAINNET");
+  }
+
+  return normalized;
+}
+
 export function resolvePwrcProgramId(
   cluster: SolanaCluster,
   explicit?: string,
@@ -40,7 +81,7 @@ export function resolvePwrcProgramId(
   if (!value) {
     throw new Error(`PWRC_FEES_PROGRAM_ID_REQUIRED:${cluster}`);
   }
-  return value;
+  return assertPowerChainDeploymentProgramId(value, cluster);
 }
 
 export function resolvePwrcRpc(

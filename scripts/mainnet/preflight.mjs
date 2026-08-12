@@ -1,0 +1,2 @@
+import fs from "node:fs"; import {spawnSync} from "node:child_process";
+const run=spawnSync(process.execPath,["scripts/mainnet/status.mjs"],{stdio:"inherit"}); if(run.status!==0)process.exit(run.status??1); const report=JSON.parse(fs.readFileSync("reports/mainnet-status.json","utf8")); if(!report.readyForMainnet){console.error("Mainnet preflight blocked: verified deployment evidence is incomplete."); process.exit(1);}

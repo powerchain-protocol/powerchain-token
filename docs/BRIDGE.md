@@ -22,7 +22,7 @@ effective wrapped exposure
 =
 wrapped supply
 + pending Solana -> Sui
-- pending Sui -> Solana
++ pending Sui -> Solana
 
 effective wrapped exposure <= locked canonical PWRC
 ```

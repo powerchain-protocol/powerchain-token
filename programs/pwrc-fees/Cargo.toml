@@ -1,8 +1,9 @@
 [package]
 name = "pwrc-fees"
 version = "1.0.0"
-description = "PowerChain PWRC protocol fee program"
 edition = "2021"
+publish = false
+description = "Deprecated PowerChain fee-router source retained for historical compatibility only"
 
 [lib]
 crate-type = ["cdylib", "lib"]
@@ -14,8 +15,16 @@ cpi = ["no-entrypoint"]
 no-entrypoint = []
 no-idl = []
 no-log-ix-name = []
-idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+idl-build = [
+  "anchor-lang/idl-build",
+  "anchor-spl/idl-build",
+]
 
 [dependencies]
 anchor-lang = "=0.32.1"
-anchor-spl = { version = "=0.32.1", features = ["token_2022", "token_2022_extensions"] }
+anchor-spl = { version = "=0.32.1", features = ["token_2022"] }
+
+[package.metadata.powerchain]
+status = "deprecated-disabled"
+canonical_transfer_fee_bps = 0
+included_in_workspace = false

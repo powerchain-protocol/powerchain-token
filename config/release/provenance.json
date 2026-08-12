@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "artifact": "powerchain-token",
+  "requiredEvidence": [
+    "sourceTreeSha256",
+    "packageJsonSha256",
+    "tokenConfigSha256",
+    "bridgeConfigSha256",
+    "suiMovePackageSha256",
+    "solanaFeeProgramSha256",
+    "solanaLockProgramSha256",
+    "metadataSha256",
+    "changelogSha256"
+  ],
+  "rules": {
+    "mainnetIdsMayNotBeSystemProgram": true,
+    "unverifiedMainnetIdsRemainNull": true,
+    "artifactVersionMustEqual100": true,
+    "privateKeysForbidden": true,
+    "lockfileRequiredForMainnetRelease": true
+  },
+  "mainnetReadiness": {
+    "canonicalMintVerified": true,
+    "solanaBridgeProgramVerified": true,
+    "solanaBridgeVaultVerified": true,
+    "suiPackageVerified": true,
+    "suiBridgeControllerVerified": true,
+    "suiCurrencyVerified": true,
+    "governanceControlledAuthorities": true,
+    "operatorGovernorSeparation": true,
+    "lockfileRequired": true
+  }
+}

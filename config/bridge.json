@@ -13,7 +13,8 @@
     },
     "mainnet-beta": {
       "mint": null
-    }
+    },
+    "network": "mainnet-beta"
   },
   "wrapped": {
     "name": "Wrapped PowerChain",
@@ -32,7 +33,16 @@
       "packageId": null,
       "coinType": null,
       "metadataObjectId": null
-    }
+    },
+    "maxSupplyBaseUnits": "18446000000000000000",
+    "baseUnitConversion": {
+      "canonicalDecimals": 9,
+      "wrappedDecimals": 9,
+      "canonicalBaseUnitsPerWrappedBaseUnit": "1",
+      "uiRatio": "1 PWRC = 1 wPWRC"
+    },
+    "genesisSupplyBaseUnits": "0",
+    "role": "bridged representation"
   },
   "bridge": {
     "provider": null,
@@ -48,7 +58,19 @@
     "wrappedBurnRequiredBeforeCanonicalRelease": true,
     "wrappedSupplyMustNotExceedLockedCanonical": true,
     "decimalsMustMatch": true,
-    "genesisWrappedSupply": "0"
+    "genesisWrappedSupply": "0",
+    "decimalConversionRequired": false,
+    "canonicalBaseUnitsPerWrappedBaseUnit": "1",
+    "solanaToSuiAmountMustBeDivisibleBy": "1000",
+    "wrappedSupplyComparison": "wPWRC_circulating + pending_Solana_to_Sui + pending_Sui_to_Solana <= PWRC_locked",
+    "metadataKeptSeparate": true,
+    "canonicalDecimals": 9,
+    "wrappedDecimals": 9,
+    "pendingAccounting": {
+      "pendingSolanaToSui": "nonnegative canonical PWRC locked and finalized on Solana but not yet minted on Sui",
+      "pendingSuiToSolana": "nonnegative wPWRC burned and finalized on Sui but canonical PWRC not yet released on Solana",
+      "conservationEquation": "PWRC_locked = wPWRC_circulating + pending_Solana_to_Sui + pending_Sui_to_Solana"
+    }
   },
   "status": "template-only"
 }

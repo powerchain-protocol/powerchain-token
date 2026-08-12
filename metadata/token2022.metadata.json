@@ -1,0 +1,98 @@
+{
+  "name": "PowerChain",
+  "symbol": "PWRC",
+  "description": "PowerChain (PWRC) is the native utility token of the PowerChain ecosystem. Canonical asset on Solana Token-2022 with fixed supply and metadata-linked logo.",
+  "image": "https://token.powerchain.energy/assets/tokens/pwrc-logo.png",
+  "external_url": "https://powerchain.energy",
+  "attributes": [
+    {
+      "trait_type": "Asset Type",
+      "value": "Utility Token"
+    },
+    {
+      "trait_type": "Chain",
+      "value": "Solana"
+    },
+    {
+      "trait_type": "Standard",
+      "value": "Token-2022"
+    },
+    {
+      "trait_type": "Decimals",
+      "value": "9"
+    },
+    {
+      "trait_type": "Version",
+      "value": "1.0.0"
+    },
+    {
+      "trait_type": "Official Website",
+      "value": "https://powerchain.energy"
+    },
+    {
+      "trait_type": "Documentation",
+      "value": "https://docs.powerchain.energy"
+    },
+    {
+      "trait_type": "Whitepaper",
+      "value": "https://whitepaper.powerchain.energy"
+    },
+    {
+      "trait_type": "X",
+      "value": "https://x.com/powerchain_ai"
+    },
+    {
+      "trait_type": "Telegram",
+      "value": "https://t.me/powerchain_official"
+    }
+  ],
+  "properties": {
+    "category": "fungible-token",
+    "chain": "solana",
+    "standard": "token-2022",
+    "symbol": "PWRC",
+    "files": [
+      {
+        "uri": "assets/pwrc-logo.png",
+        "type": "image/png",
+        "cdn": false,
+        "purpose": "local-repository-asset"
+      },
+      {
+        "uri": "https://token.powerchain.energy/assets/tokens/pwrc-logo.png",
+        "type": "image/png",
+        "cdn": true,
+        "purpose": "public-token-logo"
+      }
+    ],
+    "metadata_uri": "https://token.powerchain.energy/metadata/metadata.json",
+    "metadata_sources": {
+      "primary": "https://token.powerchain.energy/metadata/metadata.json",
+      "secondary": {
+        "provider": "github-raw",
+        "environment": "PWRC_GITHUB_METADATA_URI"
+      }
+    },
+    "official_website": "https://powerchain.energy",
+    "token_domain": "https://token.powerchain.energy",
+    "links": {
+      "website": "https://powerchain.energy",
+      "documentation": "https://docs.powerchain.energy",
+      "whitepaper": "https://whitepaper.powerchain.energy",
+      "x": "https://x.com/powerchain_ai",
+      "telegram": "https://t.me/powerchain_official"
+    },
+    "decimals": 9,
+    "canonical_asset": true,
+    "wrapped_metadata": "https://token.powerchain.energy/metadata/wpwrc.metadata.json"
+  },
+  "official_links": {
+    "website": "https://powerchain.energy",
+    "documentation": "https://docs.powerchain.energy",
+    "whitepaper": "https://whitepaper.powerchain.energy",
+    "x": "https://x.com/powerchain_ai",
+    "telegram": "https://t.me/powerchain_official"
+  },
+  "token_standard": "Token-2022",
+  "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+}

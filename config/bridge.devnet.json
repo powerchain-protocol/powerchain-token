@@ -10,7 +10,16 @@
     "chain": "sui",
     "network": "testnet",
     "packageId": null,
-    "coinType": null
+    "coinType": null,
+    "decimals": 9,
+    "canonicalBaseUnitsPerWrappedBaseUnit": "1",
+    "genesisSupplyBaseUnits": "0"
   },
-  "status": "not-deployed"
+  "status": "not-deployed",
+  "policy": {
+    "canonicalDecimals": 9,
+    "wrappedDecimals": 9,
+    "canonicalBaseUnitsPerWrappedBaseUnit": "1",
+    "exactConversionRequired": true
+  }
 }

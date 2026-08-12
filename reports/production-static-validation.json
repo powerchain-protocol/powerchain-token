@@ -1,0 +1,441 @@
+{
+  "ok": true,
+  "version": "1.0.0",
+  "checks": 29,
+  "passed": 29,
+  "failed": 0,
+  "failures": [],
+  "results": [
+    {
+      "script": "scripts/security/check-wpwrc-spec.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "canonical": {
+          "token": "PWRC",
+          "chain": "Solana mainnet-beta",
+          "decimals": 9,
+          "fixedSupply": "18446000000"
+        },
+        "wrapped": {
+          "token": "wPWRC",
+          "chain": "Sui",
+          "decimals": 9,
+          "genesisSupply": "0",
+          "ratio": "1:1",
+          "treasuryCapEncapsulated": true
+        },
+        "alias": {
+          "alias": "powerchain",
+          "address": "0x4a4a81c5e4a520c1b4d7b5b572a0567f48c6c7e85257f0a13e65639cfba49fb1",
+          "assumedPackageId": false
+        },
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/security/check-no-transfer-fee.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "canonicalTransferFeeBps": 0,
+        "transferFeeConfigAllowed": false,
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/production/check-stale-model.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "staleModelMatches": [],
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/production/check-sui-capability.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "treasuryCapEncapsulated": true,
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/production/check-solana-program.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "activeProgram": "pwrc-lock",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/production/check-client-bridge.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/integration/check.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "integrationPackage": "@powerchain/bridge-integration",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/security/check-model.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "requiredExtensions": [
+          "MetadataPointer",
+          "TokenMetadata"
+        ],
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/security/check-programs.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "programs": {
+          "pwrcLock": "active",
+          "pwrcFees": "deprecated-disabled",
+          "wpwrcSui": "bridge-capability-encapsulated"
+        },
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/security/check-bridge-intent.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "bridgeIntent": {
+          "canonical": "PWRC on Solana mainnet-beta",
+          "wrapped": "wPWRC on Sui",
+          "backing": "1:1",
+          "canonicalDecimals": 9,
+          "wrappedDecimals": 9,
+          "baseUnitFactor": 1
+        },
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/bridge/check-upgrade.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "upgrade": "9-decimal-1-to-1",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/relayer/check.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "relayer": "fail-closed",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/optimization/check.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "optimization": {
+          "sharedBridgeMath": true,
+          "boundedRelayerConcurrency": true,
+          "inFlightReadDedupe": true,
+          "boundedSuiPagination": true,
+          "boundedRpcBatching": true
+        },
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/optimization/check-v2.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "optimizationV2": {
+          "boundedQueueBackpressure": true,
+          "domainSeparatedReplay": true,
+          "canonicalSerialization": true,
+          "strictConfigParsing": true,
+          "bridgeIdentityBundle": true,
+          "accountBoundaryValidation": true
+        },
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/burn/check-epoch.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "startQuarter": "2027 Q1",
+        "startQuarterId": "20271",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/burn/check-quarterly.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "burn": "2% quarterly",
+        "suiAlias": "powerchain",
+        "suiAddress": "0x4a4a81c5e4a520c1b4d7b5b572a0567f48c6c7e85257f0a13e65639cfba49fb1",
+        "firstQuarterIllustration": {
+          "burnBaseUnits": "368920000000000000",
+          "burnPwrc": "368920000",
+          "postBurnSupplyBaseUnits": "18077080000000000000",
+          "postBurnSupplyPwrc": "18077080000"
+        }
+      }
+    },
+    {
+      "script": "scripts/burn/check-race-protection.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "raceProtection": {
+          "suiPausedBeforeSolanaBurn": true,
+          "stagedBurnIntentBeforeSolanaBurn": true,
+          "unpauseAfterReconciliationOnly": true,
+          "sameBaseUnitCeiling": true
+        },
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/release/check-bridge-release.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "releaseState": "configuration-ready",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/metadata/validate-token-metadata.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "canonical": {
+          "asset": "PWRC",
+          "chain": "solana",
+          "decimals": 9
+        },
+        "wrapped": {
+          "asset": "wPWRC",
+          "chain": "sui",
+          "decimals": 9,
+          "backing": "1:1 PWRC",
+          "canonicalBaseUnitsPerWrappedBaseUnit": "1"
+        },
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/metadata/check-official-links.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "officialLinks": {
+          "website": "https://powerchain.energy",
+          "documentation": "https://docs.powerchain.energy",
+          "whitepaper": "https://whitepaper.powerchain.energy",
+          "x": "https://x.com/powerchain_ai",
+          "telegram": "https://t.me/powerchain_official"
+        },
+        "checkedFiles": [
+          "metadata/metadata.json",
+          "metadata/metaplex.metadata.json",
+          "metadata/token2022.metadata.json",
+          "metadata/wpwrc.metadata.json"
+        ],
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/metadata/check-manifest.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "algorithm": "sha256",
+        "assets": 5,
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/sui/check-zero-genesis.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "asset": "wPWRC",
+        "decimals": 9,
+        "genesisSupplyBaseUnits": "0",
+        "issuance": "bridge-only",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/sui/check-networks.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "defaultNetwork": "testnet",
+        "productionNetwork": "mainnet",
+        "networks": {
+          "testnet": "https://fullnode.testnet.sui.io:443",
+          "mainnet": "https://fullnode.mainnet.sui.io:443",
+          "devnet": "https://fullnode.devnet.sui.io:443",
+          "local": "http://127.0.0.1:9000"
+        },
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/native-token-client/check-v2.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "client": {
+          "canonicalDecimals": 9,
+          "wrappedDecimals": 9,
+          "transferFeeBps": 0,
+          "bridgeRatio": "1:1"
+        },
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/packages/check-workspace.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "packages": [
+          "@powerchain/bridge-integration",
+          "@powerchain/native-token-client"
+        ],
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/packages/check-exports.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/packages/check-tsconfig.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "configs": [
+          "tsconfig.base.json",
+          "tsconfig.json",
+          "tsconfig.build.json",
+          "tsconfig.scripts.json",
+          "tsconfig.tests.json"
+        ],
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/packages/check-scripts.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "scriptCount": 107,
+        "failures": []
+      }
+    },
+    {
+      "script": "scripts/security/check-manifests.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "cargoWorkspace": [
+          "programs/pwrc-lock"
+        ],
+        "excludedPrograms": [
+          "programs/pwrc-fees"
+        ],
+        "anchorPrograms": [
+          "pwrc_lock"
+        ],
+        "failures": []
+      }
+    }
+  ]
+}

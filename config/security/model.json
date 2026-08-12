@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "mutableTransitions": {
+    "explicitSignerRequired": true,
+    "explicitWritableBoundaryRequired": true,
+    "solana": "Signer + writable account ownership/mutation constraints",
+    "sui": "TxContext sender authorization + &mut shared-object boundary"
+  },
+  "formats": {
+    "instructionVersion": 1,
+    "stateVersion": 1,
+    "rejectUnsupportedVersions": true,
+    "rejectMalformedData": true,
+    "rejectTrailingInstructionBytes": true
+  },
+  "arithmetic": {
+    "checkedIntegerOnly": true,
+    "floatingPointForMonetaryState": false,
+    "typescriptAmounts": "bigint",
+    "solanaOnChain": "checked integer arithmetic",
+    "suiOnChain": "integer arithmetic plus explicit bounds/preconditions"
+  },
+  "nonces": {
+    "strictlyIncreasing": true,
+    "domains": [
+      "Solana fee transfer_count",
+      "Sui mint_sequence",
+      "Sui burn_sequence",
+      "Sui canonical burn quarter_id"
+    ]
+  },
+  "mainnetAuthorities": {
+    "governanceControlled": true,
+    "multisigOrTimelockRequired": true,
+    "singleHotKeyAllowed": false
+  },
+  "externalInputs": {
+    "rpcAuthoritative": false,
+    "oracleAuthoritative": false,
+    "marketDataAuthoritative": false,
+    "dexAuthoritative": false,
+    "rule": "External providers may inform reads, prices, markets, and quotes but cannot independently authorize mint, burn, release, governance, or settlement."
+  },
+  "solanaDeploymentIdentity": {
+    "systemProgram": "11111111111111111111111111111111",
+    "systemProgramIsPowerChainDeployment": false,
+    "mainnetProgramId": null,
+    "status": "pending separately deployed and verified PowerChain SBF program"
+  }
+}

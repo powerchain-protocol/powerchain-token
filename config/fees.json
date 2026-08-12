@@ -3,31 +3,14 @@
   "asset": "PWRC",
   "decimals": 9,
   "protocolFee": {
-    "basisPoints": 250,
-    "percentage": "2.5%",
-    "collectionMode": "program-routed-transfer",
-    "program": "pwrc-fees",
-    "feeVault": null,
-    "authority": "FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy",
-    "decimals": 9,
-    "rounding": "floor",
-    "minimumGrossBaseUnits": "40",
-    "minimumGrossPWRC": "0.000000040",
-    "idempotency": "receipt-pda-v1",
-    "feePolicyMutable": false,
-    "feeVaultRotatableOnlyWhilePaused": false,
-    "feeCollectorOwner": "FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy",
-    "feeVaultType": "token-2022-associated-token-account",
-    "feeVaultDerivation": "ATA(PWRC_MINT, feeCollectorOwner, TOKEN_2022_PROGRAM_ID)",
-    "feeVaultMutable": false,
-    "transactionSubmission": "simulate-exact-bytes-then-sendRawTransaction",
-    "confirmation": "finalized",
-    "logicalRetryBehavior": "return-existing-receipt"
+    "enabled": false,
+    "basisPoints": 0,
+    "collectionMode": "none",
+    "note": "Canonical PWRC transfers have no Token-2022 or protocol transfer fee."
   },
   "token2022TransferFeeExtension": {
-    "status": "optional-not-enabled",
-    "basisPoints": 250,
-    "maximumFeeBaseUnits": null,
-    "note": "If enabled in a future mint design, TransferFeeConfig must be initialized before InitializeMint and a deliberate maximum fee must be selected. PWRC 1.0.0 currently collects the 250 bps protocol fee only through pwrc-fees."
+    "status": "disabled",
+    "basisPoints": 0,
+    "maximumFeeBaseUnits": "0"
   }
 }

@@ -1,0 +1,74 @@
+{
+  "version": "1.0.0",
+  "staticValidation": true,
+  "typescript": {
+    "syntaxParsed": true,
+    "tsconfigResolved": true,
+    "dependencyBoundTypecheckPassed": false,
+    "nodeModulesPresent": false,
+    "pnpmLockPresent": false,
+    "typecheckErrorExcerpt": "error TS2688: Cannot find type definition file for 'node'.\n  The file is in the program because:\n    Entry point of type library 'node' specified in compilerOptions",
+    "corepackPnpmAttempt": {
+      "returnCode": 1,
+      "stdout": "",
+      "stderr": "Failed to create cache directory. Please ensure the user has write access to the target directory (/home/oai/.cache/node/corepack/v1). If the user's home directory does not exist, create it first."
+    }
+  },
+  "solana": {
+    "anchorBuildExecuted": false,
+    "cargoTestExecuted": false,
+    "tools": {
+      "cargo": null,
+      "rustc": null,
+      "anchor": null,
+      "solana": null
+    },
+    "blockers": [
+      "cargo unavailable",
+      "rustc unavailable",
+      "anchor unavailable",
+      "solana unavailable"
+    ]
+  },
+  "sui": {
+    "moveBuildExecuted": false,
+    "moveTestExecuted": false,
+    "suiCli": null,
+    "blockers": [
+      "sui CLI unavailable",
+      "development Move.toml is not pinned to an immutable reviewed Mainnet framework commit"
+    ]
+  },
+  "mainnet": {
+    "deploymentExecuted": false,
+    "ready": false,
+    "preflightFailsClosed": true,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "sui.Move.toml:not-pinned-to-immutable-commit",
+      "solana.rpcUrl",
+      "solana.canonicalMint",
+      "solana.bridgeProgramId",
+      "solana.bridgeVault",
+      "sui.packageId",
+      "sui.coinType",
+      "sui.currencyObjectId",
+      "sui.bridgeControllerId",
+      "sui.frameworkRevision",
+      "governance.operator",
+      "governance.governor",
+      "solana.mintVerified",
+      "solana.programVerified",
+      "solana.vaultVerified",
+      "solana.mintAuthorityRevoked",
+      "solana.freezeAuthorityNull",
+      "solana.transferFeeConfigAbsent",
+      "solana.bridgeVerifierVerified",
+      "sui.packageVerified",
+      "sui.currencyVerified",
+      "sui.controllerVerified",
+      "sui.bridgeAuthorityVerified",
+      "governance.operatorGovernorSeparated"
+    ]
+  }
+}

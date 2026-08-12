@@ -1,0 +1,68 @@
+{
+  "ok": true,
+  "version": "1.0.0",
+  "anchor": {
+    "instructions": [
+      "acceptGovernor",
+      "acceptOperator",
+      "cancelGovernorRotation",
+      "cancelOperatorRotation",
+      "initialize",
+      "lockToSui",
+      "proposeGovernor",
+      "proposeOperator",
+      "releaseFromSui",
+      "setPaused"
+    ],
+    "accountContexts": [
+      "AcceptGovernor",
+      "AcceptOperator",
+      "Governor",
+      "Initialize",
+      "LockToSui",
+      "ReleaseFromSui"
+    ],
+    "accountTypes": [
+      "BridgeConfig",
+      "LockReceipt",
+      "ReleaseReceipt"
+    ],
+    "events": [
+      "BridgeInitialized",
+      "BridgePauseChanged",
+      "PwrcLockedForSui",
+      "PwrcReleasedFromSui"
+    ]
+  },
+  "sui": {
+    "entries": [
+      "accept_bridge_authority",
+      "accept_governor",
+      "burn_for_solana",
+      "cancel_bridge_authority",
+      "cancel_canonical_burn_intent",
+      "cancel_governor",
+      "configure_authorities",
+      "lower_canonical_supply_ceiling",
+      "mint_from_bridge",
+      "propose_bridge_authority",
+      "propose_governor",
+      "set_paused",
+      "stage_canonical_burn_intent"
+    ],
+    "events": [
+      "BridgeAuthoritiesConfigured",
+      "BridgePauseChanged",
+      "BurnedForSolana",
+      "CanonicalBurnIntentStaged",
+      "CanonicalSupplyCeilingLowered",
+      "MintedFromSolana"
+    ]
+  },
+  "sourceHashes": {
+    "programs/pwrc-lock/src/lib.rs": "8258722c5e66aa2a8eee1fe0aab9507e4992ef2d64c9d98eb700674510fb9944",
+    "contracts/wpwrc/sources/wpwrc.move": "2e2ddf6b1a4db7c6f10c455a79ad51167ba6895d14e1bf5e16e800952ecf3794",
+    "contracts/wpwrc/sources/bridge.move": "3fd78fde6faaf38728800c6666d385d3e29b8305399e0c88ef466527fc35007b"
+  },
+  "failures": []
+}

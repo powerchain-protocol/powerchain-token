@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "default": "solscan",
+  "baseUrl": "https://solscan.io",
+  "defaultCluster": "mainnet-beta",
+  "routes": {
+    "token": "/token/{mint}",
+    "account": "/account/{address}",
+    "transaction": "/tx/{signature}"
+  },
+  "clusterPolicy": {
+    "mainnetBetaQuery": null,
+    "devnetQuery": "cluster=devnet",
+    "localnetPublicLink": false
+  },
+  "authoritative": false,
+  "note": "Explorer output is informational and never replaces direct Token-2022 account validation."
+}

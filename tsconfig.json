@@ -1,24 +1,20 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2023",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "types": [
-      "node"
-    ],
-    "outDir": "dist"
+    "noEmit": true
   },
   "include": [
     "src/**/*.ts",
+    "client/**/*.ts",
+    "packages/**/*.ts",
     "scripts/**/*.ts",
-    "tests/**/*.ts",
-    "client/**/*.ts"
+    "tests/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "deployments",
+    "releases"
   ]
 }

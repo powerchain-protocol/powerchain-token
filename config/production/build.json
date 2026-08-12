@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "requiredChecks": [
+    "spec",
+    "no-transfer-fee",
+    "stale-model-scan",
+    "sui-capability-encapsulation",
+    "solana-program-static",
+    "integration",
+    "workspace",
+    "exports",
+    "manifests",
+    "networks"
+  ],
+  "buildClaims": "Only claim builds actually executed with installed dependencies/toolchains."
+}

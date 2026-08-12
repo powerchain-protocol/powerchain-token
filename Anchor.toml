@@ -1,14 +1,21 @@
 [toolchain]
 anchor_version = "0.32.1"
+solana_version = "2.3.0"
+package_manager = "pnpm"
+
+[workspace]
+members = ["programs/pwrc-lock"]
+exclude = ["programs/pwrc-fees"]
 
 [features]
 resolution = true
 skip-lint = false
 
-# This ID is a local development identity only. Devnet/mainnet IDs remain
-# unset until an actual program keypair is generated, built and deployed.
+# Local development identity only.
+# Devnet/Mainnet program IDs MUST remain unset in configuration until a
+# separately built, deployed, executable, and verified program is published.
 [programs.localnet]
-pwrc_fees = "9Ty7dY7pLmMAdH9nJHD4FSZxkRCAGbce12fs7AJV4pW7"
+pwrc_lock = "7JAV3PsxkHh5oKAFDMKqVpKaV2P2P5Vj3Qv15hH8wPwr"
 
 [registry]
 url = "https://api.apr.dev"
@@ -19,3 +26,5 @@ wallet = "~/.config/solana/id.json"
 
 [scripts]
 test = "pnpm test:anchor-program"
+program-check = "pnpm pwrc:programs:check"
+bridge-check = "pnpm pwrc:wpwrc:spec-check"

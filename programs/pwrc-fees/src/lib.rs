@@ -1,6 +1,14 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
     token_2022,
+    token_2022::spl_token_2022::{
+        extension::{
+            transfer_fee::TransferFeeConfig,
+            BaseStateWithExtensions,
+            StateWithExtensions,
+        },
+        state::Mint as SplToken2022Mint,
+    },
     token_interface::{
         transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked,
     },
@@ -11,6 +19,11 @@ declare_id!("9Ty7dY7pLmMAdH9nJHD4FSZxkRCAGbce12fs7AJV4pW7");
 pub const PWRC_CONFIG_VERSION: u8 = 1;
 pub const PWRC_DECIMALS: u8 = 9;
 pub const PWRC_PROTOCOL_FEE_BPS: u16 = 250;
+/// TransferFeeConfig is required on canonical PWRC and carries the native
+/// 250 bps fee. The legacy routed-transfer instruction is disabled so the
+/// native fee cannot be accidentally stacked with another 250 bps charge.
+pub const PWRC_NATIVE_TRANSFER_FEE_BPS: u16 = 250;
+pub const PWRC_PROTOCOL_ROUTER_ENABLED: bool = false;
 pub const BPS_DENOMINATOR: u128 = 10_000;
 // With floor division, 40 base units is the smallest amount that yields a
 // non-zero 250 bps fee. At 9 decimals this is 0.000000040 PWRC.
@@ -24,6 +37,9 @@ pub mod pwrc_fees {
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         validate_token2022_program(&ctx.accounts.token_program)?;
+        validate_native_transfer_fee_profile(
+            &ctx.accounts.mint.to_account_info(),
+        )?;
         require_eq!(
             ctx.accounts.mint.decimals,
             PWRC_DECIMALS,
@@ -81,6 +97,7 @@ pub mod pwrc_fees {
     /// call `accept_authority`; this prevents accidental one-step ownership loss.
     pub fn propose_authority(ctx: Context<Admin>, new_authority: Pubkey) -> Result<()> {
         validate_config_version(&ctx.accounts.config)?;
+        require!(ctx.accounts.config.paused, PwrcFeeError::GovernanceRequiresPause);
         require!(
             new_authority != Pubkey::default(),
             PwrcFeeError::InvalidAuthority
@@ -102,6 +119,7 @@ pub mod pwrc_fees {
 
     pub fn accept_authority(ctx: Context<AcceptAuthority>) -> Result<()> {
         validate_config_version(&ctx.accounts.config)?;
+        require!(ctx.accounts.config.paused, PwrcFeeError::GovernanceRequiresPause);
         let expected = ctx
             .accounts
             .config
@@ -125,6 +143,18 @@ pub mod pwrc_fees {
     }
 
 
+pub fn cancel_authority(ctx: Context<Admin>) -> Result<()> {
+    validate_config_version(&ctx.accounts.config)?;
+    require!(ctx.accounts.config.paused, PwrcFeeError::GovernanceRequiresPause);
+    ctx.accounts.config.pending_authority = None;
+    emit!(FeeAuthorityCancelled {
+        config: ctx.accounts.config.key(),
+        authority: ctx.accounts.authority.key(),
+    });
+    Ok(())
+}
+
+
     /// Idempotent protocol-routed PWRC transfer. `transfer_id` is a caller
     /// supplied 32-byte business-operation identifier. Its receipt PDA can only
     /// be initialized once, so a retried logical payment cannot be charged twice.
@@ -133,7 +163,15 @@ pub mod pwrc_fees {
         gross_amount: u64,
         transfer_id: [u8; 32],
     ) -> Result<()> {
+        require!(
+            PWRC_PROTOCOL_ROUTER_ENABLED,
+            PwrcFeeError::ProtocolRouterDisabledWithNativeFee
+        );
+
         validate_token2022_program(&ctx.accounts.token_program)?;
+        validate_native_transfer_fee_profile(
+            &ctx.accounts.mint.to_account_info(),
+        )?;
         validate_config_version(&ctx.accounts.config)?;
         require!(!ctx.accounts.config.paused, PwrcFeeError::ProgramPaused);
         require!(
@@ -308,6 +346,28 @@ fn transfer_tokens<'info>(
         PWRC_DECIMALS,
     )
 }
+
+
+fn validate_native_transfer_fee_profile(mint_info: &AccountInfo) -> Result<()> {
+    let data = mint_info.try_borrow_data()?;
+    let mint = StateWithExtensions::<SplToken2022Mint>::unpack(&data)
+        .map_err(|_| error!(PwrcFeeError::InvalidToken2022MintState))?;
+    let config = mint
+        .get_extension::<TransferFeeConfig>()
+        .map_err(|_| error!(PwrcFeeError::TransferFeeConfigRequired))?;
+
+    let epoch = Clock::get()?.epoch;
+    let active_fee = config.get_epoch_fee(epoch);
+    let active_bps: u16 = active_fee.transfer_fee_basis_points.into();
+
+    require_eq!(
+        active_bps,
+        PWRC_NATIVE_TRANSFER_FEE_BPS,
+        PwrcFeeError::NativeTransferFeePolicyMismatch
+    );
+    Ok(())
+}
+
 
 fn validate_token2022_program(token_program: &Interface<TokenInterface>) -> Result<()> {
     require_keys_eq!(
@@ -496,6 +556,13 @@ pub struct FeeAuthorityAccepted {
 }
 
 
+#[event]
+pub struct FeeAuthorityCancelled {
+    pub config: Pubkey,
+    pub authority: Pubkey,
+}
+
+
 #[error_code]
 pub enum PwrcFeeError {
     #[msg("Fee basis points must be between 0 and 10,000")]
@@ -546,6 +613,16 @@ pub enum PwrcFeeError {
     NoPendingAuthority,
     #[msg("PWRC fee vault must be owned by the canonical fee collector")]
     InvalidFeeCollector,
+    #[msg("Governance changes require the program to be paused")]
+    GovernanceRequiresPause,
+    #[msg("Canonical PWRC mint must include TransferFeeConfig")]
+    TransferFeeConfigRequired,
+    #[msg("Native Token-2022 transfer fee must match the PowerChain policy")]
+    NativeTransferFeePolicyMismatch,
+    #[msg("Invalid Token-2022 mint extension state")]
+    InvalidToken2022MintState,
+    #[msg("Legacy routed fee transfers are disabled while native Token-2022 fees are active")]
+    ProtocolRouterDisabledWithNativeFee,
 }
 
 #[cfg(test)]

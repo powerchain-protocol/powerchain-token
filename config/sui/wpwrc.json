@@ -9,13 +9,23 @@
   },
   "wrapped": {
     "asset": "wPWRC",
-    "name": "Wrapped PowerChain",
+    "name": "PowerChain",
     "chain": "sui",
     "decimals": 9,
     "genesisSupply": "0",
     "maxSupplyBaseUnits": "18446000000000000000",
     "metadata": "metadata/wpwrc.metadata.json",
-    "icon": "https://token.powerchain.energy/assets/tokens/wpwrc-logo.png"
+    "icon": "https://token.powerchain.energy/assets/tokens/wpwrc-logo.png",
+    "baseUnitConversion": {
+      "canonicalDecimals": 9,
+      "wrappedDecimals": 9,
+      "canonicalBaseUnitsPerWrappedBaseUnit": "1",
+      "exact": true
+    },
+    "genesisSupplyBaseUnits": "0",
+    "mintPolicy": "bridge-only",
+    "publicStandaloneMint": false,
+    "treasuryCapSharedDirectly": false
   },
   "networks": {
     "testnet": {
@@ -23,16 +33,23 @@
       "coinType": null,
       "currencyObjectId": null,
       "bridgeControllerId": null,
-      "bridgeAuthority": "powerchain",
-      "status": "not-deployed"
+      "bridgeAuthority": null,
+      "status": "not-deployed",
+      "operator": null,
+      "governor": null,
+      "localAlias": "powerchain",
+      "productionRequirement": "bridge authority/operator and governor must be explicit, distinct, reviewed identities; the publisher alias is not an authority default"
     },
     "mainnet": {
       "packageId": null,
       "coinType": null,
       "currencyObjectId": null,
       "bridgeControllerId": null,
-      "bridgeAuthority": "powerchain",
-      "status": "not-deployed"
+      "bridgeAuthority": null,
+      "status": "not-deployed",
+      "operator": null,
+      "governor": null,
+      "productionRequirement": "bridge authority/operator and governor must be explicit, distinct, reviewed identities; the publisher alias is not an authority default"
     }
   },
   "security": {
@@ -57,7 +74,31 @@
     ],
     "authorityRotationRequiresPause": true,
     "crossChainConservationEvidence": true,
-    "deploymentEvidenceSha256": true
+    "deploymentEvidenceSha256": true,
+    "separateOperatorAndGovernorRoles": true,
+    "operatorMay": [
+      "mint verified bridge claims"
+    ],
+    "operatorMayNot": [
+      "pause bridge",
+      "rotate operator",
+      "rotate governor"
+    ],
+    "governorMay": [
+      "pause/unpause bridge",
+      "propose/cancel operator rotation",
+      "propose/cancel governor rotation"
+    ],
+    "roleRotationRequiresPause": true,
+    "eventSequences": true,
+    "mintAuthorizationMaxTtlSeconds": 600,
+    "wrappedSupplyBackingInvariant": "wPWRC_circulating + pending_Solana_to_Sui + pending_Sui_to_Solana <= PWRC_locked",
+    "canonicalAndWrappedMetadataSeparate": true,
+    "zeroGenesisSupplyRequired": true,
+    "mintOnlyThroughBridgeController": true,
+    "mintClaimAmountUnit": "canonical PWRC base units (9 decimals; identical to wPWRC base units)",
+    "suiMintAmountUnit": "wrapped wPWRC base units (9 decimals; identical to PWRC base units)",
+    "treasuryCapEncapsulated": true
   },
   "bridgeProvider": {
     "mode": "operator-attested-controller",
@@ -68,5 +109,20 @@
     "coinRegistryObject": "0xc",
     "otwRequiresFinalizeRegistration": true,
     "metadataCapDeletedAtGenesis": true
-  }
+  },
+  "identity": {
+    "alias": "powerchain",
+    "address": "0x4a4a81c5e4a520c1b4d7b5b572a0567f48c6c7e85257f0a13e65639cfba49fb1",
+    "role": "address-alias/configuration-value",
+    "isPackageId": false,
+    "packageIdRequiresDeploymentEvidence": true
+  },
+  "rpc": {
+    "testnet": "https://fullnode.testnet.sui.io:443",
+    "mainnet": "https://fullnode.mainnet.sui.io:443",
+    "devnet": "https://fullnode.devnet.sui.io:443",
+    "local": "http://127.0.0.1:9000"
+  },
+  "defaultNetwork": "testnet",
+  "productionNetwork": "mainnet"
 }

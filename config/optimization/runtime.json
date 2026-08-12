@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "relayer": {
+    "defaultConcurrency": 4,
+    "maxConcurrency": 64,
+    "readCacheTtlMs": 2000,
+    "readCacheMaxEntries": 256,
+    "maxRetryAttempts": 3,
+    "queueMaxSize": 1000,
+    "hardBackpressure": true,
+    "duplicateQueueIdsRejected": true
+  },
+  "sui": {
+    "coinListPageSizeDefault": 50,
+    "coinListPageSizeMax": 100,
+    "coinListMaxPagesDefault": 20,
+    "coinListMaxPagesHardLimit": 100
+  },
+  "solanaRpc": {
+    "batchMaxRequests": 20,
+    "maxContentLengthBytes": 2000000,
+    "maxRequestBodyBytes": 256000
+  },
+  "bridge": {
+    "sharedConservationMath": true,
+    "singleBaseUnitConversionModule": true,
+    "domainSeparatedReplayKeys": true,
+    "canonicalJsonEvidence": true
+  },
+  "configuration": {
+    "strictIntegerParsing": true,
+    "strictBooleanParsing": true,
+    "unsafeFallbackParsingForbidden": true
+  }
+}

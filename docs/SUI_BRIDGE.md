@@ -55,7 +55,7 @@ Do not treat possession of a single hot key as production bridge security.
 ## Build
 
 ```bash
-cd programs/sui/wpwrc
+cd contracts/wpwrc
 sui move build
 sui move test
 ```
@@ -152,9 +152,93 @@ The invariant remains:
 ```text
 wPWRC live supply
 + pending Solana -> Sui
-- pending Sui -> Solana
++ pending Sui -> Solana
 <= canonical PWRC locked on Solana
 ```
 
 Authority rotation is now permitted only while bridge operations are paused.
 The current authority can also cancel a pending rotation while paused.
+
+## Operator / governor separation
+
+The controller now has two independent security roles:
+
+```text
+operator
+  └─ execute already-verified Solana -> Sui mint claims
+
+governor
+  ├─ pause / unpause bridge operations
+  ├─ propose / cancel operator rotation
+  └─ propose / cancel governor rotation
+```
+
+Role changes require the bridge to be paused and use a two-step
+propose/accept flow. For Mainnet, operator and governor must be different
+controlled identities. The governor should use stronger multisig/threshold
+custody than the online operator.
+
+## Event sequencing
+
+Mint and burn events contain monotonic sequence numbers in addition to their
+replay IDs and `supply_after`. Indexers should reject gaps, duplicates and
+unexpected sequence regressions when producing bridge accounting evidence.
+
+## Mint authorization envelope
+
+The off-chain verifier should issue a short-lived authorization only after the
+canonical Solana lock has satisfied the configured finality policy.
+
+Authorization fields include:
+
+- claim hash
+- Solana slot
+- source signature
+- instruction index
+- canonical mint
+- lock vault
+- exact base-unit amount
+- Sui recipient
+- observation time
+- expiry
+- verifier identity
+
+The default maximum authorization lifetime is 10 minutes.
+
+## Deployment lifecycle
+
+A deployment is not considered active merely because the package published.
+
+```text
+NOT_DEPLOYED
+→ PUBLISHED
+→ REGISTERED
+→ IDENTITY_VERIFIED
+→ CONSERVATION_VERIFIED
+→ ACTIVE
+```
+
+`PAUSED` and `BLOCKED` are explicit operational states.
+
+Check readiness with:
+
+```bash
+pnpm wpwrc:testnet:readiness
+pnpm wpwrc:mainnet:readiness
+```
+
+Mainnet readiness additionally requires distinct operator/governor identities,
+the canonical Solana lock vault and a bridge-verifier identity.
+
+## Quarterly canonical-supply ceiling
+
+The Sui BridgeController now has a monotonically decreasing
+`canonical_supply_ceiling`. It begins at the PWRC genesis maximum and is lowered
+after finalized canonical Solana burns. It can never be raised by governance.
+
+Configured Testnet PowerChain identity:
+
+```text
+alias:   powerchain
+address: 0x4a4a81c5e4a520c1b4d7b5b572a0567f48c6c7e85257f0a13e65639cfba49fb1
+```
