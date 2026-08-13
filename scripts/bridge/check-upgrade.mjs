@@ -2,11 +2,11 @@ import fs from "node:fs";
 
 const failures = [];
 const receipt = fs.readFileSync(
-  "src/bridge/receipt.ts",
+  "packages/protocol/src/bridge/receipt.ts",
   "utf8",
 );
 const reconcile = fs.readFileSync(
-  "src/bridge/reconcile.ts",
+  "packages/protocol/src/bridge/reconcile.ts",
   "utf8",
 );
 const lock = fs.readFileSync(

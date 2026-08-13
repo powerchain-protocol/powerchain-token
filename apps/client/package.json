@@ -1,0 +1,15 @@
+{
+  "name": "@powerchain/client",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.22.3 <23 || >=24.18.1 <25 || >=26.5.1 <27",
+    "pnpm": "10.21.0"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check public/app.js"
+  },
+  "description": "PowerChain browser client for PWRC platform status, bridge quotes and capability visibility."
+}

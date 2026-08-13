@@ -1,0 +1,1 @@
+{"version":3,"file":"conservation.d.ts","sourceRoot":"","sources":["../../../src/bridge/conservation.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,uBAAuB;IACtC,4BAA4B,EAAE,MAAM,CAAC;IACrC,wBAAwB,EAAE,MAAM,CAAC;IACjC,sBAAsB,EAAE,MAAM,CAAC;IAC/B,2BAA2B,CAAC,EAAE,MAAM,CAAC;IACrC,2BAA2B,CAAC,EAAE,MAAM,CAAC;CACtC;AAED,wBAAgB,0BAA0B,CACxC,KAAK,EAAE,uBAAuB;;;;;EAiD/B"}

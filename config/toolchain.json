@@ -1,13 +1,12 @@
 {
   "agave": "2.3.0",
   "splTokenCli": "5.6.1",
-  "nodeMajor": 26,
   "pnpm": "10.21.0",
   "version": "1.0.0",
   "anchor": "0.32.1",
-  "qualificationPolicy": "Node 26.7.0 Current + pnpm 10.21.0 + Anchor 0.32.1 / Agave 2.3.0 reviewed workspace target; any toolchain or approved-build change requires fresh Devnet qualification before Mainnet.",
-  "node": "26.7.0",
-  "nodeChannel": "current",
+  "qualificationPolicy": "PowerChain 1.0.0 supports Node 22.22.3 compatibility, Node 24.18.1 LTS, and Node 26.5.1 Current with pnpm 10.21.0. Native macOS 11/12 uses Node 22; Node 24/26 official macOS binaries require macOS 13.5+. Any toolchain or approved-build change requires fresh Devnet qualification before Mainnet.",
+  "node": "22.22.3",
+  "nodeChannel": "lts-maintenance",
   "pnpmBuildPolicy": {
     "strictDepBuilds": true,
     "onlyBuiltDependencies": [
@@ -17,5 +16,26 @@
       "utf-8-validate@6.0.6"
     ],
     "dangerouslyAllowAllBuilds": false
+  },
+  "nodeCompatibility": {
+    "localBaseline": "22.22.3",
+    "supported": [
+      {
+        "range": ">=22.22.3 <23",
+        "channel": "Node 22 LTS compatibility",
+        "macosMinimum": "11.0"
+      },
+      {
+        "range": ">=24.18.1 <25",
+        "channel": "Node 24 LTS",
+        "macosMinimum": "13.5"
+      },
+      {
+        "range": ">=26.5.1 <27",
+        "channel": "Node 26 Current",
+        "macosMinimum": "13.5"
+      }
+    ],
+    "policy": "Use Node 22.22.3 for native macOS 11/12 compatibility; Node 24/26 lanes require macOS 13.5+ official binaries. CI qualifies Node 22 and Node 24. Never let pnpm auto-download a Node runtime."
   }
 }

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
-import { canonicalJson } from "../src/canonical-json.js";
+import { canonicalJson } from "../packages/protocol/src/canonical-json.js";
 
 const file = process.argv[2];
 if (!file || !fs.existsSync(file)) throw new Error(`Missing journal: ${file}`);

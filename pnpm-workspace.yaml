@@ -2,9 +2,9 @@ packages:
   - "packages/*"
   - "apps/*"
 
-# PowerChain production Node runtime.
-useNodeVersion: 26.7.0
-nodeVersion: 26.7.0
+# PowerChain Node is provided by the host/version manager.
+# Do not use pnpm useNodeVersion/nodeVersion here: forcing a downloaded Node
+# can crash before repository checks run on older macOS libc++ runtimes.
 engineStrict: true
 
 # pnpm 10.21.0 dependency-build policy.

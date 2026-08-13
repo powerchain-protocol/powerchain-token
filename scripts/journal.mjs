@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { canonicalJson } from "../src/canonical-json.js";
+import { canonicalJson } from "../packages/protocol/src/canonical-json.js";
 
 const [cluster, stage, operation, signature = ""] = process.argv.slice(2);
 if (!cluster || !stage || !operation) throw new Error("cluster, stage and operation required");

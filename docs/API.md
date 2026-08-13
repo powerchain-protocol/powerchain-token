@@ -1,126 +1,229 @@
 # PowerChain Platform API
 
-Version `1.0.0`.
+**Version:** `1.0.0`  
+**Default URL:** `http://127.0.0.1:8787`  
+**OpenAPI:** `openapi/powerchain.v1.json`
 
-The full-stack API is implemented by `apps/api` using Node's HTTP runtime and
-the same canonical token, fee, Mainnet status, hashing, environment and
-security utilities used by the repository release tooling.
+The API is the server-side control plane for canonical token information,
+Mainnet readiness, fee-aware bridge quotes and tightly gated execution.
 
-## Start
+## Common response behavior
 
-From the repository root:
+JSON routes return:
 
-```bash
-pnpm app:api
-```
+- `Cache-Control: no-store`;
+- `X-Request-Id`;
+- defensive content/security headers;
+- rate-limit headers.
 
-Default endpoint:
+Request IDs are bounded safe ASCII. If a supplied request ID is invalid, the
+server generates one.
+
+## Health
+
+### `GET /api/v1/health`
+
+Process liveness.
+
+This endpoint does not assert Mainnet deployment readiness.
+
+## Readiness
+
+### `GET /api/v1/ready`
+
+Returns source/runtime readiness plus build/evidence/authorization state.
+
+A code-ready repository may return HTTP 200 while `readyForMainnet` is false.
+Those are different concepts.
+
+## Version
+
+### `GET /api/v1/version`
+
+Returns API and repository version.
+
+## Token profile
+
+### `GET /api/v1/token`
+
+Returns the canonical PWRC profile, including:
 
 ```text
-http://127.0.0.1:8787
+mint      PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
+decimals  9
+fee       250 bps
+fee cap   1000000 PWRC
 ```
 
-The browser app should normally talk to the API through the same-origin proxy
-in `apps/web` rather than calling port `8787` directly.
+## Metrics
 
-## Routes
+### `GET /api/v1/metrics`
 
-```text
-GET  /api/v1/health
-GET  /api/v1/ready
-GET  /api/v1/version
-GET  /api/v1/token
-GET  /api/v1/metrics
-GET  /api/v1/mainnet/status
-GET  /api/v1/bridge/capabilities
-POST /api/v1/bridge/quote
-POST /api/v1/bridge/execute
-GET  /api/v1/bridge/executions/{idempotencyKey}
-```
+Returns bounded process-local counters and uptime.
 
-`POST /api/v1/bridge/quote` is server-owned. The request supplies a direction
-and integer base-unit amount. The server recalculates the canonical native
-Token-2022 transfer fee and returns a deterministic quote fingerprint.
-
-`POST /api/v1/bridge/execute` is intentionally **not a browser endpoint**.
-Execution requires all of the following:
-
-1. `readyForMainnet === true`;
-2. `PWRC_BRIDGE_EXECUTION_ENABLED=true`;
-3. an HTTPS `PWRC_BRIDGE_EXECUTOR_URL`;
-4. server-only `PWRC_BRIDGE_EXECUTOR_API_KEY`;
-5. server-only inbound `PWRC_BRIDGE_API_AUTH_TOKEN`;
-6. `Authorization: Bearer ...`;
-7. a safe `Idempotency-Key`;
-8. a server-recomputed quote matching any supplied quote fingerprint.
-
-The API never blindly retries an executor request. If the external write may
-have landed but the HTTP result times out, the API returns
-`PWRC_BRIDGE_EXECUTION_AMBIGUOUS_TIMEOUT`; the operation must be reconciled by
-the idempotency key rather than resubmitted.
-
-The OpenAPI document is `openapi/powerchain.v1.json`.
-
-## Request policy
-
-- JSON request bodies are capped at 64 KiB.
-- Request IDs are bounded safe ASCII.
-- CORS is opt-in using `PWRC_API_ALLOWED_ORIGIN`.
-- Direct cross-origin execution headers are not enabled by the default CORS
-  policy.
-- Security headers and `Cache-Control: no-store` are emitted for JSON routes.
-- API logs pass through root structured redaction.
+Metrics intentionally exclude private keys, credentials, wallet material and
+request bodies.
 
 ## Mainnet status
 
-The API does not invent deployment readiness. `/api/v1/mainnet/status` refreshes
-the repository's fail-closed status checker and exposes its actual blockers.
+### `GET /api/v1/mainnet/status`
 
+Runs/reads the fail-closed Mainnet release status.
 
-## Runtime protections
+Ordinary reads use a short status cache. Monetary execution requests a fresh
+status.
 
-The API has independent read/write fixed-window limits with bounded in-memory
-cardinality. Defaults are 120 reads/minute and 30 writes/minute per remote
-address.
+## Bridge capabilities
 
-```text
-PWRC_API_READ_RATE_LIMIT_PER_MINUTE=120
-PWRC_API_WRITE_RATE_LIMIT_PER_MINUTE=30
+### `GET /api/v1/bridge/capabilities`
+
+Reports quote availability, executor configuration and whether execution is
+currently possible.
+
+`execute: false` is expected until all Mainnet and executor gates pass.
+
+## Bridge quote
+
+### `POST /api/v1/bridge/quote`
+
+Request:
+
+```json
+{
+  "direction": "solana-to-sui",
+  "amountBaseUnits": "1000000000"
+}
 ```
 
-Mainnet status is cached for two seconds for ordinary read endpoints. Monetary
-execution explicitly requests a fresh Mainnet status before proceeding.
-
-Execution requires `destinationAddress` and the exact 64-character quote
-fingerprint. Destination validation is chain-specific:
-
-- Solana → Sui requires a 32-byte Sui `0x...` address.
-- Sui → Solana requires a base58 Solana address decoding to 32 bytes.
-
-Before contacting the external executor, the API atomically reserves the
-`Idempotency-Key` under `runtime/api-idempotency`. The record survives process
-restart and moves through:
+Directions:
 
 ```text
-reserved
-→ succeeded
-→ failed
-
-reserved
-→ ambiguous
+solana-to-sui
+sui-to-solana
 ```
 
-`ambiguous` is intentionally non-terminal. A repeated request using the same
-key is rejected with `PWRC_EXECUTION_RECONCILIATION_REQUIRED` until the
-operation is reconciled. Reusing the key with different request content is
-rejected with `PWRC_IDEMPOTENCY_KEY_CONFLICT`.
+The amount is an integer string in base units. Zero and negative values are
+rejected.
 
-A successful terminal record is replayable without sending another monetary
-write. Status can be queried through the authenticated execution-status route.
+The server computes:
 
-Executor HTTP 5xx responses, network transport failures, and timeouts are
-treated as ambiguous because the API cannot prove the monetary operation did
-not reach the executor.
+```text
+fee = min(ceil(gross × 250 / 10000), 1_000_000 PWRC)
+```
 
-`GET /api/v1/metrics` exposes only bounded process-local counters and uptime; it
-does not expose secrets, wallet material, or request bodies.
+Example for `1,000,000,000` base units:
+
+```text
+gross  1,000,000,000
+fee       25,000,000
+net      975,000,000
+```
+
+The response includes a 64-character deterministic SHA-256 quote fingerprint.
+
+## Bridge execute
+
+### `POST /api/v1/bridge/execute`
+
+This is a server-to-server endpoint.
+
+Required headers:
+
+```text
+Authorization: Bearer <PWRC_BRIDGE_API_AUTH_TOKEN>
+Idempotency-Key: <safe unique operation key>
+Content-Type: application/json
+```
+
+Required body fields include:
+
+```json
+{
+  "direction": "solana-to-sui",
+  "amountBaseUnits": "1000000000",
+  "destinationAddress": "0x...",
+  "quoteFingerprint": "<64 hex>"
+}
+```
+
+Execution requires all of:
+
+1. Mainnet release status is ready;
+2. execution adapter is explicitly enabled;
+3. inbound bearer token is configured and valid;
+4. idempotency key is valid;
+5. quote is recomputed and fingerprint matches;
+6. destination address is valid for the destination chain;
+7. external executor URL/key are configured.
+
+### Destination validation
+
+Solana → Sui:
+
+```text
+0x + 64 hexadecimal characters
+```
+
+Sui → Solana:
+
+```text
+base58 address decoding to 32 bytes
+```
+
+### Idempotency
+
+Before the external executor is contacted, the request is canonicalized and
+hashed. The key is atomically reserved.
+
+Reuse behavior:
+
+| Existing state | Same request | Result |
+|---|---|---|
+| none | yes | reserve and execute |
+| reserved/ambiguous | yes | reconciliation required |
+| succeeded | yes | stored success may be replayed |
+| failed | yes | conflict/previous failure |
+| any | different request | idempotency conflict |
+
+### Ambiguous outcomes
+
+The API treats these as ambiguous:
+
+- executor timeout;
+- transport/network failure;
+- executor 5xx.
+
+It does not blindly retry because the executor may have received the monetary
+operation.
+
+## Execution status
+
+### `GET /api/v1/bridge/executions/{idempotencyKey}`
+
+Authenticated server-to-server reconciliation/status lookup.
+
+## Status codes
+
+Common codes:
+
+```text
+200  successful read / replayed terminal success
+202  execution accepted/completed by configured executor
+400  invalid request
+401  execution authentication failure
+404  route or execution record not found
+405  known route with wrong method
+409  quote/idempotency/reconciliation conflict
+413  request body too large
+415  JSON content type required
+429  rate limit exceeded
+502  ambiguous upstream/network executor failure
+503  execution/Mainnet/auth configuration not ready
+504  ambiguous executor timeout
+```
+
+## CORS
+
+CORS is opt-in through `PWRC_API_ALLOWED_ORIGIN`. Monetary execution headers are
+not enabled by the default browser CORS path. The browser app should use the
+same-origin web proxy.

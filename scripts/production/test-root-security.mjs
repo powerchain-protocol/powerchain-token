@@ -3,17 +3,17 @@ import os from "node:os";
 import path from "node:path";
 import {
   canonicalJsonStringify,
-} from "../../utils/canonical-json.mjs";
+} from "../../packages/runtime/src/canonical-json.mjs";
 import {
   redactText,
   redactValue,
-} from "../../utils/redact.mjs";
+} from "../../packages/runtime/src/redact.mjs";
 import {
   runCommandSync,
-} from "../../utils/process.mjs";
+} from "../../packages/runtime/src/process.mjs";
 import {
   readJsonFileSync,
-} from "../../utils/config.mjs";
+} from "../../packages/runtime/src/config.mjs";
 
 const failures = [];
 

@@ -3,23 +3,23 @@ import fs from "node:fs";
 const failures = [];
 
 const env = fs.readFileSync(
-  "src/common/env.ts",
+  "packages/protocol/src/common/env.ts",
   "utf8",
 );
 const retry = fs.readFileSync(
-  "src/common/retry.ts",
+  "packages/protocol/src/common/retry.ts",
   "utf8",
 );
 const write = fs.readFileSync(
-  "src/handlers/write-handler.ts",
+  "packages/protocol/src/handlers/write-handler.ts",
   "utf8",
 );
 const operation = fs.readFileSync(
-  "src/handlers/operation-handler.ts",
+  "packages/protocol/src/handlers/operation-handler.ts",
   "utf8",
 );
 const runtime = fs.readFileSync(
-  "src/config/runtime.ts",
+  "packages/protocol/src/config/runtime.ts",
   "utf8",
 );
 const clean = fs.readFileSync(

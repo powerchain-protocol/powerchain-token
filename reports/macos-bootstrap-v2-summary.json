@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0",
+  "macosBootstrapV2": {
+    "sourceableActivation": "scripts/bootstrap/activate-node.sh",
+    "nativePreflight": "scripts/bootstrap/platform-preflight.sh",
+    "shellInspector": "scripts/bootstrap/inspect-shell.sh",
+    "knownBrokenNode26DetectedBeforeExecution": true,
+    "parentShellPersistenceFixed": true,
+    "nodeBaseline": "22.22.3",
+    "pnpm": "10.21.0"
+  },
+  "validation": {
+    "productionChecks": 55,
+    "productionPassed": 55,
+    "productionFailed": 0,
+    "typescriptSyntaxFiles": 219,
+    "staleNodeSimulation": "PASS",
+    "fullstackRuntime": "PASS",
+    "fullstackLive": "PASS"
+  },
+  "mainnet": {
+    "codeReady": true,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "idl/generated/pwrc_lock.json",
+      "idl/generated/pwrc_token.json",
+      "idl/generated/wpwrc.modules.json",
+      "idl.releaseManifest:not-ready",
+      "mainnet.build-manifest-verification:failed",
+      "evidence:missing:config/mainnet/evidence.json",
+      "evidence-bindings:missing:config/mainnet/evidence.json",
+      "authorization:missing:config/mainnet/release-authorization.json",
+      "authorization-unused:missing:config/mainnet/release-authorization.json"
+    ]
+  },
+  "sourceTreeSha256": "7c220a57e33cc9e1419830d7b4089ad0ef0b25e0a33c16faac59cdd1ff367a0a",
+  "provenancePayloadSha256": "53e404b1d9eafce2d26868bfa1859e5e1f45c7c9993a37a1ab52a404ccaa9f62"
+}

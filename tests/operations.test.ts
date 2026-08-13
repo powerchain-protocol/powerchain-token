@@ -3,11 +3,11 @@ import assert from "node:assert/strict";
 import {
   assertOperationAmount,
   operationRule,
-} from "../src/operations/policy.js";
+} from "../packages/protocol/src/operations/policy.js";
 import {
   canonicalMarketId,
   canonicalServiceId,
-} from "../src/operations/ids.js";
+} from "../packages/protocol/src/operations/ids.js";
 
 test("signed messages do not require token value", () => {
   assert.doesNotThrow(() => assertOperationAmount("signed-message"));

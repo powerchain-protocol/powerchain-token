@@ -3,23 +3,23 @@ import fs from "node:fs";
 const failures = [];
 
 const required = [
-  "src/common/serialization.ts",
-  "src/common/config.ts",
-  "src/bridge/replay.ts",
-  "src/bridge/identity.ts",
-  "src/relayer/queue.ts",
-  "src/security/account-boundaries.ts",
+  "packages/protocol/src/common/serialization.ts",
+  "packages/protocol/src/common/config.ts",
+  "packages/protocol/src/bridge/replay.ts",
+  "packages/protocol/src/bridge/identity.ts",
+  "packages/protocol/src/relayer/queue.ts",
+  "packages/protocol/src/security/account-boundaries.ts",
 ];
 
 for (const file of required) {
   if (!fs.existsSync(file)) failures.push(`missing:${file}`);
 }
 
-const queue = fs.readFileSync("src/relayer/queue.ts", "utf8");
-const replay = fs.readFileSync("src/bridge/replay.ts", "utf8");
-const identity = fs.readFileSync("src/bridge/identity.ts", "utf8");
+const queue = fs.readFileSync("packages/protocol/src/relayer/queue.ts", "utf8");
+const replay = fs.readFileSync("packages/protocol/src/bridge/replay.ts", "utf8");
+const identity = fs.readFileSync("packages/protocol/src/bridge/identity.ts", "utf8");
 const serialization = fs.readFileSync(
-  "src/common/serialization.ts",
+  "packages/protocol/src/common/serialization.ts",
   "utf8",
 );
 

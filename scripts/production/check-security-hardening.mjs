@@ -3,12 +3,12 @@ import fs from "node:fs";
 const failures = [];
 
 for (const file of [
-  "utils/canonical-json.mjs",
-  "utils/redact.mjs",
-  "utils/errors.mjs",
-  "utils/process.mjs",
-  "utils/config.mjs",
-  "utils/atomic-json.mjs",
+  "packages/runtime/src/canonical-json.mjs",
+  "packages/runtime/src/redact.mjs",
+  "packages/runtime/src/errors.mjs",
+  "packages/runtime/src/process.mjs",
+  "packages/runtime/src/config.mjs",
+  "packages/runtime/src/atomic-json.mjs",
 ]) {
   if (!fs.existsSync(file)) {
     failures.push(
@@ -19,7 +19,7 @@ for (const file of [
 
 const canonical =
   fs.readFileSync(
-    "utils/canonical-json.mjs",
+    "packages/runtime/src/canonical-json.mjs",
     "utf8",
   );
 
@@ -42,7 +42,7 @@ for (const invariant of [
 
 const redact =
   fs.readFileSync(
-    "utils/redact.mjs",
+    "packages/runtime/src/redact.mjs",
     "utf8",
   );
 
@@ -65,7 +65,7 @@ for (const invariant of [
 
 const processUtil =
   fs.readFileSync(
-    "utils/process.mjs",
+    "packages/runtime/src/process.mjs",
     "utf8",
   );
 
@@ -89,7 +89,7 @@ for (const invariant of [
 
 const config =
   fs.readFileSync(
-    "utils/config.mjs",
+    "packages/runtime/src/config.mjs",
     "utf8",
   );
 
@@ -111,7 +111,7 @@ for (const invariant of [
 
 const atomic =
   fs.readFileSync(
-    "utils/atomic-json.mjs",
+    "packages/runtime/src/atomic-json.mjs",
     "utf8",
   );
 

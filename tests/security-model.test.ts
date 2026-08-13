@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   validateCanonicalPwrcToken2022Profile,
-} from "../src/security/token2022-profile.js";
+} from "../packages/protocol/src/security/token2022-profile.js";
 
 test("canonical extensions require native transfer fee + metadata", () => {
   assert.doesNotThrow(() =>

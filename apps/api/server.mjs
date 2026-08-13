@@ -6,13 +6,13 @@ import http from "node:http";
 import {
   readEnv,
   readSafeIntegerEnv,
-} from "../../utils/env.mjs";
+} from "../../packages/runtime/src/env.mjs";
 import {
   createLogger,
-} from "../../utils/logger.mjs";
+} from "../../packages/runtime/src/logger.mjs";
 import {
   canonicalJsonSha256,
-} from "../../utils/crypto.mjs";
+} from "../../packages/runtime/src/crypto.mjs";
 import {
   healthSnapshot,
   quoteBridge,
@@ -1084,6 +1084,37 @@ server.keepAliveTimeout =
 
 server.maxRequestsPerSocket =
   100;
+
+
+server.on(
+  "error",
+  (error) => {
+    const code =
+      error &&
+      typeof error === "object" &&
+      "code" in error
+        ? String(error.code)
+        : "UNKNOWN";
+
+    logger.error(
+      "server_listen_failed",
+      error,
+      {
+        host,
+        port,
+        code,
+      },
+    );
+
+    if (code === "EADDRINUSE") {
+      console.error(
+        `PWRC_SERVER_LISTEN_ERROR:api:EADDRINUSE:${host}:${port}`,
+      );
+    }
+
+    process.exitCode = 1;
+  },
+);
 
 server.listen(
   port,

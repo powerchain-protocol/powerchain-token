@@ -2,6 +2,10 @@ import fs from "node:fs";
 import {
   execFileSync,
 } from "node:child_process";
+import {
+  isSupportedNode,
+  nodePolicyLabel,
+} from "./toolchain/node-policy.mjs";
 
 const expected = JSON.parse(
   fs.readFileSync(
@@ -57,10 +61,12 @@ if (
 }
 
 if (
-  actual.node !== expected.node
+  !isSupportedNode(
+    actual.node,
+  )
 ) {
   errors.push(
-    `NODE_EXPECTED_${expected.node}`,
+    `NODE_EXPECTED_${nodePolicyLabel()}`,
   );
 }
 

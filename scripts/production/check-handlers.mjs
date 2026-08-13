@@ -3,11 +3,11 @@ import fs from "node:fs";
 const failures = [];
 
 for (const file of [
-  "src/handlers/read-handler.ts",
-  "src/handlers/write-handler.ts",
-  "src/handlers/operation-handler.ts",
-  "src/common/retry.ts",
-  "src/common/timeout.ts",
+  "packages/protocol/src/handlers/read-handler.ts",
+  "packages/protocol/src/handlers/write-handler.ts",
+  "packages/protocol/src/handlers/operation-handler.ts",
+  "packages/protocol/src/common/retry.ts",
+  "packages/protocol/src/common/timeout.ts",
 ]) {
   if (!fs.existsSync(file)) {
     failures.push(`missing:${file}`);
@@ -15,15 +15,15 @@ for (const file of [
 }
 
 const writeHandler = fs.readFileSync(
-  "src/handlers/write-handler.ts",
+  "packages/protocol/src/handlers/write-handler.ts",
   "utf8",
 );
 const retry = fs.readFileSync(
-  "src/common/retry.ts",
+  "packages/protocol/src/common/retry.ts",
   "utf8",
 );
 const timeout = fs.readFileSync(
-  "src/common/timeout.ts",
+  "packages/protocol/src/common/timeout.ts",
   "utf8",
 );
 

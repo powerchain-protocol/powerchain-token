@@ -1,48 +1,141 @@
 import fs from "node:fs";
 
 const failures = [];
+const warnings = [];
 
-const nextConfig = fs.readFileSync(
-  "next.config.mjs",
-  "utf8",
-);
+function readRequired(
+  file,
+) {
+  if (!fs.existsSync(file)) {
+    failures.push(
+      `missing:${file}`,
+    );
+    return "";
+  }
 
-const productionEnv = fs.readFileSync(
-  ".env.production",
-  "utf8",
-);
+  return fs.readFileSync(
+    file,
+    "utf8",
+  );
+}
 
-for (const variable of [
+const nextConfig =
+  readRequired(
+    "next.config.mjs",
+  );
+
+const envExample =
+  readRequired(
+    ".env.example",
+  );
+
+const ci =
+  readRequired(
+    ".github/workflows/ci.yml",
+  );
+
+const variables = [
   "NEXT_TELEMETRY_DISABLED",
   "TURBO_TELEMETRY_DISABLED",
   "DO_NOT_TRACK",
-]) {
-  if (!nextConfig.includes(variable)) {
+];
+
+for (const variable of variables) {
+  if (
+    !nextConfig.includes(
+      variable,
+    )
+  ) {
     failures.push(
       `next-config:${variable}`,
     );
   }
 
   if (
-    !productionEnv.includes(
+    !envExample.includes(
       `${variable}=1`,
     )
   ) {
     failures.push(
-      `production-env:${variable}`,
+      `env-example:${variable}`,
+    );
+  }
+
+  if (
+    !ci.includes(
+      variable,
+    )
+  ) {
+    failures.push(
+      `ci:${variable}`,
     );
   }
 }
 
-console.log(JSON.stringify({
-  ok: failures.length === 0,
-  version: "1.0.0",
-  telemetry: {
-    next: "disabled",
-    turbo: "disabled",
-    doNotTrack: true,
-  },
-  failures,
-}, null, 2));
+// Developer-local environment files are intentionally not release inputs.
+// Surface drift as a warning only.
+if (
+  fs.existsSync(
+    ".env.production",
+  )
+) {
+  const localProductionEnv =
+    fs.readFileSync(
+      ".env.production",
+      "utf8",
+    );
 
-if (failures.length) process.exit(1);
+  for (const variable of variables) {
+    if (
+      !localProductionEnv.includes(
+        `${variable}=1`,
+      )
+    ) {
+      warnings.push(
+        `local-production-env:${variable}`,
+      );
+    }
+  }
+}
+
+if (
+  process.env.NODE_OPTIONS
+) {
+  warnings.push(
+    "local-node-options-set",
+  );
+}
+
+console.log(
+  JSON.stringify(
+    {
+      ok:
+        failures.length === 0,
+      version:
+        "1.0.0",
+      telemetry: {
+        next:
+          "disabled",
+        turbo:
+          "disabled",
+        doNotTrack:
+          true,
+        releasePolicySources: [
+          "next.config.mjs",
+          ".env.example",
+          ".github/workflows/ci.yml",
+        ],
+        localEnvironmentAffectsResult:
+          false,
+      },
+      warnings,
+      failures,
+    },
+    null,
+    2,
+  ),
+);
+
+if (failures.length) {
+  process.exit(1);
+}

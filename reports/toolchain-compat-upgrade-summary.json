@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0",
+  "toolchainCompatibility": {
+    "localNodeBaseline": "22.22.3",
+    "ciNodeLanes": [
+      "22.22.3",
+      "24.18.1"
+    ],
+    "allowedNode26": ">=26.5.1 <27",
+    "pnpm": "10.21.0",
+    "pnpmForcesNodeDownload": false,
+    "nativePlatformPreflight": "scripts/bootstrap/platform-preflight.sh",
+    "macosRecovery": "scripts/bootstrap/macos-node.sh"
+  },
+  "productionStatic": {
+    "checks": 55,
+    "passed": 55,
+    "failed": 0
+  },
+  "typescriptSyntaxFiles": 219,
+  "mainnet": {
+    "codeReady": true,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "idl/generated/pwrc_lock.json",
+      "idl/generated/pwrc_token.json",
+      "idl/generated/wpwrc.modules.json",
+      "idl.releaseManifest:not-ready",
+      "mainnet.build-manifest-verification:failed",
+      "evidence:missing:config/mainnet/evidence.json",
+      "evidence-bindings:missing:config/mainnet/evidence.json",
+      "authorization:missing:config/mainnet/release-authorization.json",
+      "authorization-unused:missing:config/mainnet/release-authorization.json"
+    ]
+  },
+  "sourceTreeSha256": "64ce75aa105e443c78cc9893d502d68ce0b8394a556f5e33a5194790edca031b",
+  "provenancePayloadSha256": "649d0abaabc210e83ca72544ea11d628a21791d7ac2987bd8636055f02dbdd16"
+}

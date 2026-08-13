@@ -5,7 +5,7 @@ import {
   PWRC_GENESIS_BASE_UNITS,
   PWRC_GENESIS_SUPPLY,
   U64_MAX,
-} from "../src/constants.js";
+} from "../packages/protocol/src/constants.js";
 
 test("PWRC canonical monetary policy", () => {
   assert.equal(PWRC_DECIMALS, 9);

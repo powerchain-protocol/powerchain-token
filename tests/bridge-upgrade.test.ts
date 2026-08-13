@@ -2,10 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   assertSolanaLockReceiptObservation,
-} from "../src/bridge/receipt.js";
+} from "../packages/protocol/src/bridge/receipt.js";
 import {
   reconcileBridgeBacking,
-} from "../src/bridge/reconcile.js";
+} from "../packages/protocol/src/bridge/reconcile.js";
 
 test("lock receipt requires fee-adjusted wrapped amount", () => {
   assert.doesNotThrow(() =>

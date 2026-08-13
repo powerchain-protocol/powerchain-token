@@ -3,11 +3,13 @@ import assert from "node:assert/strict";
 import {
   POWERCHAIN_OFFICIAL_LINKS,
   assertCanonicalOfficialLinks,
-} from "../src/metadata/official-links.js";
+} from "../packages/protocol/src/metadata/official-links.js";
 
 test("canonical official links are pinned", () => {
   assert.deepEqual(POWERCHAIN_OFFICIAL_LINKS, {
     website: "https://powerchain.energy",
+    bridge: "https://bridge.powerchain.energy",
+    app: "https://app.powerchain.energy",
     documentation: "https://docs.powerchain.energy",
     whitepaper: "https://whitepaper.powerchain.energy",
     x: "https://x.com/powerchain_ai",

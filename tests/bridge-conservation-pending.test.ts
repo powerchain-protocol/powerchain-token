@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { evaluateBridgeConservation } from "../src/bridge/conservation.js";
+import { evaluateBridgeConservation } from "../packages/protocol/src/bridge/conservation.js";
 
 test("Sui burn pending release remains part of locked backing exposure", () => {
   const result = evaluateBridgeConservation({

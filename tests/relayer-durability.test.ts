@@ -7,14 +7,14 @@ import {
   FileBridgeIdempotencyStore,
   FileReplayStore,
   loadRecoverableBridgeOperations,
-} from "../src/relayer/file-store.js";
+} from "../packages/protocol/src/relayer/file-store.js";
 import {
   buildBridgeIdempotencyKey,
   type BridgeIdempotencyRecord,
-} from "../src/relayer/idempotency.js";
+} from "../packages/protocol/src/relayer/idempotency.js";
 import {
   buildReplayKey,
-} from "../src/bridge/replay.js";
+} from "../packages/protocol/src/bridge/replay.js";
 
 async function withTempDirectory<T>(
   run: (directory: string) => Promise<T>,

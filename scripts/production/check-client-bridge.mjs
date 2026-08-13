@@ -2,15 +2,15 @@ import fs from "node:fs";
 
 const failures = [];
 const wpwrc = fs.readFileSync(
-  "client/sui/wpwrc.ts",
+  "packages/sdk/src/sui/wpwrc.ts",
   "utf8",
 );
 const burn = fs.readFileSync(
-  "client/sui/burn-intent.ts",
+  "packages/sdk/src/sui/burn-intent.ts",
   "utf8",
 );
 const quarterly = fs.readFileSync(
-  "client/sui/quarterly-burn.ts",
+  "packages/sdk/src/sui/quarterly-burn.ts",
   "utf8",
 );
 

@@ -2,10 +2,10 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import {
   sha256FileSync,
-} from "../../utils/crypto.mjs";
+} from "../../packages/runtime/src/crypto.mjs";
 import {
   normalizeRepositoryPath,
-} from "../../utils/paths.mjs";
+} from "../../packages/runtime/src/paths.mjs";
 import path from "node:path";
 import { atomicWriteJsonSync } from "../lib/atomic-json.mjs";
 

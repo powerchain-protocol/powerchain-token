@@ -3,20 +3,20 @@ import assert from "node:assert/strict";
 import {
   canonicalJsonStringify,
   sha256CanonicalJson,
-} from "../src/common/serialization.js";
+} from "../packages/protocol/src/common/serialization.js";
 import {
   buildReplayKey,
-} from "../src/bridge/replay.js";
+} from "../packages/protocol/src/bridge/replay.js";
 import {
   BoundedRelayerQueue,
-} from "../src/relayer/queue.js";
+} from "../packages/protocol/src/relayer/queue.js";
 import {
   readPositiveInteger,
   readBoolean,
-} from "../src/common/config.js";
+} from "../packages/protocol/src/common/config.js";
 import {
   assertMutableBoundary,
-} from "../src/security/account-boundaries.js";
+} from "../packages/protocol/src/security/account-boundaries.js";
 
 test("canonical serialization is key-order deterministic", () => {
   const a = canonicalJsonStringify({

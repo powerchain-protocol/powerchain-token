@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import {
   assertQuarterlyBurnCrossChainSafe,
   quoteQuarterlyBurnFromLiveSupply,
-} from "../src/burn/policy.js";
-import { quarterWindow } from "../src/burn/schedule.js";
+} from "../packages/protocol/src/burn/policy.js";
+import { quarterWindow } from "../packages/protocol/src/burn/schedule.js";
 
 test("first 2 percent burn from genesis live supply is exact", () => {
   const q = quoteQuarterlyBurnFromLiveSupply(

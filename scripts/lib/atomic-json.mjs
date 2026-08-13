@@ -1,4 +1,4 @@
 export {
   atomicWriteFileSync,
   atomicWriteJsonSync,
-} from "../../utils/atomic-json.mjs";
+} from "../../packages/runtime/src/atomic-json.mjs";

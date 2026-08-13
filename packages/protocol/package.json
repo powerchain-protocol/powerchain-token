@@ -1,0 +1,37 @@
+{
+  "name": "@powerchain/protocol",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22.22.3 <23 || >=24.18.1 <25 || >=26.5.1 <27",
+    "pnpm": "10.21.0"
+  },
+  "exports": {
+    ".": "./src/policy.ts",
+    "./constants": "./src/constants.ts",
+    "./amounts": "./src/amounts.ts",
+    "./fees": "./src/fees.ts",
+    "./bridge": "./src/bridge.ts",
+    "./bridge/*": "./src/bridge/*.ts",
+    "./burn/*": "./src/burn/*.ts",
+    "./operations": "./src/operations/policy.ts",
+    "./operations/*": "./src/operations/*.ts",
+    "./security/*": "./src/security/*.ts",
+    "./metadata/*": "./src/metadata/*.ts",
+    "./observability/*": "./src/observability/*.ts",
+    "./relayer/*": "./src/relayer/*.ts",
+    "./sui/*": "./src/sui/*.ts",
+    "./market/*": "./src/market/*.ts",
+    "./x402/*": "./src/x402/*.ts",
+    "./cctp/*": "./src/cctp/*.ts",
+    "./zk/*": "./src/zk/*.ts",
+    "./common/*": "./src/common/*.ts"
+  },
+  "scripts": {
+    "check": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc -p tsconfig.json",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
+  }
+}

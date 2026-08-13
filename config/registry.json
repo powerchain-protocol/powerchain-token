@@ -64,7 +64,16 @@
       "requiredKeys": [
         "version",
         "api",
-        "web"
+        "client"
+      ]
+    },
+    {
+      "id": "repository",
+      "path": "config/repository.json",
+      "requiredKeys": [
+        "version",
+        "recommendedRepositoryName",
+        "ownerMustBeVerified"
       ]
     }
   ]

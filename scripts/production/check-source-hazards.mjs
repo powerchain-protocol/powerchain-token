@@ -1,10 +1,10 @@
 import fs from "node:fs";
 const failures = [];
 const files = {
-  solana: fs.readFileSync("src/solana.ts", "utf8"),
-  tx: fs.readFileSync("client/transactions.ts", "utf8"),
-  replay: fs.readFileSync("src/bridge/replay.ts", "utf8"),
-  idem: fs.readFileSync("src/relayer/idempotency.ts", "utf8"),
+  solana: fs.readFileSync("packages/protocol/src/solana.ts", "utf8"),
+  tx: fs.readFileSync("packages/sdk/src/transactions.ts", "utf8"),
+  replay: fs.readFileSync("packages/protocol/src/bridge/replay.ts", "utf8"),
+  idem: fs.readFileSync("packages/protocol/src/relayer/idempotency.ts", "utf8"),
   move: fs.readFileSync("contracts/wpwrc/sources/wpwrc.move", "utf8"),
   state: fs.readFileSync("contracts/wpwrc/sources/state.move", "utf8"),
   deploy: fs.readFileSync("scripts/deploy.sh", "utf8"),

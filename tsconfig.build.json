@@ -7,8 +7,8 @@
     "tsBuildInfoFile": "node_modules/.cache/pwrc-build.tsbuildinfo"
   },
   "include": [
-    "src/**/*.ts",
-    "client/**/*.ts",
+    "packages/protocol/src/**/*.ts",
+    "packages/sdk/src/**/*.ts",
     "packages/**/*.ts"
   ],
   "exclude": [

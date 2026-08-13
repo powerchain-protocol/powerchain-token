@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "docsApp": {
+    "app": "apps/docs",
+    "components": "components/docs",
+    "sessions": "sessions",
+    "sessionCount": 7,
+    "defaultPort": 3002,
+    "routes": [
+      "technology",
+      "architecture",
+      "token",
+      "bridge",
+      "api",
+      "security",
+      "development"
+    ],
+    "lightDark": true,
+    "responsive": true
+  },
+  "validation": {
+    "docsAppCheck": "PASS",
+    "docsAppRuntimeTest": "PASS",
+    "productionChecks": 61,
+    "productionPassed": 61,
+    "productionFailed": 0,
+    "typescriptSyntaxFiles": 220
+  },
+  "mainnet": {
+    "codeReady": true,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false
+  },
+  "sourceTreeSha256": "b764b71429bb339737b9f37752fc2de07f17ff4fcf7a8fb255c764331172359a",
+  "provenancePayloadSha256": "159710f6a336a40ad7baf212d236d9dda71be75261fbcc43cddb7849ce94fd04"
+}

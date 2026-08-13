@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   assertBridgeIdentity,
   verifyBridgeConservation,
-} from "../src/bridge.js";
+} from "../packages/protocol/src/bridge.js";
 
 test("bridge identity requires Solana PWRC and Sui wPWRC with 9 decimals", () => {
   assert.doesNotThrow(() =>

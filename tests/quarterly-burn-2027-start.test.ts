@@ -6,8 +6,8 @@ import {
   assertQuarterAtOrAfterBurnStart,
   burnSequenceForQuarter,
   nextQuarterId,
-} from "../src/burn/quarter-id.js";
-import { buildBurnCalendar } from "../src/burn/calendar.js";
+} from "../packages/protocol/src/burn/quarter-id.js";
+import { buildBurnCalendar } from "../packages/protocol/src/burn/calendar.js";
 
 test("burn program starts at 2027 Q1", () => {
   assert.equal(PWRC_BURN_START_QUARTER_ID, 20271n);

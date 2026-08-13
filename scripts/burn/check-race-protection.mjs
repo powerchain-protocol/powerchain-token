@@ -1,7 +1,7 @@
 import fs from "node:fs";
 
 const failures = [];
-const state = fs.readFileSync("src/burn/state.ts", "utf8");
+const state = fs.readFileSync("packages/protocol/src/burn/state.ts", "utf8");
 const move = fs.readFileSync("contracts/wpwrc/sources/wpwrc.move", "utf8");
 const bridge = fs.readFileSync("contracts/wpwrc/sources/bridge.move", "utf8");
 const errors = fs.readFileSync("contracts/wpwrc/sources/errors.move", "utf8");

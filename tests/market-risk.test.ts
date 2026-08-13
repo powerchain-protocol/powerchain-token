@@ -5,9 +5,9 @@ import {
   assertSlippageBps,
   assertTradeLiquidity,
   bpsDifference,
-} from "../src/market/risk.js";
-import { buildQuoteId, assertPwrcTradeQuote } from "../src/market/quote.js";
-import { MarketCircuitBreaker } from "../client/market/circuit-breaker.js";
+} from "../packages/protocol/src/market/risk.js";
+import { buildQuoteId, assertPwrcTradeQuote } from "../packages/protocol/src/market/quote.js";
+import { MarketCircuitBreaker } from "../packages/sdk/src/market/circuit-breaker.js";
 
 test("provider divergence is measured in basis points", () => {
   assert.equal(Math.round(bpsDifference(1, 1.05)), 500);

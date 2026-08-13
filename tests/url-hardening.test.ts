@@ -4,7 +4,7 @@ import {
   normalizeRpcUrl,
   normalizeWebSocketUrl,
   normalizeUrl,
-} from "../src/common/urls.js";
+} from "../packages/protocol/src/common/urls.js";
 
 test("production RPC requires HTTPS", () => {
   assert.equal(

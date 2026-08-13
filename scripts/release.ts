@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { canonicalJson } from "../src/canonical-json.js";
+import { canonicalJson } from "../packages/protocol/src/canonical-json.js";
 
 const cluster = process.env["PWRC_CLUSTER"] ?? "devnet";
 const dir = path.join("deployments", cluster);

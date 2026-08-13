@@ -4,10 +4,10 @@ import {
   canonicalToWrappedExact,
   wrappedToCanonical,
   PWRC_BASE_UNITS_PER_WPWRC_BASE_UNIT,
-} from "../src/common/token-units.js";
+} from "../packages/protocol/src/common/token-units.js";
 import {
   validateCanonicalPwrcToken2022Profile,
-} from "../src/security/token2022-profile.js";
+} from "../packages/protocol/src/security/token2022-profile.js";
 
 test("PWRC and wPWRC share the same 9-decimal base-unit scale", () => {
   assert.equal(

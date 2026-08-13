@@ -5,7 +5,7 @@ import {
   assertAiUsageWithinBudget,
   validatePrompt,
   type AiComputeJob,
-} from "../src/ai/policy.js";
+} from "../packages/protocol/src/ai/policy.js";
 
 test("AI prompt hashing is deterministic", () => {
   assert.equal(validatePrompt("hello"), validatePrompt("hello"));

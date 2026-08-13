@@ -4,7 +4,7 @@ import {
   WPWRC_DECIMALS,
   WPWRC_MAX_BASE_UNITS,
   bridgeMessageHash,
-} from "../client/sui/wpwrc.js";
+} from "../packages/sdk/src/sui/wpwrc.js";
 
 test("wPWRC matches canonical PWRC precision and maximum", () => {
   assert.equal(WPWRC_DECIMALS, 9);

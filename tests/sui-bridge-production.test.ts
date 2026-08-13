@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import {
   assertActivationReady,
   assertStateTransition,
-} from "../src/sui-bridge-state.js";
+} from "../packages/protocol/src/sui-bridge-state.js";
 import {
   assertMintAuthorization,
-} from "../src/sui-bridge-claim.js";
+} from "../packages/protocol/src/sui-bridge-claim.js";
 
 test("bridge lifecycle cannot skip registration or identity verification", () => {
   assert.throws(

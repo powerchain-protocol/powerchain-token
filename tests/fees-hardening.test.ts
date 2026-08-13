@@ -4,7 +4,7 @@ import {
   calculateProtocolFeeBaseUnits,
   calculateToken2022TransferFeeBaseUnits,
   quoteToken2022TransferFee,
-} from "../src/fees.js";
+} from "../packages/protocol/src/fees.js";
 
 test("Token-2022 PWRC transfer fee is 250 bps with ceil rounding", () => {
   assert.equal(

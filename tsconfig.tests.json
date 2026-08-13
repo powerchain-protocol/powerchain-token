@@ -5,8 +5,8 @@
   },
   "include": [
     "tests/**/*.ts",
-    "src/**/*.ts",
-    "client/**/*.ts",
+    "packages/protocol/src/**/*.ts",
+    "packages/sdk/src/**/*.ts",
     "packages/**/*.ts"
   ],
   "exclude": [

@@ -13,7 +13,19 @@
     "idempotencyDirectory": "runtime/api-idempotency",
     "metricsEnabled": true
   },
-  "web": {
+  "fullstack": {
+    "autoPortsDefault": false,
+    "apiHealthPath": "/api/v1/health",
+    "startupTimeoutMs": 8000,
+    "shutdownTimeoutMs": 5000
+  },
+  "docs": {
+    "host": "127.0.0.1",
+    "port": 3002,
+    "healthPath": "/health",
+    "sessionsEndpoint": "/api/docs/sessions"
+  },
+  "client": {
     "defaultHost": "127.0.0.1",
     "defaultPort": 3000,
     "apiProxyDefault": "http://127.0.0.1:8787",

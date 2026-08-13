@@ -3,20 +3,20 @@ import assert from "node:assert/strict";
 import {
   quarterlyExecutionWindow,
   assertWithinQuarterlyExecutionWindow,
-} from "../src/burn/window.js";
+} from "../packages/protocol/src/burn/window.js";
 import {
   assertSolanaSupplyObserverConsensus,
-} from "../src/burn/observers.js";
+} from "../packages/protocol/src/burn/observers.js";
 import {
   hashBurnJournalEntry,
   verifyBurnJournalChain,
-} from "../src/burn/journal.js";
+} from "../packages/protocol/src/burn/journal.js";
 import {
   assertExactBurnExecution,
-} from "../src/burn/execution.js";
+} from "../packages/protocol/src/burn/execution.js";
 import {
   evaluateQuarterlyBurnReadiness,
-} from "../src/burn/readiness.js";
+} from "../packages/protocol/src/burn/readiness.js";
 
 test("Q3 execution window starts after quarter close", () => {
   const w = quarterlyExecutionWindow({

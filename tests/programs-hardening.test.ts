@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   pwrcSolanaLockClaimHash,
-} from "../client/bridge/lock-claim.js";
+} from "../packages/sdk/src/bridge/lock-claim.js";
 
 test("Solana lock claim binds amount and Sui recipient", () => {
   const base = {

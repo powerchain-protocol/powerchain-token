@@ -127,7 +127,7 @@ async function jsonRequest(
 const apiPort =
   await freePort();
 
-const webPort =
+const clientPort =
   await freePort();
 
 const api =
@@ -155,7 +155,7 @@ const api =
     },
   );
 
-let web;
+let client;
 
 try {
   await waitFor(
@@ -163,22 +163,22 @@ try {
     api,
   );
 
-  web =
+  client =
     spawn(
       process.execPath,
       [
-        "apps/web/server.mjs",
+        "apps/client/server.mjs",
       ],
       {
         cwd:
           process.cwd(),
         env: {
           ...process.env,
-          PWRC_WEB_HOST:
+          PWRC_CLIENT_HOST:
             "127.0.0.1",
-          PWRC_WEB_PORT:
-            String(webPort),
-          PWRC_WEB_API_URL:
+          PWRC_CLIENT_PORT:
+            String(clientPort),
+          PWRC_CLIENT_API_URL:
             `http://127.0.0.1:${apiPort}`,
         },
         stdio:
@@ -187,8 +187,8 @@ try {
     );
 
   await waitFor(
-    `http://127.0.0.1:${webPort}/`,
-    web,
+    `http://127.0.0.1:${clientPort}/`,
+    client,
   );
 
   const health =
@@ -218,7 +218,7 @@ try {
 
   const proxyQuote =
     await jsonRequest(
-      `http://127.0.0.1:${webPort}/api/v1/bridge/quote`,
+      `http://127.0.0.1:${clientPort}/api/v1/bridge/quote`,
       {
         method:
           "POST",
@@ -233,7 +233,7 @@ try {
 
   const capabilities =
     await jsonRequest(
-      `http://127.0.0.1:${webPort}/api/v1/bridge/capabilities`,
+      `http://127.0.0.1:${clientPort}/api/v1/bridge/capabilities`,
     );
 
   const execute =
@@ -335,7 +335,7 @@ try {
     version:
       "1.0.0",
     apiPort,
-    webPort,
+    clientPort,
     tests: {
       health:
         true,
@@ -366,7 +366,7 @@ try {
   }
 } finally {
   for (const child of [
-    web,
+    client,
     api,
   ]) {
     if (

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import {
   atomicWriteJsonSync,
-} from "../../utils/atomic-json.mjs";
+} from "../../packages/runtime/src/atomic-json.mjs";
 
 const entries =
   fs.readdirSync(
@@ -44,11 +44,11 @@ const report = {
       .toISOString(),
   canonicalLayers: {
     runtime:
-      "src/common/",
+      "packages/protocol/src/common/",
     typedUtilities:
-      "src/utils/",
+      "packages/protocol/src/utils/",
     nodeUtilities:
-      "utils/",
+      "packages/runtime/src/",
     configuration:
       "config/",
     contracts:
@@ -56,7 +56,7 @@ const report = {
     programs:
       "programs/",
     clients:
-      "client/",
+      "packages/sdk/src/",
     releaseTooling:
       "scripts/",
     evidence:

@@ -8,16 +8,16 @@ const required = [
   "apps/api/lib/http.mjs",
   "apps/api/lib/platform.mjs",
   "apps/api/lib/executor.mjs",
-  "apps/web/package.json",
-  "apps/web/server.mjs",
-  "apps/web/public/index.html",
-  "apps/web/public/app.js",
-  "apps/web/public/styles.css",
+  "apps/client/package.json",
+  "apps/client/server.mjs",
+  "apps/client/public/index.html",
+  "apps/client/public/app.js",
+  "apps/client/public/styles.css",
   "config/apps.json",
   "docs/API.md",
   "openapi/powerchain.v1.json",
   "scripts/production/test-fullstack-live.mjs",
-  "utils/addresses.mjs",
+  "packages/runtime/src/addresses.mjs",
   "scripts/fullstack/start.mjs",
   "scripts/production/test-fullstack-runtime.mjs",
   "apps/api/lib/bridge-request.mjs",
@@ -143,9 +143,9 @@ for (const invariant of [
   }
 }
 
-const web =
+const client =
   fs.readFileSync(
-    "apps/web/server.mjs",
+    "apps/client/server.mjs",
     "utf8",
   );
 
@@ -156,7 +156,7 @@ for (const invariant of [
   "AbortController",
   "Content-Security-Policy",
 ]) {
-  if (!web.includes(invariant)) {
+  if (!client.includes(invariant)) {
     failures.push(
       `web:${invariant}`,
     );
@@ -165,7 +165,7 @@ for (const invariant of [
 
 const browser =
   fs.readFileSync(
-    "apps/web/public/app.js",
+    "apps/client/public/app.js",
     "utf8",
   );
 
@@ -222,7 +222,7 @@ console.log(JSON.stringify({
   fullStack: {
     api:
       true,
-    web:
+    client:
       true,
     sameOriginProxy:
       true,

@@ -5,7 +5,7 @@ import {
   baseUnitsToUi,
   uiToBaseUnits,
   PWRC_TRADEABILITY_POLICY,
-} from "../src/market/policy.js";
+} from "../packages/protocol/src/market/policy.js";
 
 test("zero PWRC transactions are rejected", () => {
   assert.throws(() => assertNonZeroPwrcAmount(0n), /PWRC_ZERO_OR_NEGATIVE_TRANSACTION/);

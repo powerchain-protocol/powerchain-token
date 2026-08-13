@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   POWERCHAIN_SUI_ALIAS,
   POWERCHAIN_SUI_ADDRESS,
-} from "../src/sui/identity.js";
+} from "../packages/protocol/src/sui/identity.js";
 
 test("PowerChain Sui identity is pinned", () => {
   assert.equal(POWERCHAIN_SUI_ALIAS, "powerchain");

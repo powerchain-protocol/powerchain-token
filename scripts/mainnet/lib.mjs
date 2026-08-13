@@ -1,12 +1,12 @@
 import {
   assertHttpsUrl as assertHttpsUrlShared,
-} from "../../utils/network.mjs";
+} from "../../packages/runtime/src/network.mjs";
 import {
   canonicalJsonSha256 as canonicalJsonSha256Shared,
-} from "../../utils/crypto.mjs";
+} from "../../packages/runtime/src/crypto.mjs";
 import {
   assertSha256Hex,
-} from "../../utils/validation.mjs";
+} from "../../packages/runtime/src/validation.mjs";
 
 const BASE58 =
   "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";

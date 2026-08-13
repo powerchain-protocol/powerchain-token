@@ -1,0 +1,1 @@
+{"version":3,"file":"amounts.d.ts","sourceRoot":"","sources":["../../../../packages/native-token-client/src/amounts.ts"],"names":[],"mappings":"AAQA,wBAAgB,eAAe,CAC7B,KAAK,EAAE,MAAM,GACZ,MAAM,CAgCR;AAED,wBAAgB,gBAAgB,CAC9B,SAAS,EAAE,MAAM,EACjB,OAAO,CAAC,EAAE;IACR,iBAAiB,CAAC,EAAE,OAAO,CAAC;CAC7B,GACA,MAAM,CAqBR;AAED,wBAAgB,mBAAmB,CACjC,SAAS,EAAE,MAAM,GAChB,MAAM,CAUR"}

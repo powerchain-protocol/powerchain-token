@@ -2,16 +2,16 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   assertRelayerTransition,
-} from "../src/relayer/state.js";
+} from "../packages/protocol/src/relayer/state.js";
 import {
   buildBridgeIdempotencyKey,
-} from "../src/relayer/idempotency.js";
+} from "../packages/protocol/src/relayer/idempotency.js";
 import {
   decideRelayerRetry,
-} from "../src/relayer/retry.js";
+} from "../packages/protocol/src/relayer/retry.js";
 import {
   evaluateConservationSnapshot,
-} from "../src/bridge/watcher.js";
+} from "../packages/protocol/src/bridge/watcher.js";
 
 test("relayer requires conservation before authorization", () => {
   assert.throws(
@@ -59,7 +59,7 @@ test("conservation watcher blocks undercollateralized state", () => {
     suiCheckpoint: 200n,
     canonicalLiveSupplyBaseUnits: 10_000n,
     lockedCanonicalBaseUnits: 999n,
-    suiWrappedSupplyBaseUnits: 1n,
+    suiWrappedSupplyBaseUnits: 1_000n,
     pendingSolanaToSuiCanonicalBaseUnits: 0n,
     pendingSuiToSolanaCanonicalBaseUnits: 0n,
   });

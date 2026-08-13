@@ -2,10 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   sha256Text,
-} from "../../../utils/crypto.mjs";
+} from "../../../packages/runtime/src/crypto.mjs";
 import {
   atomicWriteJsonSync,
-} from "../../../utils/atomic-json.mjs";
+} from "../../../packages/runtime/src/atomic-json.mjs";
 
 const TERMINAL =
   new Set([

@@ -1,11 +1,111 @@
 {
   "ok": true,
   "version": "1.0.0",
-  "checks": 53,
-  "passed": 53,
+  "checks": 62,
+  "passed": 62,
   "failed": 0,
   "failures": [],
   "results": [
+    {
+      "script": "scripts/production/check-platform-bootstrap.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "policy": {
+          "localNodeBaseline": "22.22.3",
+          "nodeEngine": ">=22.22.3 <23 || >=24.18.1 <25 || >=26.5.1 <27",
+          "pnpm": "10.21.0",
+          "sourceableActivation": true,
+          "staleNodePathDetection": true,
+          "pnpmNodeDownloadPin": false
+        },
+        "warnings": [
+          "validation-runtime:v22.16.0"
+        ],
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/test-portable-production-checks.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "tests": {
+          "platformCheckRepositoryScoped": true,
+          "telemetryCheckRepositoryScoped": true,
+          "localNodeOptionsNonBlocking": true,
+          "localProductionEnvNonBlocking": true
+        },
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-regression-fixtures.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-docs.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "markdownFiles": 79,
+        "requiredDocs": 30,
+        "recursive": true,
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-docs-app.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "docsApp": {
+          "app": true,
+          "reusableComponents": true,
+          "sessions": true,
+          "responsive": true,
+          "lightDark": true
+        },
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/test-docs-app.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "port": 36771,
+        "tests": {
+          "health": true,
+          "technologyPage": true,
+          "sessionIndex": true,
+          "notFound": true
+        },
+        "failures": []
+      },
+      "signal": null
+    },
     {
       "script": "scripts/production/check-fullstack.mjs",
       "ok": true,
@@ -15,11 +115,40 @@
         "version": "1.0.0",
         "fullStack": {
           "api": true,
-          "web": true,
+          "client": true,
           "sameOriginProxy": true,
           "serverOwnedQuotes": true,
           "serverOnlyExecution": true,
           "mainnetFailClosed": true
+        },
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-fullstack-supervisor.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/test-fullstack-ports.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "tests": {
+          "collisionDetectedBeforeSpawn": true,
+          "actionablePortMessage": true,
+          "automaticFallback": true,
+          "apiBeforeWeb": true,
+          "cleanShutdown": true
         },
         "failures": []
       },
@@ -106,9 +235,9 @@
         "ok": true,
         "version": "1.0.0",
         "architecture": {
-          "rootUtilities": "utils/",
-          "typedPublicUtilities": "src/utils/",
-          "runtimeImplementation": "src/common/",
+          "rootUtilities": "packages/runtime/src/",
+          "typedPublicUtilities": "packages/protocol/src/utils/",
+          "runtimeImplementation": "packages/protocol/src/common/",
           "legacyScriptShim": "scripts/lib/atomic-json.mjs"
         },
         "failures": []
@@ -122,7 +251,7 @@
       "result": {
         "ok": true,
         "version": "1.0.0",
-        "registryEntries": 10,
+        "registryEntries": 11,
         "failures": []
       },
       "signal": null
@@ -134,7 +263,7 @@
       "result": {
         "ok": true,
         "version": "1.0.0",
-        "checkedScripts": 124,
+        "checkedScripts": 136,
         "failures": []
       },
       "signal": null
@@ -229,8 +358,10 @@
       "result": {
         "ok": true,
         "version": "1.0.0",
-        "node": "26.7.0",
+        "nodeEngine": ">=22.22.3 <23 || >=24.18.1 <25 || >=26.5.1 <27",
+        "localNodeBaseline": "22.22.3",
         "pnpm": "10.21.0",
+        "pnpmForcesNodeDownload": false,
         "strictDepBuilds": true,
         "approvedBuilds": [
           "bigint-buffer@1.1.5",
@@ -238,6 +369,20 @@
           "esbuild@0.25.12",
           "utf-8-validate@6.0.6"
         ],
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/packages/check-monorepo-layout.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "apps": 3,
+        "packages": 7,
+        "rootSourceDirectoriesRemoved": true,
         "failures": []
       },
       "signal": null
@@ -252,8 +397,15 @@
         "telemetry": {
           "next": "disabled",
           "turbo": "disabled",
-          "doNotTrack": true
+          "doNotTrack": true,
+          "releasePolicySources": [
+            "next.config.mjs",
+            ".env.example",
+            ".github/workflows/ci.yml"
+          ],
+          "localEnvironmentAffectsResult": false
         },
+        "warnings": [],
         "failures": []
       },
       "signal": null
@@ -792,7 +944,12 @@
         "version": "1.0.0",
         "packages": [
           "@powerchain/bridge-integration",
-          "@powerchain/native-token-client"
+          "@powerchain/docs-content",
+          "@powerchain/docs-ui",
+          "@powerchain/native-token-client",
+          "@powerchain/protocol",
+          "@powerchain/runtime",
+          "@powerchain/sdk"
         ],
         "failures": []
       },
@@ -834,7 +991,7 @@
       "result": {
         "ok": true,
         "version": "1.0.0",
-        "scriptCount": 193,
+        "scriptCount": 211,
         "failures": []
       },
       "signal": null

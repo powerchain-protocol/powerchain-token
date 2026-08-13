@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildReplayKey, reserveReplayKey, type ReplayStore } from "../src/bridge/replay.js";
+import { buildReplayKey, reserveReplayKey, type ReplayStore } from "../packages/protocol/src/bridge/replay.js";
 
 class MemoryReplayStore implements ReplayStore {
   private readonly keys = new Set<string>();

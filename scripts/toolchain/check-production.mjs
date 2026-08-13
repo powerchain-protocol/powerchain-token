@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import { spawnSync } from "node:child_process";
+import { isSupportedNode, nodePolicyLabel } from "./node-policy.mjs";
 
 const target = process.argv[2] ?? "all";
 if (!["all", "ts", "solana", "sui"].includes(target)) {
@@ -42,9 +43,9 @@ function requireTool(name, value) {
 }
 
 if (target === "all" || target === "ts") {
-  if (nodeVersion !== expected.node) {
+  if (!isSupportedNode(nodeVersion)) {
     blockers.push(
-      `Node ${nodeVersion} != ${expected.node}`,
+      `Node ${nodeVersion} not in ${nodePolicyLabel()}`,
     );
   }
   requireTool("pnpm", detected.pnpm);

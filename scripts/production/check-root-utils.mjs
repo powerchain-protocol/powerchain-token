@@ -3,16 +3,16 @@ import fs from "node:fs";
 const failures = [];
 
 const required = [
-  "utils/index.mjs",
-  "utils/atomic-json.mjs",
-  "utils/canonical-json.mjs",
-  "utils/crypto.mjs",
-  "utils/network.mjs",
-  "utils/paths.mjs",
-  "utils/redact.mjs",
-  "utils/time.mjs",
-  "utils/validation.mjs",
-  "src/utils/index.ts",
+  "packages/runtime/src/index.mjs",
+  "packages/runtime/src/atomic-json.mjs",
+  "packages/runtime/src/canonical-json.mjs",
+  "packages/runtime/src/crypto.mjs",
+  "packages/runtime/src/network.mjs",
+  "packages/runtime/src/paths.mjs",
+  "packages/runtime/src/redact.mjs",
+  "packages/runtime/src/time.mjs",
+  "packages/runtime/src/validation.mjs",
+  "packages/protocol/src/utils/index.ts",
 ];
 
 for (const file of required) {
@@ -31,7 +31,7 @@ const atomicShim =
 
 if (
   !atomicShim.includes(
-    "../../utils/atomic-json.mjs",
+    "../../packages/runtime/src/atomic-json.mjs",
   )
 ) {
   failures.push(
@@ -46,9 +46,9 @@ const mainnetLib =
   );
 
 for (const expected of [
-  "../../utils/network.mjs",
-  "../../utils/crypto.mjs",
-  "../../utils/validation.mjs",
+  "../../packages/runtime/src/network.mjs",
+  "../../packages/runtime/src/crypto.mjs",
+  "../../packages/runtime/src/validation.mjs",
 ]) {
   if (!mainnetLib.includes(expected)) {
     failures.push(
@@ -59,7 +59,7 @@ for (const expected of [
 
 const publicUtils =
   fs.readFileSync(
-    "src/utils/index.ts",
+    "packages/protocol/src/utils/index.ts",
     "utf8",
   );
 
@@ -89,11 +89,11 @@ console.log(JSON.stringify({
   version: "1.0.0",
   architecture: {
     rootUtilities:
-      "utils/",
+      "packages/runtime/src/",
     typedPublicUtilities:
-      "src/utils/",
+      "packages/protocol/src/utils/",
     runtimeImplementation:
-      "src/common/",
+      "packages/protocol/src/common/",
     legacyScriptShim:
       "scripts/lib/atomic-json.mjs",
   },

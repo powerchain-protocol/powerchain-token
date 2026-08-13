@@ -1,6 +1,6 @@
 import fs from "node:fs";
 const failures = [];
-const tx = fs.readFileSync("client/transactions.ts", "utf8");
+const tx = fs.readFileSync("packages/sdk/src/transactions.ts", "utf8");
 for (const token of [
   "createTransferCheckedWithFeeInstruction",
   "maxRetries: 0",

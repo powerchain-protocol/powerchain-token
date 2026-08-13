@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { evaluateProductionReadiness } from "../src/readiness.js";
+import { evaluateProductionReadiness } from "../packages/protocol/src/readiness.js";
 
 function load(path: string) {
   return JSON.parse(fs.readFileSync(path, "utf8"));

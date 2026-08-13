@@ -1,12 +1,20 @@
 import {
   atomicWriteJsonSync,
-} from "../../utils/atomic-json.mjs";
+} from "../../packages/runtime/src/atomic-json.mjs";
 import {
   runCommandSync,
-} from "../../utils/process.mjs";
+} from "../../packages/runtime/src/process.mjs";
 
 const checks = [
+  "scripts/production/check-platform-bootstrap.mjs",
+  "scripts/production/test-portable-production-checks.mjs",
+  "scripts/production/check-regression-fixtures.mjs",
+  "scripts/production/check-docs.mjs",
+  "scripts/production/check-docs-app.mjs",
+  "scripts/production/test-docs-app.mjs",
   "scripts/production/check-fullstack.mjs",
+  "scripts/production/check-fullstack-supervisor.mjs",
+  "scripts/production/test-fullstack-ports.mjs",
   "scripts/production/test-fullstack-runtime.mjs",
   "scripts/production/check-security-hardening.mjs",
   "scripts/production/test-root-security.mjs",
@@ -20,6 +28,7 @@ const checks = [
   "scripts/production/check-typescript-regressions.mjs",
   "scripts/production/check-doctor-portability.mjs",
   "scripts/packages/check-pnpm-build-policy.mjs",
+  "scripts/packages/check-monorepo-layout.mjs",
   "scripts/telemetry/check-disabled.mjs",
   "scripts/production/check-source-hazards.mjs",
   "scripts/operations/check-runbook.mjs",

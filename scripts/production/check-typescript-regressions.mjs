@@ -74,7 +74,7 @@ for (const file of walk(".")) {
 
 const solana =
   fs.readFileSync(
-    "src/solana.ts",
+    "packages/protocol/src/solana.ts",
     "utf8",
   );
 for (const stale of [
@@ -84,14 +84,14 @@ for (const stale of [
 ]) {
   if (solana.includes(stale)) {
     failures.push(
-      `src/solana.ts:${stale}`,
+      `packages/protocol/src/solana.ts:${stale}`,
     );
   }
 }
 
 const constants =
   fs.readFileSync(
-    "src/constants.ts",
+    "packages/protocol/src/constants.ts",
     "utf8",
   );
 if (
@@ -100,13 +100,13 @@ if (
   )
 ) {
   failures.push(
-    "src/constants.ts:canonical-mint-address-alias",
+    "packages/protocol/src/constants.ts:canonical-mint-address-alias",
   );
 }
 
 const calendar =
   fs.readFileSync(
-    "src/burn/calendar.ts",
+    "packages/protocol/src/burn/calendar.ts",
     "utf8",
   );
 if (
@@ -115,13 +115,13 @@ if (
   )
 ) {
   failures.push(
-    "src/burn/calendar.ts:bigint-literal-narrowing",
+    "packages/protocol/src/burn/calendar.ts:bigint-literal-narrowing",
   );
 }
 
 const errors =
   fs.readFileSync(
-    "src/common/errors.ts",
+    "packages/protocol/src/common/errors.ts",
     "utf8",
   );
 if (
@@ -130,13 +130,13 @@ if (
   )
 ) {
   failures.push(
-    "src/common/errors.ts:error-cause-override",
+    "packages/protocol/src/common/errors.ts:error-cause-override",
   );
 }
 
 const handler =
   fs.readFileSync(
-    "src/handlers/read-handler.ts",
+    "packages/protocol/src/handlers/read-handler.ts",
     "utf8",
   );
 for (const stale of [
@@ -146,7 +146,7 @@ for (const stale of [
 ]) {
   if (handler.includes(stale)) {
     failures.push(
-      `src/handlers/read-handler.ts:${stale}`,
+      `packages/protocol/src/handlers/read-handler.ts:${stale}`,
     );
   }
 }

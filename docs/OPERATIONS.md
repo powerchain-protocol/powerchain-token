@@ -22,7 +22,7 @@ Production writes follow the same safety sequence:
 6. reconcile ambiguous outcomes using the returned signature or durable source reference;
 7. only retry after idempotency/replay state proves a retry is safe.
 
-`src/handlers/write-handler.ts` intentionally has no blind-retry loop.
+`packages/protocol/src/handlers/write-handler.ts` intentionally has no blind-retry loop.
 
 ## Replay and idempotency
 

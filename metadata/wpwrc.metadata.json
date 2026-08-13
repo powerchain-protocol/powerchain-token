@@ -1,5 +1,5 @@
 {
-  "name": "PowerChain",
+  "name": "Wrapped PowerChain",
   "symbol": "wPWRC",
   "description": "Wrapped PowerChain (wPWRC) is the Sui bridged representation of canonical PowerChain (PWRC), supporting the PowerChain utility, governance, tokenized renewables and real-world-asset ecosystem.",
   "image": "https://token.powerchain.energy/assets/tokens/wpwrc-logo.png",
@@ -95,7 +95,7 @@
     "canonical_mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
     "canonical_transfer_fee_basis_points": 250,
     "canonical_maximum_transfer_fee_tokens": "1000000",
-    "bridge_fee_semantics": "Solana\u2192Sui mints wPWRC equal to net PWRC credited to bridge backing after the Token-2022 transfer fee; Sui\u2192Solana releases the same gross canonical base units as wPWRC burned and the Solana destination transfer applies the Token-2022 fee.",
+    "bridge_fee_semantics": "Solana→Sui mints wPWRC equal to net PWRC credited to bridge backing after the Token-2022 transfer fee; Sui→Solana releases the same gross canonical base units as wPWRC burned and the Solana destination transfer applies the Token-2022 fee.",
     "asset_categories": [
       "wrapped-token",
       "utility-token",

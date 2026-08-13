@@ -3,16 +3,16 @@ import assert from "node:assert/strict";
 import {
   decodeQuarterId,
   encodeQuarterId,
-} from "../src/burn/quarter-id.js";
+} from "../packages/protocol/src/burn/quarter-id.js";
 import {
   assertQuarterlyBurnTransition,
-} from "../src/burn/state.js";
+} from "../packages/protocol/src/burn/state.js";
 import {
   reconcileQuarterlyBurn,
-} from "../src/burn/reconcile.js";
+} from "../packages/protocol/src/burn/reconcile.js";
 import {
   assertSuiMintWithinLiveCeiling,
-} from "../src/sui/mint-guard.js";
+} from "../packages/protocol/src/sui/mint-guard.js";
 
 test("quarter IDs are deterministic and monotonic by quarter", () => {
   assert.equal(encodeQuarterId(2026, 3), 20263n);

@@ -2,8 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   solanaPwrcLockClaimHash,
-} from "../client/sui/wpwrc.js";
-import { verifyCrossChainSupply } from "../src/sui-bridge-integrity.js";
+} from "../packages/sdk/src/sui/wpwrc.js";
+import { verifyCrossChainSupply } from "../packages/protocol/src/sui-bridge-integrity.js";
 
 const claim = {
   version: "1.0.0" as const,

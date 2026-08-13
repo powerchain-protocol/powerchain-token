@@ -4,7 +4,7 @@ import {
   PWRC_PRIMARY_METADATA_URI,
   WPWRC_PRIMARY_METADATA_URI,
   fetchMetadataWithGithubFallback,
-} from "../client/metadata.js";
+} from "../packages/sdk/src/metadata.js";
 
 test("canonical metadata domain is token.powerchain.energy", () => {
   assert.equal(

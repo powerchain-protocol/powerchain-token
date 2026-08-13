@@ -2,19 +2,19 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   summarizeProviderHealth,
-} from "../src/observability/health.js";
+} from "../packages/protocol/src/observability/health.js";
 import {
   createEvidenceEnvelope,
   verifyEvidenceEnvelope,
-} from "../src/observability/evidence.js";
+} from "../packages/protocol/src/observability/evidence.js";
 import {
   retryDelayMs,
   shouldRetryHttpStatus,
-} from "../src/observability/retry.js";
+} from "../packages/protocol/src/observability/retry.js";
 import {
   evaluateProductionReadiness,
   assertCoreProductionReady,
-} from "../src/readiness.js";
+} from "../packages/protocol/src/readiness.js";
 
 test("provider health degrades after failures", () => {
   const observations = Array.from({ length: 10 }, (_, i) => ({

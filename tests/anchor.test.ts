@@ -10,12 +10,12 @@ import {
   decodeSecretKey,
   resolveRpcUrl,
   walletFromKeypair,
-} from "../client/client.js";
+} from "../packages/sdk/src/client.js";
 import {
   PWRC_DECIMALS,
   PWRC_GENESIS_BASE_UNITS,
   PWRC_GENESIS_SUPPLY,
-} from "../src/constants.js";
+} from "../packages/protocol/src/constants.js";
 
 test("Anchor compatibility client initializes without network I/O", () => {
   const keypair = Keypair.generate();
@@ -58,7 +58,7 @@ test("client dependencies and canonical PWRC constants are wired", () => {
 test("mainnet RPC requires HTTPS", () => {
   assert.throws(
     () => resolveRpcUrl("mainnet-beta", "http://example.com"),
-    /PWRC_MAINNET_RPC_REQUIRES_HTTPS/,
+    /POWERCHAIN_HTTPS_REQUIRED/,
   );
 });
 

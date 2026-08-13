@@ -2,13 +2,13 @@ import fs from "node:fs";
 import {
   readJsonFileSync,
   requireKeys,
-} from "../../utils/config.mjs";
+} from "../../packages/runtime/src/config.mjs";
 import {
   PWRC_CANONICAL_MINT,
   PWRC_DECIMALS,
   PWRC_TRANSFER_FEE_BASIS_POINTS,
   PWRC_MAXIMUM_TRANSFER_FEE_TOKENS,
-} from "../../utils/constants.mjs";
+} from "../../packages/runtime/src/constants.mjs";
 
 const failures = [];
 

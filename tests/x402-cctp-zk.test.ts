@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { assertCctpIntent, PWRC_CCTP_POLICY } from "../src/cctp/policy.js";
-import { assertCanonicalPwrcZkMode } from "../src/zk/policy.js";
-import { PWRC_X402_POLICY } from "../src/x402/policy.js";
+import { assertCctpIntent, PWRC_CCTP_POLICY } from "../packages/protocol/src/cctp/policy.js";
+import { assertCanonicalPwrcZkMode } from "../packages/protocol/src/zk/policy.js";
+import { PWRC_X402_POLICY } from "../packages/protocol/src/x402/policy.js";
 
 test("CCTP is USDC-only in PWRC architecture", () => {
   assert.equal(PWRC_CCTP_POLICY.asset, "USDC");

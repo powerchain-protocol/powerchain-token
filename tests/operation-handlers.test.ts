@@ -2,14 +2,14 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   handleOperation,
-} from "../src/handlers/operation-handler.js";
+} from "../packages/protocol/src/handlers/operation-handler.js";
 import {
   handleChainWrite,
-} from "../src/handlers/write-handler.js";
+} from "../packages/protocol/src/handlers/write-handler.js";
 import {
   PowerChainError,
   PowerChainErrorCode,
-} from "../src/common/errors.js";
+} from "../packages/protocol/src/common/errors.js";
 
 
 test("operation handler rejects zero settlement", async () => {

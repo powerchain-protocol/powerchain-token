@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   assertVerifiedAnchorIdlRuntime,
   assertVerifiedSuiAbiRuntime,
-} from "../src/idl/runtime.js";
+} from "../packages/protocol/src/idl/runtime.js";
 
 test("Anchor runtime guard rejects missing generated-IDL verification", () => {
   assert.throws(

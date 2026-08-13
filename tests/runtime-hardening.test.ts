@@ -4,21 +4,21 @@ import {
   readBooleanEnv,
   readIntegerEnv,
   readEnumEnv,
-} from "../src/common/env.js";
+} from "../packages/protocol/src/common/env.js";
 import {
   assertRetryPolicy,
   retryDelayMs,
-} from "../src/common/retry.js";
+} from "../packages/protocol/src/common/retry.js";
 import {
   assertRuntimePolicy,
   DEFAULT_RUNTIME_POLICY,
-} from "../src/config/runtime.js";
+} from "../packages/protocol/src/config/runtime.js";
 import {
   assertOperationContext,
-} from "../src/handlers/operation-handler.js";
+} from "../packages/protocol/src/handlers/operation-handler.js";
 import {
   handleChainWrite,
-} from "../src/handlers/write-handler.js";
+} from "../packages/protocol/src/handlers/write-handler.js";
 
 test("environment helpers reject malformed values", () => {
   assert.equal(
@@ -116,7 +116,7 @@ test("operation request IDs reject whitespace and controls", () => {
   assert.doesNotThrow(
     () =>
       assertOperationContext({
-        operation: "read",
+        operation: "status",
         requestId:
           "pwrc:req-123",
       }),
@@ -125,7 +125,7 @@ test("operation request IDs reject whitespace and controls", () => {
   assert.throws(
     () =>
       assertOperationContext({
-        operation: "read",
+        operation: "status",
         requestId:
           " bad id ",
       }),

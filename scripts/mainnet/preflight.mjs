@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import {
   runCommandSync,
-} from "../../utils/process.mjs";
+} from "../../packages/runtime/src/process.mjs";
 
 const checks = [
   "scripts/production/check-all.mjs",

@@ -2,18 +2,18 @@ import fs from "node:fs";
 
 const failures = [];
 for (const file of [
-  "src/common/token-units.ts",
-  "src/common/errors.ts",
-  "src/bridge/conservation.ts",
-  "src/relayer/concurrency.ts",
-  "src/relayer/read-cache.ts",
+  "packages/protocol/src/common/token-units.ts",
+  "packages/protocol/src/common/errors.ts",
+  "packages/protocol/src/bridge/conservation.ts",
+  "packages/protocol/src/relayer/concurrency.ts",
+  "packages/protocol/src/relayer/read-cache.ts",
   "config/optimization/runtime.json",
 ]) {
   if (!fs.existsSync(file)) failures.push(`missing:${file}`);
 }
 
-const watcher = fs.readFileSync("src/bridge/watcher.ts", "utf8");
-const accounts = fs.readFileSync("client/sui/accounts.ts", "utf8");
+const watcher = fs.readFileSync("packages/protocol/src/bridge/watcher.ts", "utf8");
+const accounts = fs.readFileSync("packages/sdk/src/sui/accounts.ts", "utf8");
 const rpc = fs.readFileSync("packages/native-token-client/src/solana/rpc.ts", "utf8");
 
 if (!watcher.includes("evaluateBridgeConservation")) {

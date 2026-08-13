@@ -49,7 +49,7 @@
   "changeClassifier": "scripts/idl/classify-change.mjs",
   "mainnetBindingCheck": "scripts/idl/check-mainnet-binding.mjs",
   "baselineChecksum": "idl/baseline/1.0.0.sha256",
-  "runtimeGuards": "src/idl/runtime.ts",
+  "runtimeGuards": "packages/protocol/src/idl/runtime.ts",
   "readinessReport": "reports/idl-readiness.json",
   "anchorTokenVerifier": {
     "expected": "idl/anchor/pwrc_token.expected.json",

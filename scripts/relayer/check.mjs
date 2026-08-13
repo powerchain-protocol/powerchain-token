@@ -4,13 +4,13 @@ const failures = [];
 const policy = JSON.parse(
   fs.readFileSync("config/relayer/policy.json", "utf8"),
 );
-const state = fs.readFileSync("src/relayer/state.ts", "utf8");
+const state = fs.readFileSync("packages/protocol/src/relayer/state.ts", "utf8");
 const idem = fs.readFileSync(
-  "src/relayer/idempotency.ts",
+  "packages/protocol/src/relayer/idempotency.ts",
   "utf8",
 );
 const watcher = fs.readFileSync(
-  "src/bridge/watcher.ts",
+  "packages/protocol/src/bridge/watcher.ts",
   "utf8",
 );
 

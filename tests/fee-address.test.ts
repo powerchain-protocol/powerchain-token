@@ -4,7 +4,7 @@ import {
   PWRC_MAX_TRANSFER_FEE_BASE_UNITS,
   PWRC_MAX_TRANSFER_FEE_TOKENS,
   PWRC_TRANSFER_FEE_BPS,
-} from "../src/constants.js";
+} from "../packages/protocol/src/constants.js";
 
 test("PWRC uses native Token-2022 fee policy, not a custom fee collector", () => {
   assert.equal(PWRC_TRANSFER_FEE_BPS, 250n);

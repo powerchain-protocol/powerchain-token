@@ -1,108 +1,110 @@
-# PowerChain Documentation
+# PowerChain Technical Documentation
 
 **Version:** `1.0.0`
 
-This directory documents the production model for canonical PWRC, wPWRC,
-Token-2022 fees, bridge accounting, IDL/release policy, and Mainnet evidence.
+This directory contains maintainer, developer, protocol, security, operations
+and release documentation for PowerChain.
 
 ## Start here
 
-| Document | Purpose |
-|---|---|
-| `TOKEN_PROGRAM.md` | Canonical PWRC Token-2022 verifier and invariant policy |
-| `TOKEN_ASSETS.md` | PWRC/wPWRC images, metadata URLs, and official product links |
-| `WPWRC_SPECIFICATION.md` | Canonical PWRC → Sui wPWRC bridge representation |
-| `PROGRAMS.md` | Solana/Sui on-chain program architecture |
-| `BRIDGE_INTENT.md` | Bridge lifecycle, conservation, and replay boundaries |
-| `INTEGRATION.md` | Production bridge integration lifecycle |
-| `RELAYER_SECURITY.md` | Fail-closed relayer/security policy |
-| `BURN_INTENT.md` | Quarterly canonical burn race protection |
-| `IDL.md` | Expected/generated IDL contracts and ABI release gates |
-| `PRODUCTION.md` | Build phases, toolchain gates, and production workflow |
-| `PRODUCTION_MAINNET.md` | Mainnet build/deployment readiness requirements |
-| `MAINNET_CHECKLIST.md` | Final Mainnet evidence checklist |
-| `OPERATIONS.md` | Operational runbook and incident-safe workflows |
-| `RELEASE_PROVENANCE.md` | Source/build/deployment evidence commitments |
-| `SECURITY_MODEL.md` | Security model and authority boundaries |
-| `OFFICIAL_LINKS.md` | Canonical PowerChain project links |
+- [Getting Started](GETTING_STARTED.md)
+- [Architecture](ARCHITECTURE.md)
+- [Full-stack Architecture](FULLSTACK.md)
+- [Configuration](CONFIGURATION.md)
+- [Environment](ENVIRONMENT.md)
+- [API](API.md)
+- [Bridge Model](BRIDGE_MODEL.md)
+- [Security](SECURITY.md)
+- [Development](DEVELOPMENT.md)
+- [Testing](TESTING.md)
+- [Operations Runbook](OPERATIONS_RUNBOOK.md)
+- [Deployment](DEPLOYMENT.md)
+- [Mainnet](MAINNET.md)
+- [Release](RELEASE.md)
+- [Troubleshooting](TROUBLESHOOTING.md)
 
-## Canonical token snapshot
+## Protocol
 
-```text
-PWRC chain:             Solana mainnet-beta
-PWRC standard:          Token-2022
-PWRC mint:              PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
-PWRC decimals:          9
-PWRC fixed supply:      18,446,000,000
-Transfer fee:           250 bps / 2.5%
-Maximum transfer fee:   1,000,000 PWRC
-wPWRC chain:            Sui
-wPWRC decimals:         9
-wPWRC genesis supply:   0
+- [Token Assets](protocol/TOKEN_ASSETS.md)
+- [Token Program](protocol/TOKEN_PROGRAM.md)
+- [wPWRC Specification](protocol/WPWRC_SPECIFICATION.md)
+- [Contracts](protocol/CONTRACTS.md)
+- [Programs](protocol/PROGRAMS.md)
+- [Quarterly Burn](protocol/QUARTERLY_BURN.md)
+- [Quarterly Burn Calendar](protocol/QUARTERLY_BURN_CALENDAR.md)
+- [Quarterly Burn Runbook](protocol/QUARTERLY_BURN_RUNBOOK.md)
+- [Quarterly Burn Security](protocol/QUARTERLY_BURN_SECURITY.md)
+- [Burn Intent](protocol/BURN_INTENT.md)
+
+## Bridge
+
+- [Bridge](bridge/BRIDGE.md)
+- [Bridge Intent](bridge/BRIDGE_INTENT.md)
+- [Bridge Upgrade](bridge/BRIDGE_UPGRADE.md)
+- [Sui Bridge](bridge/SUI_BRIDGE.md)
+- [wPWRC Sui Client](bridge/WPWRC_SUI_CLIENT.md)
+- [Relayer Security](bridge/RELAYER_SECURITY.md)
+
+## Security
+
+- [Security Model](security/SECURITY_MODEL.md)
+- [AI Security](security/AI_SECURITY.md)
+- [Deployment Evidence](security/DEPLOYMENT_EVIDENCE.md)
+
+## Development references
+
+- [Client](development/CLIENT.md)
+- [Native Token Client](development/NATIVE_TOKEN_CLIENT.md)
+- [Native Token Client v2](development/NATIVE_TOKEN_CLIENT_V2.md)
+- [TypeScript Packages & Scripts](development/TYPESCRIPT_PACKAGES_SCRIPTS.md)
+- [Node/macOS Compatibility](development/NODE_MACOS_COMPATIBILITY.md)
+- [Runtime](development/RUNTIME.md)
+- [Optimization](development/OPTIMIZATION.md)
+- [Optimization v2](development/OPTIMIZATION_V2.md)
+
+## Integrations
+
+- [Integration](integrations/INTEGRATION.md)
+- [Market Data](integrations/MARKET_DATA.md)
+- [CCTP](integrations/CCTP.md)
+- [x402](integrations/X402.md)
+- [ZK](integrations/ZK.md)
+
+## Reference
+
+- [IDL](reference/IDL.md)
+- [Observability](reference/OBSERVABILITY.md)
+- [Official Links](reference/OFFICIAL_LINKS.md)
+- [Transactions](reference/TRANSACTIONS.md)
+- [Verification](reference/VERIFICATION.md)
+- [Dependencies](reference/DEPENDENCIES.md)
+- [GitHub Repository Naming](reference/GITHUB_REPOSITORY.md)
+
+## Release and production
+
+- [Production](release/PRODUCTION.md)
+- [Production Mainnet](release/PRODUCTION_MAINNET.md)
+- [Release Provenance](release/RELEASE_PROVENANCE.md)
+- [Root Architecture](release/ROOT-ARCHITECTURE.md)
+
+## Applications
+
+- [Docs App](apps/DOCS_APP.md)
+- [Full-stack Ports](apps/FULLSTACK_PORTS.md)
+
+## Operations quick links
+
+- [Operations](OPERATIONS.md)
+- [Devnet](DEVNET.md)
+- [Mainnet Checklist](MAINNET_CHECKLIST.md)
+- [Commands](COMMANDS.md)
+- [Project Status](PROJECT_STATUS.md)
+- [Glossary](GLOSSARY.md)
+- [FAQ](FAQ.md)
+- [Contributing](CONTRIBUTING.md)
+
+The documentation application is available locally with:
+
+```bash
+pnpm start:docs
 ```
-
-Required canonical Token-2022 extensions are `TransferFeeConfig`,
-`MetadataPointer`, and `TokenMetadata`.
-
-## Metadata and assets
-
-```text
-public/assets/pwrc.png
-public/assets/wpwrc.png
-metadata/metadata.json
-metadata/wpwrc.metadata.json
-```
-
-Public metadata:
-
-```text
-https://token.powerchain.energy/metadata/metadata.json
-```
-
-On-chain metadata URI:
-
-```text
-https://powerchain.energy/metadata/metaplex.json
-```
-
-## Sui RPC environments
-
-| Network | RPC endpoint | Production target |
-|---|---|---:|
-| testnet | `https://fullnode.testnet.sui.io:443` | |
-| mainnet | `https://fullnode.mainnet.sui.io:443` | **✓** |
-| devnet | `https://fullnode.devnet.sui.io:443` | |
-| local | `http://127.0.0.1:9000` | |
-
-Machine-readable configuration lives under `config/sui/`.
-
-## Release principle
-
-The repository distinguishes three states:
-
-1. **static configuration/source valid**;
-2. **toolchain-generated artifacts verified**;
-3. **Mainnet deployment evidence verified**.
-
-Passing static checks is not equivalent to a successful Anchor build, Sui Move
-build, on-chain mint verification, or Mainnet deployment.
-
-## Production runtime additions
-
-- `TRANSACTIONS.md` — fee-aware transaction submission and reconciliation.
-- `RUNTIME.md` — runtime config, retry/timeout utilities and handlers.
-- `DEVNET.md` — Devnet readiness and fail-closed preflight.
-- `NEXTJS.md` — optional Next.js host security baseline.
-
-- `CONTRACTS.md` — active Solana/Sui contract roles and hardening.
-
-## JavaScript toolchain
-
-Production JavaScript tooling is pinned to Node `26.7.0` and pnpm
-`10.21.0`. Dependency build scripts use an explicit pnpm 10 allowlist;
-Next/Turbo telemetry is disabled. See `PRODUCTION.md`.
-
-- `ROOT-ARCHITECTURE.md` — root utilities, shared platform services and ownership boundaries.
-- `PRODUCTION.md` — production runtime, build, security and operational controls.
-- `MAINNET.md` — fail-closed Mainnet evidence and release-authorization workflow.
-- `API.md` — full-stack API, server-owned bridge quotes and server-only execution adapter.

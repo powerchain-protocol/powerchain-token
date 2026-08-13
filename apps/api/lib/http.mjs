@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import {
   redactValue,
-} from "../../../utils/redact.mjs";
+} from "../../../packages/runtime/src/redact.mjs";
 
 export const MAX_JSON_BODY_BYTES =
   64 * 1024;

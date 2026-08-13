@@ -3,12 +3,12 @@ import fs from "node:fs";
 const failures = [];
 
 for (const file of [
-  "utils/config.mjs",
-  "utils/constants.mjs",
-  "utils/env.mjs",
-  "utils/errors.mjs",
-  "utils/logger.mjs",
-  "utils/process.mjs",
+  "packages/runtime/src/config.mjs",
+  "packages/runtime/src/constants.mjs",
+  "packages/runtime/src/env.mjs",
+  "packages/runtime/src/errors.mjs",
+  "packages/runtime/src/logger.mjs",
+  "packages/runtime/src/process.mjs",
   "config/registry.json",
   "scripts/production/check-config-registry.mjs",
   "scripts/production/check-utility-duplication.mjs",
@@ -22,7 +22,7 @@ for (const file of [
 
 const processUtil =
   fs.readFileSync(
-    "utils/process.mjs",
+    "packages/runtime/src/process.mjs",
     "utf8",
   );
 
@@ -45,7 +45,7 @@ for (const invariant of [
 
 const logger =
   fs.readFileSync(
-    "utils/logger.mjs",
+    "packages/runtime/src/logger.mjs",
     "utf8",
   );
 

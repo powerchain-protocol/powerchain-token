@@ -71,5 +71,5 @@ Mainnet readiness must verify, rather than assume:
 Ambiguous writes that may have landed must be reconciled before retrying.
 Replay/idempotency keys must be persisted atomically with state changes.
 
-See `docs/INTEGRATION.md`, `docs/BRIDGE_INTENT.md`, and
-`docs/PRODUCTION_MAINNET.md` for the wider production flow.
+See `docs/integrations/INTEGRATION.md`, `docs/bridge/BRIDGE_INTENT.md`, and
+`docs/release/PRODUCTION_MAINNET.md` for the wider production flow.

@@ -2,13 +2,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   assertBurnSafeToUnpause,
-} from "../src/burn/unpause.js";
+} from "../packages/protocol/src/burn/unpause.js";
 import {
   quarterlyBurnExecutionRecordSha256,
-} from "../src/burn/record.js";
+} from "../packages/protocol/src/burn/record.js";
 import {
   assertBridgeDeploymentManifest,
-} from "../src/bridge/manifest.js";
+} from "../packages/protocol/src/bridge/manifest.js";
 
 test("unpause requires reconciled burn evidence", () => {
   assert.throws(

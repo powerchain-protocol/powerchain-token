@@ -8,7 +8,7 @@ import {
   findPwrcVaultAuthorityPda,
   PWRC_LOCK_PROGRAM_ID,
   PWRC_TOKEN_VERIFIER_PROGRAM_ID,
-} from "../client/programs.js";
+} from "../packages/sdk/src/programs.js";
 
 test("active PowerChain local program identities are valid and distinct", () => {
   assert.notEqual(PWRC_LOCK_PROGRAM_ID.toBase58(), PWRC_TOKEN_VERIFIER_PROGRAM_ID.toBase58());

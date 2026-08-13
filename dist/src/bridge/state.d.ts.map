@@ -1,0 +1,1 @@
+{"version":3,"file":"state.d.ts","sourceRoot":"","sources":["../../../src/bridge/state.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,mBAAmB,GAC3B,SAAS,GACT,kBAAkB,GAClB,kBAAkB,GAClB,iBAAiB,GACjB,mBAAmB,GACnB,uBAAuB,GACvB,uBAAuB,GACvB,uBAAuB,GACvB,YAAY,GACZ,WAAW,GACX,SAAS,CAAC;AAmBd,wBAAgB,8BAA8B,CAC5C,IAAI,EAAE,mBAAmB,EACzB,EAAE,EAAE,mBAAmB,GACtB,IAAI,CAIN"}

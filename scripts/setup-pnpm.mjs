@@ -1,83 +1,130 @@
-import { spawnSync } from "node:child_process";
-
-const EXPECTED_NODE = "26.7.0";
-const EXPECTED_PNPM = "10.21.0";
+import {
+  spawnSync,
+} from "node:child_process";
+import {
+  isSupportedNode,
+  nodePolicyLabel,
+  PNPM_VERSION,
+} from "./toolchain/node-policy.mjs";
 
 function run(command, args) {
-  return spawnSync(command, args, {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  return spawnSync(
+    command,
+    args,
+    {
+      encoding: "utf8",
+      stdio: [
+        "ignore",
+        "pipe",
+        "pipe",
+      ],
+      shell: false,
+    },
+  );
 }
 
 function readVersion(command) {
-  const result = run(command, ["--version"]);
-  if (result.error || result.status !== 0) {
+  const result =
+    run(
+      command,
+      ["--version"],
+    );
+
+  if (
+    result.error ||
+    result.status !== 0
+  ) {
     return null;
   }
+
   return (
     result.stdout.trim() ||
     result.stderr.trim()
   );
 }
 
-if (process.versions.node !== EXPECTED_NODE) {
+if (
+  !isSupportedNode(
+    process.versions.node,
+  )
+) {
   console.error(
-    `PWRC_NODE_VERSION_MISMATCH: expected ${EXPECTED_NODE}, got ${process.versions.node}`,
+    `PWRC_NODE_VERSION_UNSUPPORTED: ${process.versions.node}; expected ${nodePolicyLabel()}`,
   );
   console.error(
-    `Use .nvmrc/.node-version and activate Node ${EXPECTED_NODE} first.`,
+    "Run: bash scripts/bootstrap/platform-preflight.sh",
   );
   process.exit(1);
 }
 
-let pnpm = readVersion("pnpm");
+let pnpm =
+  readVersion("pnpm");
 
-if (pnpm !== EXPECTED_PNPM) {
-  const corepack = readVersion("corepack");
+if (pnpm !== PNPM_VERSION) {
+  const corepack =
+    readVersion("corepack");
 
   if (!corepack) {
     console.error(
-      "PWRC_COREPACK_UNAVAILABLE: install Corepack, then rerun setup.",
+      "PWRC_COREPACK_UNAVAILABLE",
     );
     console.error(
-      "npm install --global corepack@latest",
-    );
-    console.error("corepack enable");
-    console.error(
-      `corepack prepare pnpm@${EXPECTED_PNPM} --activate`,
+      "Install/enable Corepack only after a compatible Node binary starts successfully.",
     );
     process.exit(2);
   }
 
-  const prepare = spawnSync(
-    "corepack",
-    [
-      "prepare",
-      `pnpm@${EXPECTED_PNPM}`,
-      "--activate",
-    ],
-    { stdio: "inherit" },
-  );
+  const prepare =
+    spawnSync(
+      "corepack",
+      [
+        "prepare",
+        `pnpm@${PNPM_VERSION}`,
+        "--activate",
+      ],
+      {
+        stdio:
+          "inherit",
+        shell:
+          false,
+      },
+    );
 
-  if (prepare.status !== 0) {
-    process.exit(prepare.status ?? 1);
+  if (
+    prepare.status !== 0
+  ) {
+    process.exit(
+      prepare.status ?? 1,
+    );
   }
 
-  pnpm = readVersion("pnpm");
+  pnpm =
+    readVersion("pnpm");
 }
 
-if (pnpm !== EXPECTED_PNPM) {
+if (pnpm !== PNPM_VERSION) {
   console.error(
-    `PWRC_PNPM_VERSION_MISMATCH: expected ${EXPECTED_PNPM}, got ${pnpm ?? "unavailable"}`,
+    `PWRC_PNPM_VERSION_MISMATCH: expected ${PNPM_VERSION}, got ${pnpm ?? "unavailable"}`,
   );
   process.exit(3);
 }
 
-console.log(JSON.stringify({
-  ok: true,
-  version: "1.0.0",
-  node: process.versions.node,
-  pnpm,
-  buildApprovalPolicy: "pnpm-workspace.yaml:onlyBuiltDependencies",
-}, null, 2));
+console.log(
+  JSON.stringify(
+    {
+      ok: true,
+      version: "1.0.0",
+      node:
+        process.versions.node,
+      nodePolicy:
+        nodePolicyLabel(),
+      pnpm,
+      pnpmForcesNodeDownload:
+        false,
+      buildApprovalPolicy:
+        "pnpm-workspace.yaml:onlyBuiltDependencies",
+    },
+    null,
+    2,
+  ),
+);

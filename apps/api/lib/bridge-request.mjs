@@ -1,7 +1,7 @@
 import {
   assertSolanaAddress,
   assertSuiAddress,
-} from "../../../utils/addresses.mjs";
+} from "../../../packages/runtime/src/addresses.mjs";
 
 const SAFE_FINGERPRINT =
   /^[a-f0-9]{64}$/i;

@@ -7,7 +7,7 @@ import {
   PWRC_MAX_BASE_UNITS,
   TOKEN_2022_PROGRAM_ID,
   U64_MAX,
-} from "../src/constants.js";
+} from "../packages/protocol/src/constants.js";
 
 test("canonical supply cannot drift", () => {
   assert.equal(PWRC_GENESIS_SUPPLY, 18_446_000_000n);
@@ -24,6 +24,10 @@ test("token config has exact production profile", () => {
   assert.equal(config.version, "1.0.0");
   assert.equal(config.tokenProgram, TOKEN_2022_PROGRAM_ID);
   assert.equal(config.decimals, 9);
-  assert.deepEqual(config.allowedExtensions, ["MetadataPointer", "TokenMetadata"]);
+  assert.deepEqual(config.allowedExtensions, [
+    "TransferFeeConfig",
+    "MetadataPointer",
+    "TokenMetadata",
+  ]);
   assert.equal(config.freezeAuthority, null);
 });

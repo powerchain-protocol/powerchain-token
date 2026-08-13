@@ -2,11 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   assertQuarterlyBurnTransition,
-} from "../src/burn/state.js";
+} from "../packages/protocol/src/burn/state.js";
 import {
   assertQuarterlyBurnIntent,
   quarterlyBurnIntentSha256,
-} from "../src/burn/intent.js";
+} from "../packages/protocol/src/burn/intent.js";
 
 test("Solana burn cannot be submitted before finalized Sui intent", () => {
   assert.throws(
@@ -32,7 +32,7 @@ test("burn intent binds expected post-burn wrapped ceiling", () => {
     expectedPostBurnCanonicalSupplyBaseUnits:
       "980000000000",
     expectedPostBurnWrappedCeilingBaseUnits:
-      "980000000",
+      "980000000000",
     solanaSlot: "1",
     suiCheckpoint: "1",
     planSha256: "ab".repeat(32),

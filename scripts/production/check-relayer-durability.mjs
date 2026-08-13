@@ -1,9 +1,9 @@
 import fs from "node:fs";
 
 const failures = [];
-const store = fs.readFileSync("src/relayer/file-store.ts", "utf8");
-const atomic = fs.readFileSync("src/common/atomic-file.ts", "utf8");
-const write = fs.readFileSync("src/handlers/write-handler.ts", "utf8");
+const store = fs.readFileSync("packages/protocol/src/relayer/file-store.ts", "utf8");
+const atomic = fs.readFileSync("packages/protocol/src/common/atomic-file.ts", "utf8");
+const write = fs.readFileSync("packages/protocol/src/handlers/write-handler.ts", "utf8");
 const provenance = fs.readFileSync("scripts/release/generate-provenance.mjs", "utf8");
 
 for (const token of [

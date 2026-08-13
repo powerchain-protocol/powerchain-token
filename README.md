@@ -1,482 +1,260 @@
-# PowerChain (PWRC) — Token & Bridge Workspace
+# PowerChain
 
-**Version:** `1.0.0`
+**Version:** `1.0.0`  
+**Canonical token:** `PWRC`  
+**Canonical network:** Solana mainnet-beta  
+**Wrapped representation:** `wPWRC` on Sui  
+**Repository:** PowerChain token, bridge, API, web, docs, protocol packages and release tooling
 
-Production-oriented source workspace for the canonical PowerChain token on Solana,
-the Sui `wPWRC` bridge representation, client libraries, IDL contracts, release
-evidence, and fail-closed Mainnet readiness checks.
+PowerChain is a security-first cross-chain token infrastructure monorepo. It
+contains the canonical PWRC Token-2022 policy, the Sui wPWRC bridge model,
+client SDKs, server-owned execution services, technical documentation, release
+evidence tooling and production validation.
+
+The repository distinguishes source readiness from build, deployment-evidence
+and Mainnet authorization readiness. A passing source check is not proof of an
+on-chain deployment.
+
+## Monorepo layout
+
+```text
+.
+├── apps/
+│   ├── api/                  # HTTP API, quotes, readiness and execution gate
+│   ├── docs/                 # Technical documentation application
+│   └── web/                  # Browser application and same-origin API proxy
+│
+├── packages/
+│   ├── protocol/             # Canonical PWRC/wPWRC protocol and policy logic
+│   ├── sdk/                  # High-level PowerChain client SDK
+│   ├── runtime/              # Shared Node.js runtime utilities
+│   ├── native-token-client/  # Focused native token client
+│   ├── bridge-integration/   # Bridge integration package
+│   ├── docs-ui/              # Reusable docs rendering components
+│   └── docs-content/         # Structured documentation sessions
+│
+├── programs/                 # Solana Anchor programs
+├── contracts/                # Sui Move package
+├── config/                   # Token, bridge, app and release policy
+├── metadata/                 # PWRC and wPWRC metadata + manifests
+├── openapi/                  # PowerChain API schema
+├── idl/                      # Interface baselines and generated-artifact gates
+├── scripts/                  # Build, verification, release and operations tooling
+├── tests/                    # Repository-level protocol/security tests
+├── docs/                     # Maintainer and operator documentation
+└── reports/                  # Generated local validation reports
+```
+
+Reusable application/library code belongs in `packages/*`; runnable services
+belong in `apps/*`. Repository-root TypeScript source directories are no longer
+used as library ownership boundaries.
+
+## GitHub repository
+
+Recommended repository name: **`powerchain-token`**.
+
+Use `powerchain-ai/powerchain-token` only if `powerchain-ai` is the actual
+controlling GitHub organization. See
+[GitHub Repository Naming](docs/reference/GITHUB_REPOSITORY.md).
+
+## Workspace applications
+
+| Package | Purpose | Default local endpoint |
+|---|---|---|
+| `@powerchain/api` | API, readiness, bridge quote/execution gate | `127.0.0.1:8787` |
+| `@powerchain/client` | Browser UI and same-origin proxy | `127.0.0.1:3000` |
+| `@powerchain/docs` | Technical documentation | `127.0.0.1:3002` |
+
+## Workspace packages
+
+| Package | Responsibility |
+|---|---|
+| `@powerchain/protocol` | Canonical token, bridge, burn, security and policy logic |
+| `@powerchain/sdk` | High-level Solana/Sui/bridge client interfaces |
+| `@powerchain/runtime` | Shared deterministic Node runtime utilities |
+| `@powerchain/native-token-client` | Focused PWRC native token client |
+| `@powerchain/bridge-integration` | Bridge finality, reconciliation and integration |
+| `@powerchain/docs-ui` | Reusable documentation renderer |
+| `@powerchain/docs-content` | Structured docs sessions/content |
 
 ## Canonical PWRC profile
 
-| Field | Value |
-|---|---|
-| Name | PowerChain |
-| Symbol | PWRC |
-| Canonical chain | Solana `mainnet-beta` |
-| Token standard | Token-2022 |
-| Canonical mint | `PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc` |
-| Decimals | `9` |
-| Fixed supply | `18,446,000,000 PWRC` |
-| Fixed supply base units | `18,446,000,000,000,000,000` |
-| Native transfer fee | `250 bps` / `2.5%` |
-| Maximum transfer fee | `1,000,000 PWRC` |
-| Maximum fee base units | `1,000,000,000,000,000` |
-| Mint authority | must be revoked after verified genesis |
-| Freeze authority | must be `null` |
+```text
+Network:             Solana mainnet-beta
+Token standard:      Token-2022
+Mint:                PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
+Decimals:            9
+Genesis/max supply:  18,446,000,000 PWRC
+Transfer fee:        250 bps (2.5%)
+Maximum fee:         1,000,000 PWRC
+Freeze authority:    null
+Wrapped asset:       wPWRC on Sui
+Wrapped genesis:     0
+Bridge ratio:        1:1 base-unit domain
+```
 
 Required Token-2022 extensions:
 
-```text
-TransferFeeConfig
-MetadataPointer
-TokenMetadata
-```
+- `TransferFeeConfig`
+- `MetadataPointer`
+- `TokenMetadata`
 
-The canonical profile forbids unrelated extensions such as permanent delegate,
-mint-close authority, default-frozen state, interest-bearing configuration,
-scaled UI amount, pausable, and non-transferable behavior.
+The source repository does not assume deployment authority state. Mint,
+transfer-fee and bridge authority facts must come from verified deployment or
+on-chain evidence.
 
-> The canonical mint address is configured in this repository, but Mainnet
-> readiness still requires independent on-chain verification of mint state,
-> supply, authorities, transfer-fee configuration, and authority custody.
+## Requirements
 
-## wPWRC on Sui
-
-`wPWRC` is the 9-decimal Sui bridge representation of PWRC.
+Local compatibility baseline:
 
 ```text
-Genesis supply:      0 wPWRC
-Mint policy:         bridge-only
-Decimal domain:      9 decimals
-Base-unit factor:    1
-Canonical backing:   net spendable PWRC bridge backing
+Node.js  22.22.3
+pnpm     10.21.0
 ```
 
-The economic ratio is 1:1 in the common base-unit domain, but Solana transfers
-are fee-bearing.
-
-### Solana → Sui
-
-```text
-gross PWRC transfer
-- Token-2022 transfer fee
-= net spendable PWRC credited to bridge backing
-= wPWRC minted
-```
-
-### Sui → Solana
-
-```text
-wPWRC burned
-= gross PWRC released from bridge backing
-
-gross release
-- Token-2022 transfer fee
-= net PWRC received by the Solana destination
-```
-
-Transfer-fee withheld amounts are not counted as spendable bridge backing.
-
-## Metadata and token images
-
-Repository assets:
-
-```text
-public/assets/pwrc.png
-public/assets/wpwrc.png
-```
-
-When served from a web application's static `public/` root:
-
-```text
-/assets/pwrc.png
-/assets/wpwrc.png
-```
-
-Canonical metadata endpoints:
-
-```text
-On-chain metadata URI: https://powerchain.energy/metadata/metaplex.json
-Public metadata JSON:  https://token.powerchain.energy/metadata/metadata.json
-PWRC public image:     https://token.powerchain.energy/assets/tokens/pwrc-logo.png
-wPWRC metadata:        https://token.powerchain.energy/metadata/wpwrc.metadata.json
-```
-
-Official product links:
-
-```text
-Website:    https://powerchain.energy
-Bridge:     https://bridge.powerchain.energy
-App:        https://app.powerchain.energy
-Docs:       https://docs.powerchain.energy
-Whitepaper: https://whitepaper.powerchain.energy
-X:          https://x.com/powerchain_ai
-Telegram:   https://t.me/powerchain_official
-```
-
-## Repository layout
-
-```text
-programs/
-├── pwrc-lock/                  Solana PWRC ↔ wPWRC bridge custody program
-├── token/                      canonical PWRC Token-2022 verifier
-└── pwrc-fees/                  deprecated custom fee-router source
-
-contracts/
-└── wpwrc/                      active Sui Move bridge package
-
-packages/
-├── native-token-client/        exact PWRC client/fee/bridge helpers
-└── bridge-integration/         production integration/readiness helpers
-
-idl/                            expected/generated ABI contracts + release gates
-metadata/                       canonical PWRC/wPWRC metadata
-public/assets/                  local PWRC/wPWRC PNG assets
-config/                         token, bridge, fee, network, Mainnet policies
-scripts/                        validation/build/deployment/release tooling
-```
-
-`programs/pwrc-fees` is deprecated. Canonical transfer fees are implemented by
-Token-2022 `TransferFeeConfig`; there is no second custom protocol-router fee.
-
-## Sui RPC environments
-
-| Network | RPC endpoint | Production target |
-|---|---|---:|
-| testnet | `https://fullnode.testnet.sui.io:443` | |
-| mainnet | `https://fullnode.mainnet.sui.io:443` | **✓** |
-| devnet | `https://fullnode.devnet.sui.io:443` | |
-| local | `http://127.0.0.1:9000` | |
-
-Machine-readable configuration lives under `config/sui/`.
-
-## Production checks
-
-Run the static production suite:
+Activate the repository runtime:
 
 ```bash
-pnpm production:check
+source scripts/bootstrap/activate-node.sh
 ```
 
-Useful focused checks:
+Install:
 
 ```bash
-pnpm token:production:check
-pnpm pwrc:fees
-pnpm pwrc:metadata:validate
-pnpm pwrc:metadata:assets-check
-pnpm pwrc:bridge:upgrade-check
-pnpm pwrc:client:check
-pnpm pwrc:idl:check
-pnpm pwrc:mainnet:status
-```
-
-When dependencies and toolchains are installed:
-
-```bash
-pnpm production:build:ts
-pnpm production:build:solana
-pnpm production:build:sui
-```
-
-A full Mainnet build is intentionally gated:
-
-```bash
-pnpm mainnet:build
-```
-
-## Solana programs
-
-### `pwrc-lock`
-
-Escrows canonical PWRC and releases custody only against authenticated,
-replay-protected bridge evidence. Solana → Sui lock accounting records the net
-spendable amount after the Token-2022 transfer fee.
-
-### `pwrc-token`
-
-Verification-only Anchor program for the canonical PWRC Token-2022 mint. It
-exposes no public mint instruction and verifies the canonical mint address,
-fixed supply, authority state, required extensions, and transfer-fee schedules.
-
-Localnet program IDs are development identities only and are not Mainnet
-deployment evidence.
-
-## Sui capability model
-
-`TreasuryCap<WPWRC>` is encapsulated by the shared bridge controller rather than
-being handed to an unrestricted publisher/operator address. The bridge starts
-paused, uses separate authority/governor roles, and permanently consumes replay
-identifiers before bridge mint/release state transitions.
-
-The configured `powerchain` Sui address is an alias/configuration value only.
-It must not be treated as the published package ID without deployment evidence.
-
-## Conservation and reconciliation
-
-All bridge accounting uses the common 9-decimal base-unit domain.
-
-For a reconciled state, `PWRC_backing` means **net spendable canonical PWRC
-controlled by the bridge**, excluding Token-2022 withheld transfer fees.
-
-```text
-PWRC_backing
-=
-wPWRC_circulating
-+ pending_Solana_to_Sui
-+ pending_Sui_to_Solana
-```
-
-Pending semantics must be state-machine consistent:
-
-- `pending_Solana_to_Sui`: net PWRC backing finalized on Solana but not yet
-  represented by finalized wPWRC minting;
-- `pending_Sui_to_Solana`: wPWRC already burned but corresponding gross PWRC
-  release not yet finalized on Solana.
-
-## IDL and ABI release policy
-
-Expected source interfaces live under `/idl`; toolchain-generated artifacts are
-accepted only after real Anchor/Sui builds.
-
-```bash
-pnpm idl:check-all
-pnpm idl:build
-pnpm idl:sync
-pnpm idl:generated:verify
-pnpm idl:release
-pnpm idl:readiness
-```
-
-Release readiness requires generated IDLs for both `pwrc_lock` and `pwrc_token`,
-plus normalized Sui module evidence. Expected-interface JSON never substitutes
-for generated deployment artifacts.
-
-## Mainnet readiness
-
-```bash
-pnpm pwrc:mainnet:status
-pnpm pwrc:mainnet:preflight
-```
-
-Mainnet remains fail-closed until required evidence is verified, including:
-
-- canonical mint account and exact Token-2022 state;
-- fixed supply and authority revocation;
-- transfer-fee schedules and transfer-fee authority custody;
-- Solana bridge program and vault deployment;
-- generated Anchor IDLs and discriminators;
-- reviewed Sui Move 2024 build, `Move.lock` SHA-256, and Sui CLI version;
-- Sui package, Currency/metadata/controller identities;
-- normalized Sui module ABI;
-- bridge/governance role separation;
-- deployment transaction/checkpoint/slot/signature evidence;
-- release provenance and ABI commitments.
-
-No Mainnet program/package/object identity should be fabricated to satisfy a
-readiness check.
-
-## Provenance
-
-```bash
-pnpm pwrc:release:provenance
-pnpm idl:attestation
-pnpm idl:attestation:verify
-```
-
-Static checks, source hashes, ABI fingerprints, and unsigned attestations are
-release evidence. They are not proof that a chain build or deployment occurred.
-
-## Documentation
-
-Start with:
-
-```text
-docs/README.md
-docs/TOKEN_PROGRAM.md
-docs/TOKEN_ASSETS.md
-docs/WPWRC_SPECIFICATION.md
-docs/BRIDGE_INTENT.md
-docs/SECURITY_MODEL.md
-docs/PRODUCTION_MAINNET.md
-idl/README.md
-```
-
-## Runtime and transaction hardening
-
-The `1.0.0` runtime now centralizes retry/timeout/URL/u64 utilities, SHA-256 replay/idempotency keys, fee-aware Token-2022 transactions, write reconciliation handlers, Devnet/Mainnet preflights and optional Next.js host security configuration.
-
-```bash
-pnpm production:check
-pnpm pwrc:devnet:status
-pnpm pwrc:mainnet:status
-pnpm clean:cache
-```
-
-Mainnet remains fail-closed until deployment and authority evidence is verified.
-
-## Node, pnpm and dependency build approvals
-
-The workspace is pinned to:
-
-```text
-Node.js: 26.7.0 Current
-pnpm:    10.21.0
-```
-
-Use the committed `.nvmrc` / `.node-version` and then activate pnpm:
-
-```bash
-npm install --global corepack@latest
-corepack enable
-corepack prepare pnpm@10.21.0 --activate
-
-node --version
-pnpm --version
 pnpm install
 ```
 
-pnpm dependency install scripts are **allowlisted**, not globally enabled.
-The reviewed build-script dependencies are:
+## Development
 
-```text
-bigint-buffer@1.1.5
-bufferutil@4.1.0
-esbuild@0.25.12
-utf-8-validate@6.0.6
+Start the API and web stack on strict default ports:
+
+```bash
+pnpm start
 ```
 
-They are declared under `onlyBuiltDependencies` in `pnpm-workspace.yaml`, which
-is the pnpm `10.21.0` build-approval mechanism. `strictDepBuilds: true` makes a
-new unreviewed dependency build fail the install rather than silently ignoring
-it.
+Use automatically allocated local ports when defaults are occupied:
 
-Useful checks:
+```bash
+pnpm start:auto
+```
+
+Start documentation:
+
+```bash
+pnpm start:docs
+```
+
+Run an individual app:
+
+```bash
+pnpm --filter @powerchain/api start
+pnpm --filter @powerchain/client start
+pnpm --filter @powerchain/docs start
+```
+
+## Validation
+
+Core repository gates:
 
 ```bash
 pnpm pnpm:check
-pnpm pnpm:ignored-builds
-pnpm telemetry:check
-```
-
-`pnpm approve-builds` remains available for reviewing future new build-script
-dependencies. Do not enable `dangerouslyAllowAllBuilds`.
-
-Build-tool telemetry is disabled with:
-
-```text
-NEXT_TELEMETRY_DISABLED=1
-TURBO_TELEMETRY_DISABLED=1
-DO_NOT_TRACK=1
-```
-
-
-## Root architecture
-
-Shared utilities are organized by execution environment:
-
-- `src/common/` — canonical TypeScript runtime implementations.
-- `src/utils/` — public typed utility exports.
-- `utils/` — dependency-free Node/release utilities.
-- `scripts/` — orchestration only; shared primitives belong in `utils/`.
-
-See `docs/ROOT-ARCHITECTURE.md`.
-
-```bash
-pnpm pwrc:root:check
-pnpm pwrc:root:map
-```
-
-
-### Root platform checks
-
-```bash
-pnpm pwrc:root:platform-check
-pnpm pwrc:config:registry-check
-pnpm pwrc:utils:duplication-check
-```
-
-The release/build scripts use a shared dependency-free platform layer for
-configuration, process execution, atomic writes, hashing, network validation,
-structured logging, redaction, environment parsing and root constants.
-
-
-## Security hardening
-
-The `1.0.0` root platform fails closed around release tooling and untrusted
-configuration.
-
-Key controls:
-
-- canonical JSON used by SHA-256/signature flows rejects `undefined`, `BigInt`,
-  non-finite numbers, cycles, and non-plain objects instead of silently
-  normalizing ambiguous values;
-- structured logging redacts secret-like keys, bearer credentials, secret
-  assignments, credential-bearing URLs, and cyclic structures;
-- child processes use argument arrays with `shell: false`, bounded timeout, and
-  bounded output buffers;
-- production JSON configuration reads are contained to the repository root and
-  reject direct symlink config files;
-- atomic state/report writes use exclusive randomized temporary files, `fsync`,
-  and same-directory rename;
-- Mainnet preflight uses the shared safe process runner and requires the exact
-  `AUTHORIZED` state with an unused authorization before creating a short-lived
-  preflight proof.
-
-Run:
-
-```bash
-pnpm pwrc:security:hardening-check
-pnpm test:root-security
+pnpm monorepo:check
 pnpm production:check
+pnpm typecheck
+pnpm test
+pnpm fullstack:ports-test
+pnpm fullstack:runtime-test
+pnpm fullstack:test
+pnpm docs:app:test
 ```
 
-Passing static checks does not mean Mainnet deployment has occurred. Real
-build artifacts, on-chain evidence, dual-RPC observations, signed evidence,
-and a fresh one-time release authorization are still required.
+Production validation is intentionally fail-closed. It validates source policy
+and runtime safety without converting missing build/deployment artifacts into
+fake evidence.
 
+## Documentation
 
-## Full-stack applications
+Start with [`docs/README.md`](docs/README.md).
 
-The workspace now includes wired application surfaces:
+Core guides:
+
+- [Getting started](docs/GETTING_STARTED.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Full-stack runtime](docs/FULLSTACK.md)
+- [Configuration](docs/CONFIGURATION.md)
+- [API](docs/API.md)
+- [Bridge model](docs/BRIDGE_MODEL.md)
+- [Security](docs/SECURITY.md)
+- [Development](docs/DEVELOPMENT.md)
+- [Testing](docs/TESTING.md)
+- [Operations runbook](docs/OPERATIONS_RUNBOOK.md)
+- [Deployment](docs/DEPLOYMENT.md)
+- [Mainnet](docs/MAINNET.md)
+- [Release](docs/RELEASE.md)
+- [Troubleshooting](docs/TROUBLESHOOTING.md)
+
+Specialized documentation is grouped under `docs/protocol`, `docs/bridge`,
+`docs/security`, `docs/development`, `docs/integrations`, `docs/reference`,
+`docs/release` and `docs/apps`.
+
+## Mainnet readiness
+
+The release state is sequential:
 
 ```text
-apps/
-├── api/    Node API and server-only bridge executor adapter
-└── web/    responsive status/quote frontend with same-origin API proxy
+SOURCE_READY
+  ↓
+BUILD_READY
+  ↓
+EVIDENCE_READY
+  ↓
+AUTHORIZED
+  ↓
+CONSUMED
 ```
 
-Start them in separate terminals:
+Missing generated IDLs, compiled programs, Move lockfiles, deployment evidence
+or release authorization remain explicit blockers. They are never fabricated
+by source tooling.
+
+Check current state with:
 
 ```bash
-pnpm app:api
-pnpm app:web
+pnpm pwrc:mainnet:status
 ```
 
-Then open:
+## Security boundaries
 
-```text
-http://127.0.0.1:3000
-```
+PowerChain uses the following default security model:
 
-The web UI reads canonical token data, Mainnet readiness, bridge capability and
-server-generated fee-aware quotes from the API. Browser code does not receive
-bridge executor credentials.
+- integer/base-unit token accounting
+- native Token-2022 transfer-fee semantics
+- explicit Solana and Sui address validation
+- bounded RPC retry for reads
+- no blind transaction-write retries
+- durable execution idempotency
+- quote fingerprint verification
+- server-only execution credentials
+- Mainnet execution gated by fresh readiness state
+- deterministic serialization and hashing
+- release provenance and evidence binding
+- fail-closed bridge conservation checks
 
-Bridge execution remains fail-closed until the existing build/evidence/release
-gates are all satisfied and the separate server execution adapter is explicitly
-enabled.
+See [Security](docs/SECURITY.md) and
+[Security model](docs/security/SECURITY_MODEL.md).
 
-```bash
-pnpm fullstack:check
-pnpm production:check
-```
+## Official resources
 
-API details: `docs/API.md`. Machine-readable contract:
-`openapi/powerchain.v1.json`.
+- Website: `https://powerchain.energy`
+- App: `https://app.powerchain.energy`
+- Bridge: `https://bridge.powerchain.energy`
+- Documentation: `https://docs.powerchain.energy`
+- Whitepaper: `https://whitepaper.powerchain.energy`
+- X: `https://x.com/powerchain_ai`
+- Telegram: `https://t.me/powerchain_official`
 
+## Version policy
 
-The API runtime additionally provides bounded rate limiting, two-second
-readiness caching, process-local metrics, chain-aware destination validation,
-and restart-safe execution idempotency. Ambiguous executor results are never
-blindly resubmitted.
+This repository is pinned to **PowerChain `1.0.0`**. Workspace packages,
+applications, contracts, programs, documentation and release metadata must not
+silently drift to another version.

@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { normalizeRpcUrl, normalizeWebSocketUrl } from "../src/common/urls.js";
-import { retryDelayMs } from "../src/common/retry.js";
-import { assertU64 } from "../src/common/bigint.js";
+import { normalizeRpcUrl, normalizeWebSocketUrl } from "../packages/protocol/src/common/urls.js";
+import { retryDelayMs } from "../packages/protocol/src/common/retry.js";
+import { assertU64 } from "../packages/protocol/src/common/bigint.js";
 
 test("production RPC requires HTTPS and strips trailing slash", () => {
   assert.equal(normalizeRpcUrl("https://rpc.example.com/", true), "https://rpc.example.com");
