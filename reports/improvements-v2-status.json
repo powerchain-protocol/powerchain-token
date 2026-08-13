@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "durableRelayerState": true,
+  "atomicJsonWrites": true,
+  "reconciliationDeadlineMsDefault": 60000,
+  "urlHardening": true,
+  "provenanceVerified": true,
+  "sourceTreeSha256": "f6531a6c3dbef038a476813d448e5a9ca9f2d7260892ba55ec5b20cf97155058",
+  "provenancePayloadSha256": "aa0ccb83a9e1d53373f4f08d164217233c8576f6fdc1f21b1bfd8609b3360916",
+  "productionStatic": {
+    "checks": 44,
+    "passed": 44,
+    "failed": 0
+  },
+  "mainnetReady": false,
+  "mainnetBlockers": [
+    "pnpm-lock.yaml",
+    "sui.Move.lock",
+    "solana.rpcUrl",
+    "solana.bridgeProgramId",
+    "solana.bridgeVault",
+    "sui.packageId",
+    "sui.coinType",
+    "sui.currencyObjectId",
+    "sui.bridgeControllerId",
+    "sui.moveLockSha256",
+    "sui.suiCliVersion",
+    "governance.operator",
+    "governance.governor",
+    "solana.mintVerified",
+    "solana.programVerified",
+    "solana.vaultVerified",
+    "solana.mintAuthorityRevoked",
+    "solana.freezeAuthorityNull",
+    "solana.transferFeeConfigVerified",
+    "solana.transferFeeConfigAuthorityVerified",
+    "solana.withdrawWithheldAuthorityVerified",
+    "solana.bridgeVerifierVerified",
+    "sui.packageVerified",
+    "sui.currencyVerified",
+    "sui.controllerVerified",
+    "sui.bridgeAuthorityVerified",
+    "governance.operatorGovernorSeparated",
+    "idl.releaseManifest:not-ready"
+  ],
+  "dependencyBoundTypecheck": {
+    "passed": false,
+    "blockedBy": "node_modules/@types/node not installed in artifact runtime"
+  },
+  "versions": {
+    "package.json": "1.0.0",
+    "packages/native-token-client/package.json": "1.0.0",
+    "packages/bridge-integration/package.json": "1.0.0"
+  }
+}

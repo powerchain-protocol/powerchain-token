@@ -90,3 +90,42 @@ require_precommitted_mainnet_mint() {
 journal() {
   node scripts/journal.mjs "${PWRC_CLUSTER:?}" "$1" "$2" "${3:-}" >/dev/null
 }
+
+
+# Portable SHA-256 helpers.
+sha256_tool() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    printf '%s' "sha256sum"
+  elif command -v shasum >/dev/null 2>&1; then
+    printf '%s' "shasum"
+  elif command -v openssl >/dev/null 2>&1; then
+    printf '%s' "openssl"
+  else
+    return 1
+  fi
+}
+
+need_sha256() {
+  sha256_tool >/dev/null 2>&1 ||
+    die "Missing SHA-256 tool. Install one of: sha256sum, shasum, openssl"
+}
+
+sha256_file() {
+  local file="${1:?file required}"
+  [[ -f "$file" ]] || die "SHA-256 input does not exist: $file"
+
+  case "$(sha256_tool)" in
+    sha256sum)
+      sha256sum "$file" | awk '{print $1}'
+      ;;
+    shasum)
+      shasum -a 256 "$file" | awk '{print $1}'
+      ;;
+    openssl)
+      openssl dgst -sha256 "$file" | awk '{print $NF}'
+      ;;
+    *)
+      die "No SHA-256 implementation available"
+      ;;
+  esac
+}

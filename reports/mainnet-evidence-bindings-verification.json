@@ -1,0 +1,8 @@
+{
+  "ok": false,
+  "version": "1.0.0",
+  "evidenceFile": "config/mainnet/evidence.json",
+  "failures": [
+    "evidence-bindings:missing:config/mainnet/evidence.json"
+  ]
+}

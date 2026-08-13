@@ -27,26 +27,64 @@ const timeout = fs.readFileSync(
   "utf8",
 );
 
+const compact = (value) =>
+  value.replace(/[\s,]+/g, "");
+
+const compactWrite =
+  compact(writeHandler);
+const compactRetry =
+  compact(retry);
+
 for (const token of [
   "PowerChainErrorCode.SimulationFailed",
   "PowerChainErrorCode.AmbiguousWrite",
   "PowerChainErrorCode.TransactionFailed",
   "signatureFromError",
-  "reconcile(submitted.signature)",
+  "reconcileWithDeadline",
+  "input.reconcile",
+  "recoverFinalizedResult",
 ]) {
-  if (!writeHandler.includes(token)) {
-    failures.push(`write-handler:${token}`);
+  if (
+    !compactWrite.includes(
+      compact(token),
+    )
+  ) {
+    failures.push(
+      `write-handler:${token}`,
+    );
   }
 }
 
-if (!retry.includes("assertRetryPolicy")) {
-  failures.push("retry:policy-validation");
+if (
+  !retry.includes(
+    "assertRetryPolicy",
+  )
+) {
+  failures.push(
+    "retry:policy-validation",
+  );
 }
-if (!retry.includes('removeEventListener("abort", onAbort)')) {
-  failures.push("retry:abort-listener-cleanup");
+
+if (
+  !compactRetry.includes(
+    compact(
+      'signal?.removeEventListener("abort", onAbort)',
+    ),
+  )
+) {
+  failures.push(
+    "retry:abort-listener-cleanup",
+  );
 }
-if (!timeout.includes("externalSignal?.aborted")) {
-  failures.push("timeout:pre-aborted-signal");
+
+if (
+  !timeout.includes(
+    "externalSignal?.aborted",
+  )
+) {
+  failures.push(
+    "timeout:pre-aborted-signal",
+  );
 }
 
 console.log(JSON.stringify({
@@ -54,7 +92,10 @@ console.log(JSON.stringify({
   version: "1.0.0",
   noBlindWriteRetry: true,
   ambiguousWriteReconciliation: true,
+  finalizedWriteRecovery: true,
   failures,
 }, null, 2));
 
-if (failures.length) process.exit(1);
+if (failures.length) {
+  process.exit(1);
+}

@@ -1,0 +1,67 @@
+{
+  "version": "1.0.0",
+  "mainnetReadyByDesign": true,
+  "codeReady": true,
+  "buildReady": false,
+  "deploymentEvidenceReady": false,
+  "releaseAuthorized": false,
+  "readyForMainnet": false,
+  "improvements": [
+    "evidence-to-artifact commitment verification",
+    "one-time authorization nonce ledger",
+    "unused authorization preflight",
+    "deterministic signing payload export",
+    "normalized blocker labels"
+  ],
+  "ed25519FunctionalTest": {
+    "ok": true,
+    "algorithm": "Ed25519",
+    "digestAlgorithm": "SHA-256",
+    "tamperRejected": true
+  },
+  "productionStatic": {
+    "checks": 45,
+    "passed": 45,
+    "failed": 0
+  },
+  "typescriptSyntaxFiles": 205,
+  "sourceTreeSha256": "fe627b4df13a427610f3f272125f3f3d9558f033c6b180d91dfb83528d52e18d",
+  "provenancePayloadSha256": "375830207f47a63c1cf0e0a7dc59010c3c759656173074d9748f54a61230a86b",
+  "expectedFailClosedGates": {
+    "buildManifestVerification": {
+      "blocked": true,
+      "returnCode": 2
+    },
+    "deploymentEvidenceVerification": {
+      "blocked": true,
+      "returnCode": 2
+    },
+    "evidenceBindingsVerification": {
+      "blocked": true,
+      "returnCode": 2
+    },
+    "releaseAuthorizationVerification": {
+      "blocked": true,
+      "returnCode": 2
+    },
+    "releaseAuthorizationUnusedCheck": {
+      "blocked": true,
+      "returnCode": 2
+    }
+  },
+  "blockers": [
+    "pnpm-lock.yaml",
+    "contracts/wpwrc/Move.lock",
+    "target/deploy/pwrc_lock.so",
+    "target/deploy/pwrc_token.so",
+    "idl/generated/pwrc_lock.json",
+    "idl/generated/pwrc_token.json",
+    "idl/generated/wpwrc.modules.json",
+    "idl.releaseManifest:not-ready",
+    "mainnet.build-manifest-verification:failed",
+    "evidence:missing:config/mainnet/evidence.json",
+    "evidence-bindings:missing:config/mainnet/evidence.json",
+    "authorization:missing:config/mainnet/release-authorization.json",
+    "authorization-unused:missing:config/mainnet/release-authorization.json"
+  ]
+}

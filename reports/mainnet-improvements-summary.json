@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "mainnetReadyByDesign": true,
+  "cryptographicEvidence": "Ed25519",
+  "deterministicBuildManifest": true,
+  "codeReady": true,
+  "buildReady": false,
+  "deploymentEvidenceReady": false,
+  "readyForMainnet": false,
+  "productionStatic": {
+    "checks": 45,
+    "passed": 45,
+    "failed": 0
+  },
+  "sourceTreeSha256": "ef128f274847dd6738ba515ea7500480d7dac0adb2eee5395114431485db451e",
+  "provenancePayloadSha256": "7924ef978c23385b4384e7412f508d514dd47abd339e5dc17232982f37d4429f",
+  "typescriptSyntaxFiles": 205,
+  "expectedFailClosedGates": {
+    "buildManifestGeneration": {
+      "blocked": true,
+      "returnCode": 2
+    },
+    "buildManifestVerification": {
+      "blocked": true,
+      "returnCode": 2
+    },
+    "deploymentEvidenceVerification": {
+      "blocked": true,
+      "returnCode": 2
+    }
+  },
+  "blockers": [
+    "pnpm-lock.yaml",
+    "contracts/wpwrc/Move.lock",
+    "target/deploy/pwrc_lock.so",
+    "target/deploy/pwrc_token.so",
+    "idl/generated/pwrc_lock.json",
+    "idl/generated/pwrc_token.json",
+    "idl/generated/wpwrc.modules.json",
+    "idl.releaseManifest:not-ready",
+    "mainnet.build-manifest-verification:failed",
+    "evidence:evidence:missing:config/mainnet/evidence.json"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0",
+  "doctorPortable": true,
+  "doctorSha256Fallbacks": [
+    "sha256sum",
+    "shasum -a 256",
+    "openssl dgst -sha256"
+  ],
+  "doctorDetectedHashToolInValidationRuntime": "sha256sum",
+  "doctorStubFlowPassed": true,
+  "compilerRegressionGatePassed": true,
+  "compilerErrorsCovered": [
+    "TS4111",
+    "TS2724",
+    "TS2322",
+    "TS4114",
+    "TS2379",
+    "TS1543",
+    "TS2551",
+    "TS2345"
+  ],
+  "typescriptSyntax": {
+    "ok": true,
+    "files": 199,
+    "failures": []
+  },
+  "fullTypecheck": {
+    "attempted": true,
+    "passed": false,
+    "outputExcerpt": "error TS2688: Cannot find type definition file for 'node'.\n  The file is in the program because:\n    Entry point of type library 'node' specified in compilerOptions",
+    "environmentBlocked": true
+  },
+  "productionStatic": {
+    "checks": 42,
+    "passed": 42,
+    "failed": 0
+  },
+  "versions": {
+    "package.json": "1.0.0",
+    "packages/native-token-client/package.json": "1.0.0",
+    "packages/bridge-integration/package.json": "1.0.0"
+  }
+}

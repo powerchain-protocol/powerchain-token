@@ -1,0 +1,60 @@
+{
+  "version": "1.0.0",
+  "securityFixes": [
+    "strict canonical JSON",
+    "embedded credential redaction",
+    "bounded shell-free process runner",
+    "repository-contained config reads",
+    "direct config symlink rejection",
+    "randomized atomic temp files",
+    "safe Mainnet preflight orchestration",
+    "security regression test"
+  ],
+  "docsUpdated": [
+    "README.md",
+    "docs/README.md",
+    "docs/PRODUCTION.md",
+    "docs/PRODUCTION_MAINNET.md",
+    "docs/MAINNET.md",
+    "docs/SECURITY_MODEL.md"
+  ],
+  "productionStatic": {
+    "checks": 51,
+    "passed": 51,
+    "failed": 0
+  },
+  "typescriptSyntaxFiles": 219,
+  "mainnet": {
+    "codeReady": true,
+    "buildReady": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "preflightFailClosed": true,
+    "expectedBlocked": {
+      "buildManifest": true,
+      "evidence": true,
+      "evidenceBindings": true,
+      "authorization": true,
+      "authorizationUnused": true
+    },
+    "blockers": [
+      "pnpm-lock.yaml",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "idl/generated/pwrc_lock.json",
+      "idl/generated/pwrc_token.json",
+      "idl/generated/wpwrc.modules.json",
+      "idl.releaseManifest:not-ready",
+      "mainnet.build-manifest-verification:failed",
+      "evidence:missing:config/mainnet/evidence.json",
+      "evidence-bindings:missing:config/mainnet/evidence.json",
+      "authorization:missing:config/mainnet/release-authorization.json",
+      "authorization-unused:missing:config/mainnet/release-authorization.json"
+    ]
+  },
+  "sourceTreeSha256": "8c6968bb71e5d46f6e87d3b33654e9516d3b7e688d29fd0567d1ebef6570f01c",
+  "provenancePayloadSha256": "4f594a355586656748ce60703dc86032d37436eb61e8eed9a3f1ea7541347b40"
+}

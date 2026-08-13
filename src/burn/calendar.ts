@@ -24,7 +24,7 @@ export function buildBurnCalendar(
   }
 
   const result: BurnCalendarEntry[] = [];
-  let id = PWRC_BURN_START_QUARTER_ID;
+  let id: bigint = PWRC_BURN_START_QUARTER_ID;
 
   for (let i = 0; i < count; i += 1) {
     const { year, quarter } = decodeQuarterId(id);

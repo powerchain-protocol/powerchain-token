@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "rootPlatform": {
+    "rootUtilities": "utils/",
+    "typedUtilities": "src/utils/",
+    "runtimeImplementations": "src/common/",
+    "configRegistry": "config/registry.json",
+    "safeProcessRunner": "utils/process.mjs",
+    "structuredLogger": "utils/logger.mjs",
+    "environment": "utils/env.mjs",
+    "canonicalConstants": "utils/constants.mjs",
+    "configLoader": "utils/config.mjs"
+  },
+  "productionStatic": {
+    "checks": 49,
+    "passed": 49,
+    "failed": 0
+  },
+  "typescriptSyntaxFiles": 219,
+  "mainnet": {
+    "codeReady": true,
+    "buildReady": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "expectedFailClosedGates": {
+      "buildManifest": true,
+      "evidence": true,
+      "evidenceBindings": true,
+      "authorization": true,
+      "authorizationUnused": true
+    }
+  },
+  "sourceTreeSha256": "f1af53e54d767b76457574d5e37b6d09b609b0b12e26c8a0aabb80f8276342ea",
+  "provenancePayloadSha256": "28296501ccb9fa302d70ce15c3b45b68e6177819a52a83b373c6f1b03c4dcd93"
+}

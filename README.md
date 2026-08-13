@@ -314,3 +314,169 @@ pnpm clean:cache
 ```
 
 Mainnet remains fail-closed until deployment and authority evidence is verified.
+
+## Node, pnpm and dependency build approvals
+
+The workspace is pinned to:
+
+```text
+Node.js: 26.7.0 Current
+pnpm:    10.21.0
+```
+
+Use the committed `.nvmrc` / `.node-version` and then activate pnpm:
+
+```bash
+npm install --global corepack@latest
+corepack enable
+corepack prepare pnpm@10.21.0 --activate
+
+node --version
+pnpm --version
+pnpm install
+```
+
+pnpm dependency install scripts are **allowlisted**, not globally enabled.
+The reviewed build-script dependencies are:
+
+```text
+bigint-buffer@1.1.5
+bufferutil@4.1.0
+esbuild@0.25.12
+utf-8-validate@6.0.6
+```
+
+They are declared under `onlyBuiltDependencies` in `pnpm-workspace.yaml`, which
+is the pnpm `10.21.0` build-approval mechanism. `strictDepBuilds: true` makes a
+new unreviewed dependency build fail the install rather than silently ignoring
+it.
+
+Useful checks:
+
+```bash
+pnpm pnpm:check
+pnpm pnpm:ignored-builds
+pnpm telemetry:check
+```
+
+`pnpm approve-builds` remains available for reviewing future new build-script
+dependencies. Do not enable `dangerouslyAllowAllBuilds`.
+
+Build-tool telemetry is disabled with:
+
+```text
+NEXT_TELEMETRY_DISABLED=1
+TURBO_TELEMETRY_DISABLED=1
+DO_NOT_TRACK=1
+```
+
+
+## Root architecture
+
+Shared utilities are organized by execution environment:
+
+- `src/common/` — canonical TypeScript runtime implementations.
+- `src/utils/` — public typed utility exports.
+- `utils/` — dependency-free Node/release utilities.
+- `scripts/` — orchestration only; shared primitives belong in `utils/`.
+
+See `docs/ROOT-ARCHITECTURE.md`.
+
+```bash
+pnpm pwrc:root:check
+pnpm pwrc:root:map
+```
+
+
+### Root platform checks
+
+```bash
+pnpm pwrc:root:platform-check
+pnpm pwrc:config:registry-check
+pnpm pwrc:utils:duplication-check
+```
+
+The release/build scripts use a shared dependency-free platform layer for
+configuration, process execution, atomic writes, hashing, network validation,
+structured logging, redaction, environment parsing and root constants.
+
+
+## Security hardening
+
+The `1.0.0` root platform fails closed around release tooling and untrusted
+configuration.
+
+Key controls:
+
+- canonical JSON used by SHA-256/signature flows rejects `undefined`, `BigInt`,
+  non-finite numbers, cycles, and non-plain objects instead of silently
+  normalizing ambiguous values;
+- structured logging redacts secret-like keys, bearer credentials, secret
+  assignments, credential-bearing URLs, and cyclic structures;
+- child processes use argument arrays with `shell: false`, bounded timeout, and
+  bounded output buffers;
+- production JSON configuration reads are contained to the repository root and
+  reject direct symlink config files;
+- atomic state/report writes use exclusive randomized temporary files, `fsync`,
+  and same-directory rename;
+- Mainnet preflight uses the shared safe process runner and requires the exact
+  `AUTHORIZED` state with an unused authorization before creating a short-lived
+  preflight proof.
+
+Run:
+
+```bash
+pnpm pwrc:security:hardening-check
+pnpm test:root-security
+pnpm production:check
+```
+
+Passing static checks does not mean Mainnet deployment has occurred. Real
+build artifacts, on-chain evidence, dual-RPC observations, signed evidence,
+and a fresh one-time release authorization are still required.
+
+
+## Full-stack applications
+
+The workspace now includes wired application surfaces:
+
+```text
+apps/
+├── api/    Node API and server-only bridge executor adapter
+└── web/    responsive status/quote frontend with same-origin API proxy
+```
+
+Start them in separate terminals:
+
+```bash
+pnpm app:api
+pnpm app:web
+```
+
+Then open:
+
+```text
+http://127.0.0.1:3000
+```
+
+The web UI reads canonical token data, Mainnet readiness, bridge capability and
+server-generated fee-aware quotes from the API. Browser code does not receive
+bridge executor credentials.
+
+Bridge execution remains fail-closed until the existing build/evidence/release
+gates are all satisfied and the separate server execution adapter is explicitly
+enabled.
+
+```bash
+pnpm fullstack:check
+pnpm production:check
+```
+
+API details: `docs/API.md`. Machine-readable contract:
+`openapi/powerchain.v1.json`.
+
+
+The API runtime additionally provides bounded rate limiting, two-second
+readiness caching, process-local metrics, chain-aware destination validation,
+and restart-safe execution idempotency. Ambiguous executor results are never
+blindly resubmitted.

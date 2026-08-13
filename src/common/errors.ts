@@ -21,12 +21,20 @@ export type PowerChainErrorCodeValue =
 
 export class PowerChainError extends Error {
   readonly code: PowerChainErrorCodeValue;
-  readonly cause?: unknown;
-  constructor(code: PowerChainErrorCodeValue, message: string, options?: { cause?: unknown }) {
-    super(message);
+
+  constructor(
+    code: PowerChainErrorCodeValue,
+    message: string,
+    options?: { cause?: unknown },
+  ) {
+    super(
+      message,
+      options?.cause === undefined
+        ? undefined
+        : { cause: options.cause },
+    );
     this.name = "PowerChainError";
     this.code = code;
-    this.cause = options?.cause;
   }
 }
 

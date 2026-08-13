@@ -1,2 +1,17 @@
 packages:
   - "packages/*"
+  - "apps/*"
+
+# PowerChain production Node runtime.
+useNodeVersion: 26.7.0
+nodeVersion: 26.7.0
+engineStrict: true
+
+# pnpm 10.21.0 dependency-build policy.
+# These exact packages are explicitly reviewed/approved to run install scripts.
+strictDepBuilds: true
+onlyBuiltDependencies:
+  - "bigint-buffer@1.1.5"
+  - "bufferutil@4.1.0"
+  - "esbuild@0.25.12"
+  - "utf-8-validate@6.0.6"

@@ -1,17 +1,19 @@
 {
   "version": "1.0.0",
-  "sourceTreeSha256": "51676201b0d8c450c6ddfed301fb5b0a3afdfa9908440dfca44e5d56dc71a29b",
-  "generatedAt": "2026-08-12T16:50:32.678Z",
-  "packageJsonSha256": "10779a4ca200d0a7e2529083b8d97124e28e001d9479ec90435064bdf2f82811",
+  "sourceTreeSha256": "ce4d44aec4ddc781cc3ce438eec102421ec712b8b1e486b3e8dbce36f98b31a4",
+  "packageJsonSha256": "fd99478284ea07e74c543e2c3f1c3e81f4661255bd71bacd926e361448daab4f",
   "tokenConfigSha256": "849f5b6173680541954fe5c86e4b090d2de25c090d53f97198123fe9c57bc232",
   "bridgeConfigSha256": "fd22f7d3d627946a429853b82cdf2396da191ae66cce246a9462f4297476b430",
   "mainnetConfigSha256": "b8651287f22fdd12765606e5af91ab039c9c51e526c18babd6ab337a67a57a8a",
   "suiMovePackageSha256": "1e3215f31b1c15a5e6c0f11a8afaeef1d6dcb56eb5466f7cb000154bc57ef50c",
   "suiBridgeModuleSha256": "4d491b8f9ed98b5b82566a812230e8a835fcaea9bd21a27def46a20f981a2ab6",
   "solanaLockProgramSha256": "b01e05f374d5b7a0c64b2206030514d1e70ff1329d3cab8f25c77dff7605f0d9",
-  "nativeClientPackageSha256": "56e79e05d73ac788386cabdf92879915e3fe3ff6df9a8bbc39eec6965790a1eb",
-  "bridgeIntegrationPackageSha256": "2a2e76423f267b5ec355963d29d71166f79522d55b0b2a34845199445df68421",
+  "solanaTokenVerifierSha256": "59cf6fcf3944b2838f07edb1d4700d6edb1d7588aabc5493d97eab4a0f73b90b",
+  "nativeClientPackageSha256": "848dc1f71a8f7f9df500892f67d26e41b5cd1e7e7d2c7c84294cf98c651b10fe",
+  "bridgeIntegrationPackageSha256": "bd790079349743672460d7a00295aa954e9adf510d2dadb11cd124512e2c049b",
   "metadataSha256": "9f04cc3f389b4056a38da12a8dc2b696fbfd5f43e79f612c56d366ebf5235bb1",
   "wrappedMetadataSha256": "65db55abec0a001cccdae7c504a0869523aee4fabebe4cb3028fd7218872df78",
-  "changelogSha256": "d1e5cf07df3c5a68e799b8076a23c78e12c4a45b988ef611438b5acb5a49e6bd"
+  "changelogSha256": "87071a82754d0ed2ac493e93c31342c5f2528a86b205ffe9c46dd78953ad003d",
+  "payloadSha256": "e7b17ce1e05e074fe99cf8f21bb22eeea479088ae01112d39d071293a2983a26",
+  "generatedAt": "2026-08-13T04:34:18.965Z"
 }

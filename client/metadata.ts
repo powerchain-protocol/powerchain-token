@@ -69,13 +69,13 @@ export async function fetchMetadataWithGithubFallback<T = unknown>(
 export function pwrcMetadataSources() {
   return {
     primary: PWRC_PRIMARY_METADATA_URI,
-    secondary: process.env.PWRC_GITHUB_METADATA_URI || undefined,
+    secondary: process.env["PWRC_GITHUB_METADATA_URI"] || undefined,
   };
 }
 
 export function wpwrcMetadataSources() {
   return {
     primary: WPWRC_PRIMARY_METADATA_URI,
-    secondary: process.env.WPWRC_GITHUB_METADATA_URI || undefined,
+    secondary: process.env["WPWRC_GITHUB_METADATA_URI"] || undefined,
   };
 }

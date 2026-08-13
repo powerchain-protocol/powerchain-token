@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "rootArchitecture": {
+    "nodeUtilities": "utils/",
+    "typedUtilities": "src/utils/",
+    "runtimeImplementations": "src/common/",
+    "legacyAtomicJson": "compatibility re-export only"
+  },
+  "functionalUtilityTest": {
+    "ok": true,
+    "canonicalHashStable": true,
+    "sameHostRejected": true,
+    "redaction": true,
+    "atomicWrite": true
+  },
+  "productionStatic": {
+    "checks": 46,
+    "passed": 46,
+    "failed": 0
+  },
+  "typescriptSyntaxFiles": 219,
+  "codeReady": true,
+  "buildReady": false,
+  "deploymentEvidenceReady": false,
+  "releaseAuthorized": false,
+  "releaseState": "SOURCE_READY",
+  "readyForMainnet": false,
+  "sourceTreeSha256": "7e60db321713b610929c6dd3b2d2e55a1d0480f7c839f01df476f90caedcf66c",
+  "provenancePayloadSha256": "757690b35ba4d2d6022524a393b21dabaa719f747e231a60ba6aff6e272556d4",
+  "blockers": [
+    "pnpm-lock.yaml",
+    "contracts/wpwrc/Move.lock",
+    "target/deploy/pwrc_lock.so",
+    "target/deploy/pwrc_token.so",
+    "idl/generated/pwrc_lock.json",
+    "idl/generated/pwrc_token.json",
+    "idl/generated/wpwrc.modules.json",
+    "idl.releaseManifest:not-ready",
+    "mainnet.build-manifest-verification:failed",
+    "evidence:missing:config/mainnet/evidence.json",
+    "evidence-bindings:missing:config/mainnet/evidence.json",
+    "authorization:missing:config/mainnet/release-authorization.json",
+    "authorization-unused:missing:config/mainnet/release-authorization.json"
+  ]
+}

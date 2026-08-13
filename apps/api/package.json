@@ -1,0 +1,13 @@
+{
+  "name": "@powerchain/api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=26.7.0 <27"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check lib/http.mjs && node --check lib/platform.mjs && node --check lib/executor.mjs"
+  }
+}

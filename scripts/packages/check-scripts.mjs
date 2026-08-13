@@ -13,6 +13,12 @@ const scripts =
   pkg.scripts ?? {};
 
 const required = [
+  "toolchain:node-pnpm",
+  "telemetry:check",
+  "pnpm:ignored-builds",
+  "pnpm:approve-builds",
+  "pnpm:check",
+  "setup:pnpm",
   "typecheck",
   "build:ts",
   "packages:check",

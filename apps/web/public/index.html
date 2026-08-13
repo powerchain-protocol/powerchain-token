@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>PowerChain Platform</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <p class="eyebrow">PowerChain · 1.0.0</p>
+        <h1>PWRC Platform Status</h1>
+        <p class="muted">Canonical Solana Token-2022 asset with Sui wPWRC bridge representation.</p>
+      </div>
+      <span id="health" class="badge">Loading…</span>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Token</h2>
+        <dl id="token"></dl>
+      </article>
+
+      <article class="card">
+        <h2>Mainnet readiness</h2>
+        <dl id="readiness"></dl>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Bridge quote</h2>
+      <form id="quote-form">
+        <label>
+          Direction
+          <select id="direction">
+            <option value="solana-to-sui">Solana → Sui</option>
+            <option value="sui-to-solana">Sui → Solana</option>
+          </select>
+        </label>
+        <label>
+          Amount (base units)
+          <input id="amount" inputmode="numeric" value="1000000000" pattern="[0-9]+" required>
+        </label>
+        <button type="submit">Get server quote</button>
+      </form>
+      <pre id="quote">No quote yet.</pre>
+    </section>
+
+    <section class="card">
+      <h2>Execution capability</h2>
+      <p id="capability" class="muted">Loading…</p>
+    </section>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

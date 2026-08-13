@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import expected from "../idl/anchor/pwrc_token.expected.json";
+import expected from "../idl/anchor/pwrc_token.expected.json" with { type: "json" };
 
 test("token verifier exposes no mint instruction", () => {
   assert.equal(

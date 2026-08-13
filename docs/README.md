@@ -95,3 +95,14 @@ build, on-chain mint verification, or Mainnet deployment.
 - `NEXTJS.md` — optional Next.js host security baseline.
 
 - `CONTRACTS.md` — active Solana/Sui contract roles and hardening.
+
+## JavaScript toolchain
+
+Production JavaScript tooling is pinned to Node `26.7.0` and pnpm
+`10.21.0`. Dependency build scripts use an explicit pnpm 10 allowlist;
+Next/Turbo telemetry is disabled. See `PRODUCTION.md`.
+
+- `ROOT-ARCHITECTURE.md` — root utilities, shared platform services and ownership boundaries.
+- `PRODUCTION.md` — production runtime, build, security and operational controls.
+- `MAINNET.md` — fail-closed Mainnet evidence and release-authorization workflow.
+- `API.md` — full-stack API, server-owned bridge quotes and server-only execution adapter.

@@ -17,3 +17,16 @@ PWRC uses Token-2022 `TransferFeeConfig`. Production verification records both
 the transfer-fee config authority and `withdraw_withheld_authority`; source
 configuration does not guess these authorities. Mainnet remains blocked until
 their actual on-chain values and custody policy are verified.
+
+
+## Release tooling security
+
+Repository release tooling uses strict canonical JSON for cryptographic
+commitments, bounded shell-free child-process execution, repository-contained
+configuration reads, atomic state/report writes, embedded credential redaction,
+dual-RPC Mainnet observations, Ed25519 evidence signatures, and one-time
+release authorization nonces.
+
+These controls protect the release process but do not replace on-chain
+verification, signer custody controls, independent review, or qualified
+Devnet/Mainnet deployment procedures.

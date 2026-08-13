@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0",
+  "mainnetReadyByDesign": true,
+  "codeReady": true,
+  "buildReady": false,
+  "deploymentEvidenceReady": false,
+  "readyForMainnet": false,
+  "productionStatic": {
+    "checks": 45,
+    "passed": 45,
+    "failed": 0
+  },
+  "sourceTreeSha256": "9af17b512ed852d4b741a5a5a725d1bc91ac9e3bb59890ec19e5b803af810a4b",
+  "provenancePayloadSha256": "795e0bae42ddd0195be270cab2ff9fead3436e900dc477342625876b3d5a2f24",
+  "evidenceVerifierFailClosedWithoutEvidence": true,
+  "blockers": [
+    "pnpm-lock.yaml",
+    "contracts/wpwrc/Move.lock",
+    "idl/generated/pwrc_lock.json",
+    "idl/generated/pwrc_token.json",
+    "idl/generated/wpwrc.modules.json",
+    "idl.releaseManifest:not-ready",
+    "mainnet.deployment-evidence"
+  ]
+}

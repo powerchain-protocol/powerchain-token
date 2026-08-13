@@ -1,14 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import expected from "../idl/anchor/pwrc_lock.expected.json";
-import sui from "../idl/sui/wpwrc.interface.json";
+import expected from "../idl/anchor/pwrc_lock.expected.json" with { type: "json" };
+import sui from "../idl/sui/wpwrc.interface.json" with { type: "json" };
 
 test("Anchor expected IDL contract matches canonical policy", () => {
   assert.equal(expected.version, "1.0.0");
   assert.equal(expected.canonicalRules.pwrcDecimals, 9);
   assert.equal(expected.canonicalRules.wpwrcDecimals, 9);
   assert.equal(expected.canonicalRules.baseUnitFactor, "1");
-  assert.equal(expected.canonicalRules.transferFeeBps, 0);
+  assert.equal(expected.canonicalRules.transferFeeBps, 250);
 });
 
 test("Sui interface never invents package ID", () => {

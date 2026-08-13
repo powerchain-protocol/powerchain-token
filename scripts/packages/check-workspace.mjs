@@ -5,7 +5,7 @@ const failures = [];
 const root = JSON.parse(fs.readFileSync("package.json", "utf8"));
 
 if (root.version !== "1.0.0") failures.push("root:version");
-if (root.packageManager !== "pnpm@11.20.0") {
+if (root.packageManager !== "pnpm@10.21.0") {
   failures.push("root:packageManager");
 }
 if (!Array.isArray(root.workspaces) || !root.workspaces.includes("packages/*")) {

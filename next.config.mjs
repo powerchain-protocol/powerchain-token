@@ -1,3 +1,7 @@
+process.env.NEXT_TELEMETRY_DISABLED ??= "1";
+process.env.TURBO_TELEMETRY_DISABLED ??= "1";
+process.env.DO_NOT_TRACK ??= "1";
+
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   reactStrictMode: true,

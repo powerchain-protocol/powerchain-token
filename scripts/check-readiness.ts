@@ -12,18 +12,18 @@ const cctp = load("config/integrations/cctp.json");
 
 const checks = evaluateProductionReadiness({
   canonicalMint:
-    process.env.PWRC_EXPECTED_MINT ||
+    process.env["PWRC_EXPECTED_MINT"] ||
     token.mainnetMint ||
     null,
   mainnetRpcUrl:
-    process.env.PWRC_MAINNET_RPC_URL ||
-    process.env.PWRC_RPC_URL ||
+    process.env["PWRC_MAINNET_RPC_URL"] ||
+    process.env["PWRC_RPC_URL"] ||
     null,
   pythFeedId:
-    process.env.PWRC_PYTH_FEED_ID ||
+    process.env["PWRC_PYTH_FEED_ID"] ||
     market.providers?.pyth?.feedId ||
     null,
-  birdeyeConfigured: Boolean(process.env.BIRDEYE_API_KEY),
+  birdeyeConfigured: Boolean(process.env["BIRDEYE_API_KEY"]),
   bridgePackageId: bridge.wrapped?.packageId ?? null,
   bridgeCoinType: bridge.wrapped?.coinType ?? null,
   cctpMessageTransmitter:

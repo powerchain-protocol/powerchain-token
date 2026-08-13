@@ -2,8 +2,7 @@
 
 Version: `1.0.0`
 
-Release states are distinct: **static-ready**, **build-ready**,
-**deployment-ready**, and **Mainnet-ready**.
+The Mainnet release state machine is forward-only: **SOURCE_READY → BUILD_READY → EVIDENCE_READY → AUTHORIZED → CONSUMED**. `readyForMainnet` is true only while all build/evidence/authorization gates pass and the authorization is still unused.
 
 ## Solana
 
@@ -48,3 +47,15 @@ pnpm mainnet:release:check
 ```
 
 No Mainnet identity is synthesized by the build or readiness scripts.
+
+
+## Release authorization and replay safety
+
+Deployment verification and release authorization are separate gates. Mainnet
+evidence must include independent Solana/Sui RPC observations and an Ed25519
+signature over the canonical evidence digest.
+
+A second, short-lived Ed25519 release authorization binds the canonical mint,
+networks, evidence hash, provenance hash, build-manifest hash, nonce, issue time,
+and expiration time. The authorization nonce is consumed atomically at the
+point of no return and cannot be reused.

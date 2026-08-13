@@ -2,7 +2,7 @@
 
 ## Qualified configuration
 
-The repository targets Node 22+, pnpm 11.20.0, Anchor 0.32.1 and the reviewed Agave/Solana 2.3.0 profile recorded in `config/toolchain.json`. A different toolchain requires a fresh Devnet qualification before Mainnet use.
+The repository targets exact Node 26.7.0 Current and pnpm 10.21.0, Anchor 0.32.1 and the reviewed Agave/Solana 2.3.0 profile recorded in `config/toolchain.json`. A different toolchain requires a fresh Devnet qualification before Mainnet use.
 
 ## Canonical asset
 
@@ -76,3 +76,129 @@ pnpm mainnet:release:check
 
 That final release gate requires deployment identities, authority evidence,
 generated Anchor IDLs, normalized Sui module evidence, and Mainnet preflight.
+
+## pnpm build approvals
+
+pnpm `10.21.0` blocks dependency lifecycle scripts unless they are explicitly
+approved. PowerChain pre-approves only these reviewed packages:
+
+```text
+bigint-buffer@1.1.5
+bufferutil@4.1.0
+esbuild@0.25.12
+utf-8-validate@6.0.6
+```
+
+The policy lives in `pnpm-workspace.yaml` under `onlyBuiltDependencies` with
+`strictDepBuilds: true`. This resolves `ERR_PNPM_IGNORED_BUILDS` for the known
+dependencies and fails closed if a future dependency introduces a new build
+script.
+
+```bash
+pnpm pnpm:check
+pnpm pnpm:ignored-builds
+```
+
+Do not use `dangerouslyAllowAllBuilds`.
+
+## Telemetry
+
+Next.js/Turbo build telemetry is disabled for repository production workflows:
+
+```text
+NEXT_TELEMETRY_DISABLED=1
+TURBO_TELEMETRY_DISABLED=1
+DO_NOT_TRACK=1
+```
+
+The settings are present in `.env.production`, example environments,
+`next.config.mjs`, and CI.
+
+
+## Portable doctor
+
+`scripts/doctor.sh` supports macOS and GNU/Linux. SHA-256 is resolved through
+`sha256sum`, `shasum -a 256`, or `openssl dgst -sha256`.
+
+```bash
+bash scripts/doctor.sh
+pnpm pwrc:doctor:portability-check
+pnpm pwrc:typescript:regression-check
+```
+
+The TypeScript regression gate covers the strict compiler issues fixed in this
+release, including NodeNext JSON import attributes, index-signature environment
+access, exact optional properties, and current fee-aware bridge test shapes.
+
+
+## Runtime hardening
+
+Production runtime helpers now include strict boolean/integer/enum environment
+parsing, bounded read-retry attempts and delays, safe operation request IDs,
+and a finalized-write recovery hook.
+
+A monetary write is never blindly resubmitted. If submit transport fails after
+a signature is known, the handler first reconciles that signature. A caller may
+provide `recoverFinalizedResult` to reconstruct the result after confirmed
+finalization without sending a second transaction.
+
+Repository cache cleanup removes only known local build/cache outputs and does
+not delete the pnpm store, dependency tree, deployment evidence, or release
+artifacts.
+
+```bash
+pnpm pwrc:runtime:hardening-check
+pnpm test:runtime-hardening
+pnpm clean:cache
+```
+
+
+## Durable relayer state
+
+`FileBridgeIdempotencyStore` and `FileReplayStore` persist replay/idempotency
+reservations with exclusive-create semantics. A process restart therefore does
+not reopen already-reserved bridge operations. `loadRecoverableBridgeOperations`
+rehydrates non-terminal records in deterministic update order.
+
+Writes to mutable JSON state use same-directory temporary files, file `fsync`,
+and atomic rename. Monetary transaction reconciliation is also deadline-bounded;
+timeout remains an ambiguous state and never triggers a blind resubmission.
+
+Release provenance excludes build/cache outputs from its source-tree commitment,
+adds a deterministic payload SHA-256, and can be reverified with:
+
+```bash
+pnpm release:provenance
+pnpm release:provenance:verify
+pnpm pwrc:relayer:durability-check
+pnpm test:relayer-durability
+```
+
+
+## Root security controls
+
+Release/build tooling shares the root `utils/` security primitives rather than
+reimplementing them per script.
+
+```bash
+pnpm pwrc:security:hardening-check
+pnpm test:root-security
+pnpm pwrc:root:platform-check
+```
+
+Security-sensitive canonical JSON is strict: unsupported values, non-finite
+numbers, cycles, undefined properties, and non-plain objects are rejected.
+This avoids signing or hashing data whose serialized representation could be
+ambiguous.
+
+The shared process runner never enables a shell, bounds runtime/output, rejects
+NUL-containing commands/arguments, and reports timeout separately from normal
+nonzero exits.
+
+Configuration readers enforce repository containment and reject direct symlink
+configuration files. Generated mutable JSON reports use atomic same-directory
+writes with randomized exclusive temporary names.
+
+Structured logging redacts both secret-like object keys and common credentials
+embedded inside free-form strings. Secrets must still never be intentionally
+logged or committed.

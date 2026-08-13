@@ -2,6 +2,8 @@ export interface UrlPolicy {
   httpsRequired?: boolean;
   allowHttpLocalhost?: boolean;
   protocols?: readonly string[];
+  maxLength?: number;
+  requireHostname?: boolean;
 }
 
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
@@ -13,11 +15,24 @@ export function normalizeUrl(
   const input = raw.trim();
   if (!input) throw new Error("POWERCHAIN_URL_REQUIRED");
 
+  if (/\p{Cc}/u.test(input)) {
+    throw new Error("POWERCHAIN_URL_CONTROL_CHARACTER_FORBIDDEN");
+  }
+
+  const maxLength = policy.maxLength ?? 2_048;
+  if (input.length > maxLength) {
+    throw new Error("POWERCHAIN_URL_TOO_LONG");
+  }
+
   let url: URL;
   try {
     url = new URL(input);
   } catch {
     throw new Error("POWERCHAIN_URL_INVALID");
+  }
+
+  if ((policy.requireHostname ?? true) && !url.hostname) {
+    throw new Error("POWERCHAIN_URL_HOSTNAME_REQUIRED");
   }
 
   if (url.username || url.password) {
@@ -46,6 +61,8 @@ export function normalizeRpcUrl(raw: string, production: boolean): string {
     httpsRequired: production,
     allowHttpLocalhost: !production,
     protocols: ["https:", "http:"],
+    maxLength: 2_048,
+    requireHostname: true,
   });
 }
 
@@ -53,5 +70,7 @@ export function normalizeWebSocketUrl(raw: string, production: boolean): string 
   return normalizeUrl(raw, {
     httpsRequired: false,
     protocols: production ? ["wss:"] : ["wss:", "ws:"],
+    maxLength: 2_048,
+    requireHostname: true,
   });
 }

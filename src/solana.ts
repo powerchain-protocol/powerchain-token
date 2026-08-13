@@ -84,9 +84,9 @@ export function resolvePwrcRpc(
   explicit?: string,
   env: NodeJS.ProcessEnv = process.env,
 ): string {
-  const value = explicit?.trim() || env.PWRC_RPC_URL?.trim() || env.PWRC_MAINNET_RPC_URL?.trim();
+  const value = explicit?.trim() || env["PWRC_RPC_URL"]?.trim() || env["PWRC_MAINNET_RPC_URL"]?.trim();
   if (value) return normalizeRpcUrl(value, cluster === "mainnet-beta");
-  if (cluster === "mainnet-beta" && env.NODE_ENV === "production") {
+  if (cluster === "mainnet-beta" && env["NODE_ENV"] === "production") {
     throw new Error("PWRC_PRODUCTION_DEDICATED_RPC_REQUIRED");
   }
   return SOLANA_PUBLIC_RPC[cluster];

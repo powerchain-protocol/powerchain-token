@@ -1,7 +1,26 @@
-import fs from "node:fs";
-import { spawnSync } from "node:child_process";
+import {
+  atomicWriteJsonSync,
+} from "../../utils/atomic-json.mjs";
+import {
+  runCommandSync,
+} from "../../utils/process.mjs";
 
 const checks = [
+  "scripts/production/check-fullstack.mjs",
+  "scripts/production/test-fullstack-runtime.mjs",
+  "scripts/production/check-security-hardening.mjs",
+  "scripts/production/test-root-security.mjs",
+  "scripts/production/check-root-platform.mjs",
+  "scripts/production/check-root-utils.mjs",
+  "scripts/production/check-config-registry.mjs",
+  "scripts/production/check-utility-duplication.mjs",
+  "scripts/production/check-mainnet-release.mjs",
+  "scripts/production/check-relayer-durability.mjs",
+  "scripts/production/check-runtime-hardening.mjs",
+  "scripts/production/check-typescript-regressions.mjs",
+  "scripts/production/check-doctor-portability.mjs",
+  "scripts/packages/check-pnpm-build-policy.mjs",
+  "scripts/telemetry/check-disabled.mjs",
   "scripts/production/check-source-hazards.mjs",
   "scripts/operations/check-runbook.mjs",
   "scripts/production/check-handlers.mjs",
@@ -43,57 +62,100 @@ const checks = [
 ];
 
 const results = [];
+
 for (const script of checks) {
-  const run = spawnSync(
-    process.execPath,
-    [script],
-    { encoding: "utf8" },
-  );
+  const run =
+    runCommandSync({
+      command:
+        process.execPath,
+      args: [script],
+      allowFailure: true,
+      timeoutMs:
+        120_000,
+      maxOutputBytes:
+        2_000_000,
+    });
 
   let parsed = null;
+
   try {
-    parsed = JSON.parse(run.stdout.trim());
+    parsed =
+      JSON.parse(
+        run.stdout.trim(),
+      );
   } catch {
-    // Some older repository checks may emit valid human-readable output.
+    // Some legacy checks still use human-readable stdout.
   }
 
   results.push({
     script,
-    ok: run.status === 0,
-    status: run.status,
-    result: parsed,
-    stdout: parsed ? undefined : run.stdout.trim(),
-    stderr: run.stderr.trim() || undefined,
+    ok:
+      run.ok,
+    status:
+      run.status,
+    result:
+      parsed,
+    stdout:
+      parsed
+        ? undefined
+        : run.stdout.trim() ||
+          undefined,
+    stderr:
+      run.stderr.trim() ||
+      undefined,
+    signal:
+      run.signal,
   });
 }
 
-const failures = results
-  .filter((result) => !result.ok)
-  .map((result) => result.script);
+const failures =
+  results
+    .filter(
+      (result) =>
+        !result.ok,
+    )
+    .map(
+      (result) =>
+        result.script,
+    );
 
 const report = {
-  ok: failures.length === 0,
+  ok:
+    failures.length === 0,
   version: "1.0.0",
-  checks: results.length,
-  passed: results.length - failures.length,
-  failed: failures.length,
+  checks:
+    results.length,
+  passed:
+    results.length -
+    failures.length,
+  failed:
+    failures.length,
   failures,
   results,
 };
 
-fs.mkdirSync("reports", { recursive: true });
-fs.writeFileSync(
+atomicWriteJsonSync(
   "reports/production-static-validation.json",
-  `${JSON.stringify(report, null, 2)}\n`,
+  report,
 );
 
-console.log(JSON.stringify({
-  ok: report.ok,
-  version: report.version,
-  checks: report.checks,
-  passed: report.passed,
-  failed: report.failed,
-  failures: report.failures,
-}, null, 2));
+console.log(
+  JSON.stringify({
+    ok:
+      report.ok,
+    version:
+      report.version,
+    checks:
+      report.checks,
+    passed:
+      report.passed,
+    failed:
+      report.failed,
+    failures:
+      report.failures,
+  }, null, 2),
+);
 
-if (failures.length) process.exit(1);
+if (failures.length) {
+  process.exit(1);
+}

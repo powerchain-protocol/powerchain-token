@@ -35,18 +35,16 @@ const detected = {
 };
 
 const blockers = [];
-const nodeMajor = Number(
-  process.versions.node.split(".")[0],
-);
+const nodeVersion = process.versions.node;
 
 function requireTool(name, value) {
   if (!value) blockers.push(`${name} unavailable`);
 }
 
 if (target === "all" || target === "ts") {
-  if (nodeMajor !== expected.nodeMajor) {
+  if (nodeVersion !== expected.node) {
     blockers.push(
-      `Node major ${nodeMajor} != ${expected.nodeMajor}`,
+      `Node ${nodeVersion} != ${expected.node}`,
     );
   }
   requireTool("pnpm", detected.pnpm);

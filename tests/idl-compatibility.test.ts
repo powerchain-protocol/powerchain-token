@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import baseline from "../idl/baseline/1.0.0.json";
-import expected from "../idl/anchor/pwrc_lock.expected.json";
-import sui from "../idl/sui/wpwrc.interface.json";
+import baseline from "../idl/baseline/1.0.0.json" with { type: "json" };
+import expected from "../idl/anchor/pwrc_lock.expected.json" with { type: "json" };
+import sui from "../idl/sui/wpwrc.interface.json" with { type: "json" };
 
 test("IDL baseline is pinned to 1.0.0", () => {
   assert.equal(baseline.version, "1.0.0");

@@ -8,26 +8,45 @@ import {
 } from "../common/errors.js";
 
 export interface OperationContext {
-  operation: PwrcOperationClass;
+  operation:
+    PwrcOperationClass;
   requestId: string;
   amountBaseUnits?: bigint;
 }
 
-export function assertOperationContext(context: OperationContext): void {
-  assertOperationAmount(context.operation, context.amountBaseUnits);
+const REQUEST_ID_PATTERN =
+  /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 
-  const requestId = context.requestId.trim();
+export function assertOperationContext(
+  context: OperationContext,
+): void {
+  assertOperationAmount(
+    context.operation,
+    context.amountBaseUnits,
+  );
+
+  const requestId =
+    context.requestId.trim();
+
   if (!requestId) {
     throw new PowerChainError(
-      PowerChainErrorCode.InvalidConfiguration,
+      PowerChainErrorCode
+        .InvalidConfiguration,
       "requestId is required",
     );
   }
 
-  if (requestId.length > 128) {
+  if (
+    requestId !==
+      context.requestId ||
+    !REQUEST_ID_PATTERN.test(
+      requestId,
+    )
+  ) {
     throw new PowerChainError(
-      PowerChainErrorCode.InvalidConfiguration,
-      "requestId exceeds 128 characters",
+      PowerChainErrorCode
+        .InvalidConfiguration,
+      "requestId must be 1-128 safe ASCII characters",
     );
   }
 }
@@ -36,16 +55,26 @@ export async function handleOperation<T>(
   context: OperationContext,
   operation: () => Promise<T>,
 ): Promise<T> {
-  assertOperationContext(context);
+  assertOperationContext(
+    context,
+  );
 
   try {
     return await operation();
   } catch (error) {
-    if (error instanceof PowerChainError) throw error;
+    if (
+      error instanceof
+      PowerChainError
+    ) {
+      throw error;
+    }
 
     throw new PowerChainError(
-      PowerChainErrorCode.OperationFailed,
-      error instanceof Error ? error.message : "Unknown operation failure",
+      PowerChainErrorCode
+        .OperationFailed,
+      error instanceof Error
+        ? error.message
+        : "Unknown operation failure",
       { cause: error },
     );
   }

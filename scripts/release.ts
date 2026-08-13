@@ -3,7 +3,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { canonicalJson } from "../src/canonical-json.js";
 
-const cluster = process.env.PWRC_CLUSTER ?? "devnet";
+const cluster = process.env["PWRC_CLUSTER"] ?? "devnet";
 const dir = path.join("deployments", cluster);
 const deploymentPath = path.join(dir, "deployment.json");
 if (!fs.existsSync(deploymentPath)) throw new Error(`Missing ${deploymentPath}`);

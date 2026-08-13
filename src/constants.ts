@@ -5,6 +5,8 @@ export const PWRC_NAME = "PowerChain" as const;
 export const PWRC_SYMBOL = "PWRC" as const;
 export const PWRC_CANONICAL_MINT =
   "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc" as const;
+export const PWRC_CANONICAL_MINT_ADDRESS =
+  PWRC_CANONICAL_MINT;
 export const PWRC_DECIMALS = 9 as const;
 export const PWRC_GENESIS_SUPPLY = 18_446_000_000n;
 export const PWRC_SCALE = 1_000_000_000n;

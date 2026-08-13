@@ -2,7 +2,7 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import path from "node:path";
 
-const cluster = process.env.PWRC_CLUSTER ?? "devnet";
+const cluster = process.env["PWRC_CLUSTER"] ?? "devnet";
 const dir = path.join("deployments", cluster);
 const manifestPath = path.join(dir, "deployment.env");
 

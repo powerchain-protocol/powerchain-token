@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import networks from "../config/sui/networks.json";
-import token from "../config/token.json";
-import transactions from "../config/transactions.json";
+import networks from "../config/sui/networks.json" with { type: "json" };
+import token from "../config/token.json" with { type: "json" };
+import transactions from "../config/transactions.json" with { type: "json" };
 
 
 test("Sui network endpoints remain explicitly configured", () => {

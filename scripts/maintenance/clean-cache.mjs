@@ -1,52 +1,127 @@
 import fs from "node:fs";
 import path from "node:path";
+import { atomicWriteJsonSync } from "../lib/atomic-json.mjs";
 
-const roots = [
+const rootTargets = [
   ".next",
-  "dist",
   ".turbo",
   ".cache",
+  "dist",
   "coverage",
-  "target/.rustc_info.json",
-  "target/debug/.fingerprint",
-  "target/debug/incremental",
+  "target",
+  "node_modules/.cache",
+  "node_modules/.pnpm-debug.log",
 ];
 
-const removed = [];
+const workspaceRoots = [
+  "packages",
+  "apps",
+  "services",
+];
 
-for (const value of roots) {
-  const resolved = path.resolve(value);
-  const cwd = `${process.cwd()}${path.sep}`;
+const workspaceTargetNames =
+  new Set([
+    ".next",
+    ".turbo",
+    ".cache",
+    "dist",
+    "coverage",
+  ]);
 
-  if (resolved !== process.cwd() && !resolved.startsWith(cwd)) {
-    throw new Error("PWRC_CACHE_PATH_ESCAPE");
+const candidates =
+  new Set(rootTargets);
+
+for (
+  const workspaceRoot of
+  workspaceRoots
+) {
+  if (
+    !fs.existsSync(
+      workspaceRoot,
+    )
+  ) {
+    continue;
   }
 
-  if (fs.existsSync(resolved)) {
-    fs.rmSync(resolved, {
-      recursive: true,
-      force: true,
-    });
-    removed.push(value);
+  for (
+    const entry of
+    fs.readdirSync(
+      workspaceRoot,
+      {
+        withFileTypes: true,
+      },
+    )
+  ) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+
+    const packageRoot =
+      path.join(
+        workspaceRoot,
+        entry.name,
+      );
+
+    for (
+      const target of
+      workspaceTargetNames
+    ) {
+      candidates.add(
+        path.join(
+          packageRoot,
+          target,
+        ),
+      );
+    }
   }
 }
 
-const result = {
+const removed = [];
+
+for (
+  const target of
+  [...candidates].sort()
+) {
+  if (
+    !fs.existsSync(target)
+  ) {
+    continue;
+  }
+
+  fs.rmSync(
+    target,
+    {
+      recursive: true,
+      force: true,
+    },
+  );
+
+  removed.push(target);
+}
+
+const report = {
   ok: true,
   version: "1.0.0",
   removed,
-  preserved: [
+  protected: [
     "node_modules",
-    "pnpm-lock.yaml",
-    "target/idl",
-    "reports",
+    "pnpm store",
+    "deployment evidence",
+    "release artifacts",
   ],
+  note:
+    "Only repository-local build/cache outputs are removed.",
 };
 
-fs.mkdirSync("reports", { recursive: true });
-fs.writeFileSync(
+atomicWriteJsonSync(
   "reports/cache-clean.json",
-  `${JSON.stringify(result, null, 2)}\n`,
+  report,
 );
 
-console.log(JSON.stringify(result, null, 2));
+console.log(
+  JSON.stringify(
+    report,
+    null,
+    2,
+  ),
+);

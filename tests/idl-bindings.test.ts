@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import binding from "../idl/bindings/manifest.json";
-import fingerprint from "../idl/abi.fingerprint.json";
-import expected from "../idl/anchor/pwrc_lock.expected.json";
-import sui from "../idl/sui/wpwrc.interface.json";
+import binding from "../idl/bindings/manifest.json" with { type: "json" };
+import fingerprint from "../idl/abi.fingerprint.json" with { type: "json" };
+import expected from "../idl/anchor/pwrc_lock.expected.json" with { type: "json" };
+import sui from "../idl/sui/wpwrc.interface.json" with { type: "json" };
 
 test("binding is tied to current ABI fingerprint", () => {
   assert.equal(binding.version, "1.0.0");

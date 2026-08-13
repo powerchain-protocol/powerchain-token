@@ -1,40 +1,60 @@
 {
   "ok": false,
   "version": "1.0.0",
+  "codeReady": true,
+  "buildReady": false,
+  "deploymentEvidenceReady": false,
+  "releaseAuthorized": false,
+  "authorizationConsumed": false,
+  "releaseState": "SOURCE_READY",
   "readyForMainnet": false,
-  "movePackage": {
-    "edition": "2024",
-    "moveLockPresent": false,
-    "actualMoveLockSha256": null
+  "phases": {
+    "static": {
+      "ready": true,
+      "blockers": []
+    },
+    "build": {
+      "ready": false,
+      "blockers": [
+        "pnpm-lock.yaml",
+        "contracts/wpwrc/Move.lock",
+        "target/deploy/pwrc_lock.so",
+        "target/deploy/pwrc_token.so",
+        "idl/generated/pwrc_lock.json",
+        "idl/generated/pwrc_token.json",
+        "idl/generated/wpwrc.modules.json",
+        "idl.releaseManifest:not-ready",
+        "mainnet.build-manifest-verification:failed"
+      ]
+    },
+    "evidence": {
+      "ready": false,
+      "blockers": [
+        "evidence:missing:config/mainnet/evidence.json",
+        "evidence-bindings:missing:config/mainnet/evidence.json"
+      ]
+    },
+    "authorization": {
+      "ready": false,
+      "blockers": [
+        "authorization:missing:config/mainnet/release-authorization.json",
+        "authorization-unused:missing:config/mainnet/release-authorization.json"
+      ]
+    }
   },
   "blockers": [
     "pnpm-lock.yaml",
-    "sui.Move.lock",
-    "solana.rpcUrl",
-    "solana.bridgeProgramId",
-    "solana.bridgeVault",
-    "sui.packageId",
-    "sui.coinType",
-    "sui.currencyObjectId",
-    "sui.bridgeControllerId",
-    "sui.moveLockSha256",
-    "sui.suiCliVersion",
-    "governance.operator",
-    "governance.governor",
-    "solana.mintVerified",
-    "solana.programVerified",
-    "solana.vaultVerified",
-    "solana.mintAuthorityRevoked",
-    "solana.freezeAuthorityNull",
-    "solana.transferFeeConfigVerified",
-    "solana.transferFeeConfigAuthorityVerified",
-    "solana.withdrawWithheldAuthorityVerified",
-    "solana.bridgeVerifierVerified",
-    "sui.packageVerified",
-    "sui.currencyVerified",
-    "sui.controllerVerified",
-    "sui.bridgeAuthorityVerified",
-    "governance.operatorGovernorSeparated",
-    "idl.releaseManifest:not-ready"
+    "contracts/wpwrc/Move.lock",
+    "target/deploy/pwrc_lock.so",
+    "target/deploy/pwrc_token.so",
+    "idl/generated/pwrc_lock.json",
+    "idl/generated/pwrc_token.json",
+    "idl/generated/wpwrc.modules.json",
+    "idl.releaseManifest:not-ready",
+    "mainnet.build-manifest-verification:failed",
+    "evidence:missing:config/mainnet/evidence.json",
+    "evidence-bindings:missing:config/mainnet/evidence.json",
+    "authorization:missing:config/mainnet/release-authorization.json",
+    "authorization-unused:missing:config/mainnet/release-authorization.json"
   ]
 }

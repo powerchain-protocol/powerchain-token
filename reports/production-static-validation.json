@@ -1,11 +1,263 @@
 {
   "ok": true,
   "version": "1.0.0",
-  "checks": 38,
-  "passed": 38,
+  "checks": 53,
+  "passed": 53,
   "failed": 0,
   "failures": [],
   "results": [
+    {
+      "script": "scripts/production/check-fullstack.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "fullStack": {
+          "api": true,
+          "web": true,
+          "sameOriginProxy": true,
+          "serverOwnedQuotes": true,
+          "serverOnlyExecution": true,
+          "mainnetFailClosed": true
+        },
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/test-fullstack-runtime.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "tests": {
+          "rateLimit": true,
+          "ttlCache": true,
+          "durableIdempotency": true,
+          "conflictDetection": true,
+          "ambiguousRecovery": true,
+          "restartPersistence": true
+        },
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-security-hardening.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "security": {
+          "strictCanonicalJson": true,
+          "embeddedSecretRedaction": true,
+          "boundedProcessExecution": true,
+          "configPathContainment": true,
+          "randomizedAtomicTempFiles": true
+        },
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/test-root-security.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "tests": {
+          "strictCanonicalJson": true,
+          "embeddedSecretRedaction": true,
+          "circularRedaction": true,
+          "boundedProcessExecution": true,
+          "configPathContainment": true
+        },
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-root-platform.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "platform": {
+          "configRegistry": true,
+          "safeProcessRunner": true,
+          "structuredRedactedLogger": true,
+          "sharedEnvironmentReader": true,
+          "canonicalConstants": true
+        },
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-root-utils.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "architecture": {
+          "rootUtilities": "utils/",
+          "typedPublicUtilities": "src/utils/",
+          "runtimeImplementation": "src/common/",
+          "legacyScriptShim": "scripts/lib/atomic-json.mjs"
+        },
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-config-registry.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "registryEntries": 10,
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-utility-duplication.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "checkedScripts": 124,
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-mainnet-release.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "mainnetReadyByDesign": true,
+        "failClosed": true,
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-relayer-durability.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "durableRelayerState": true,
+        "atomicWrites": true,
+        "reconciliationDeadline": true,
+        "provenanceSelfHash": true,
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-runtime-hardening.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "hardening": [
+          "typed env parsing",
+          "bounded read retries",
+          "finalized-write recovery",
+          "strict request IDs",
+          "runtime policy relationships",
+          "workspace cache cleanup"
+        ],
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-typescript-regressions.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "coveredCompilerErrors": [
+          "TS4111",
+          "TS2724",
+          "TS2322",
+          "TS4114",
+          "TS2379",
+          "TS1543",
+          "TS2551",
+          "TS2345"
+        ],
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/production/check-doctor-portability.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "platforms": [
+          "macOS",
+          "Linux"
+        ],
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/packages/check-pnpm-build-policy.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "node": "26.7.0",
+        "pnpm": "10.21.0",
+        "strictDepBuilds": true,
+        "approvedBuilds": [
+          "bigint-buffer@1.1.5",
+          "bufferutil@4.1.0",
+          "esbuild@0.25.12",
+          "utf-8-validate@6.0.6"
+        ],
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/telemetry/check-disabled.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "telemetry": {
+          "next": "disabled",
+          "turbo": "disabled",
+          "doNotTrack": true
+        },
+        "failures": []
+      },
+      "signal": null
+    },
     {
       "script": "scripts/production/check-source-hazards.mjs",
       "ok": true,
@@ -14,7 +266,8 @@
         "ok": true,
         "version": "1.0.0",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/operations/check-runbook.mjs",
@@ -24,7 +277,8 @@
         "ok": true,
         "version": "1.0.0",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/production/check-handlers.mjs",
@@ -35,8 +289,10 @@
         "version": "1.0.0",
         "noBlindWriteRetry": true,
         "ambiguousWriteReconciliation": true,
+        "finalizedWriteRecovery": true,
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/production/check-transactions.mjs",
@@ -46,7 +302,8 @@
         "ok": true,
         "version": "1.0.0",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/production/check-runtime-config.mjs",
@@ -56,7 +313,8 @@
         "ok": true,
         "version": "1.0.0",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/token/check-program.mjs",
@@ -72,7 +330,8 @@
         "transferFeeBasisPoints": 250,
         "maximumTransferFeeTokens": "1000000",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/token/check-manifest.mjs",
@@ -84,7 +343,8 @@
         "localProgramId": "HRrDxwZzuFreRmkCLY9oFXNGAy2gjd3diHyyTadxd8s6",
         "mainnetProgramIdClaimed": false,
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/idl/check-token-program.mjs",
@@ -95,7 +355,8 @@
         "version": "1.0.0",
         "program": "pwrc_token",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/security/check-wpwrc-spec.mjs",
@@ -124,7 +385,8 @@
           "assumedPackageId": false
         },
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/security/check-transfer-fee.mjs",
@@ -139,7 +401,8 @@
         "maximumTransferFeeTokens": "1000000",
         "maximumTransferFeeBaseUnits": "1000000000000000",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/production/check-stale-model.mjs",
@@ -150,7 +413,8 @@
         "version": "1.0.0",
         "staleModelMatches": [],
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/production/check-sui-capability.mjs",
@@ -161,7 +425,8 @@
         "version": "1.0.0",
         "treasuryCapEncapsulated": true,
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/production/check-solana-program.mjs",
@@ -176,7 +441,8 @@
         ],
         "transferFeeBasisPoints": 250,
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/production/check-client-bridge.mjs",
@@ -186,7 +452,8 @@
         "ok": true,
         "version": "1.0.0",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/integration/check.mjs",
@@ -197,7 +464,8 @@
         "version": "1.0.0",
         "integrationPackage": "@powerchain/bridge-integration",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/security/check-model.mjs",
@@ -212,7 +480,8 @@
           "TokenMetadata"
         ],
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/security/check-programs.mjs",
@@ -228,7 +497,8 @@
           "wpwrcSui": "bridge-capability-encapsulated"
         },
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/security/check-bridge-intent.mjs",
@@ -246,7 +516,8 @@
           "baseUnitFactor": 1
         },
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/bridge/check-upgrade.mjs",
@@ -258,7 +529,8 @@
         "upgrade": "9-decimal-fee-aware-bridge",
         "transferFeeBasisPoints": 250,
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/relayer/check.mjs",
@@ -269,7 +541,8 @@
         "version": "1.0.0",
         "relayer": "fail-closed",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/optimization/check.mjs",
@@ -286,7 +559,8 @@
           "boundedRpcBatching": true
         },
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/optimization/check-v2.mjs",
@@ -304,7 +578,8 @@
           "accountBoundaryValidation": true
         },
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/burn/check-epoch.mjs",
@@ -315,7 +590,8 @@
         "startQuarter": "2027 Q1",
         "startQuarterId": "20271",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/burn/check-quarterly.mjs",
@@ -333,7 +609,8 @@
           "postBurnSupplyBaseUnits": "18077080000000000000",
           "postBurnSupplyPwrc": "18077080000"
         }
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/burn/check-race-protection.mjs",
@@ -349,7 +626,8 @@
           "sameBaseUnitCeiling": true
         },
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/release/check-bridge-release.mjs",
@@ -362,7 +640,8 @@
         "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
         "transferFeeBasisPoints": 250,
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/metadata/validate-token-metadata.mjs",
@@ -386,7 +665,8 @@
           "backing": "1:1 net locked PWRC"
         },
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/metadata/check-assets.mjs",
@@ -410,7 +690,8 @@
           }
         ],
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/metadata/check-official-links.mjs",
@@ -435,7 +716,8 @@
           "metadata/wpwrc.metadata.json"
         ],
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/metadata/check-manifest.mjs",
@@ -447,7 +729,8 @@
         "algorithm": "sha256",
         "files": 5,
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/sui/check-zero-genesis.mjs",
@@ -461,7 +744,8 @@
         "genesisSupplyBaseUnits": "0",
         "issuance": "bridge-only",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/sui/check-networks.mjs",
@@ -479,7 +763,8 @@
           "local": "http://127.0.0.1:9000"
         },
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/native-token-client/check-v2.mjs",
@@ -495,7 +780,8 @@
           "bridgeRatio": "1:1-net-locked"
         },
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/packages/check-workspace.mjs",
@@ -509,7 +795,8 @@
           "@powerchain/native-token-client"
         ],
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/packages/check-exports.mjs",
@@ -519,7 +806,8 @@
         "ok": true,
         "version": "1.0.0",
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/packages/check-tsconfig.mjs",
@@ -536,7 +824,8 @@
           "tsconfig.tests.json"
         ],
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/packages/check-scripts.mjs",
@@ -545,9 +834,10 @@
       "result": {
         "ok": true,
         "version": "1.0.0",
-        "scriptCount": 151,
+        "scriptCount": 193,
         "failures": []
-      }
+      },
+      "signal": null
     },
     {
       "script": "scripts/security/check-manifests.mjs",
@@ -568,7 +858,8 @@
           "pwrc_token"
         ],
         "failures": []
-      }
+      },
+      "signal": null
     }
   ]
 }

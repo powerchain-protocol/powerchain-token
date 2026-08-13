@@ -57,3 +57,15 @@
 - [ ] `pnpm pwrc:mainnet:preflight` passes.
 - [ ] Deployment evidence, source hashes, ABI fingerprints and signer evidence are archived.
 - [ ] No private key, seed phrase, API secret or keypair JSON exists in the repository.
+
+
+## Signed deployment evidence
+
+```bash
+pnpm mainnet:evidence:prepare
+# populate config/mainnet/evidence.json from real build/on-chain evidence
+pnpm mainnet:evidence:verify
+pnpm pwrc:mainnet:preflight
+```
+
+`readyForMainnet` must not be manually overridden.
