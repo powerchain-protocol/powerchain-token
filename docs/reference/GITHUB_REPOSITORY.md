@@ -13,10 +13,10 @@ powerchain-token
 A suitable full slug is:
 
 ```text
-powerchain-ai/powerchain-token
+powerchain-network/powerchain-token
 ```
 
-only if `powerchain-ai` is the actual GitHub organization that owns the
+only if `powerchain` is the actual GitHub organization that owns the
 repository. The owner segment must be verified before publishing repository
 metadata or changing remotes.
 

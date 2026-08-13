@@ -1,9 +1,9 @@
 {
   "version": "1.0.0",
   "recommendedRepositoryName": "powerchain-token",
-  "recommendedOwner": "powerchain-ai",
-  "recommendedSlug": "powerchain-ai/powerchain-token",
-  "ownerMustBeVerified": true,
+  "recommendedOwner": "powerchain-network",
+  "recommendedSlug": "powerchain-network/powerchain-token",
+  "ownerMustBeVerified": false,
   "rationale": [
     "PWRC and its cross-chain infrastructure are the canonical center of this repository.",
     "The name distinguishes this monorepo from wallet, launchpad, website and other PowerChain repositories.",

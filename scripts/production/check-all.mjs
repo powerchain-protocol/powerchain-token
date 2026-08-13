@@ -28,6 +28,7 @@ const checks = [
   "scripts/production/check-typescript-regressions.mjs",
   "scripts/production/check-doctor-portability.mjs",
   "scripts/packages/check-pnpm-build-policy.mjs",
+  "scripts/security/check-dependency-security.mjs",
   "scripts/packages/check-monorepo-layout.mjs",
   "scripts/telemetry/check-disabled.mjs",
   "scripts/production/check-source-hazards.mjs",

@@ -1,8 +1,8 @@
 {
   "ok": true,
   "version": "1.0.0",
-  "checks": 62,
-  "passed": 62,
+  "checks": 63,
+  "passed": 63,
   "failed": 0,
   "failures": [],
   "results": [
@@ -63,7 +63,7 @@
       "result": {
         "ok": true,
         "version": "1.0.0",
-        "markdownFiles": 79,
+        "markdownFiles": 81,
         "requiredDocs": 30,
         "recursive": true,
         "failures": []
@@ -95,7 +95,7 @@
       "result": {
         "ok": true,
         "version": "1.0.0",
-        "port": 36771,
+        "port": 46847,
         "tests": {
           "health": true,
           "technologyPage": true,
@@ -263,7 +263,7 @@
       "result": {
         "ok": true,
         "version": "1.0.0",
-        "checkedScripts": 136,
+        "checkedScripts": 138,
         "failures": []
       },
       "signal": null
@@ -364,11 +364,36 @@
         "pnpmForcesNodeDownload": false,
         "strictDepBuilds": true,
         "approvedBuilds": [
-          "bigint-buffer@1.1.5",
           "bufferutil@4.1.0",
           "esbuild@0.25.12",
           "utf-8-validate@6.0.6"
         ],
+        "failures": []
+      },
+      "signal": null
+    },
+    {
+      "script": "scripts/security/check-dependency-security.mjs",
+      "ok": true,
+      "status": 0,
+      "result": {
+        "ok": true,
+        "version": "1.0.0",
+        "repository": "powerchain-network/powerchain-token",
+        "bigintBuffer": {
+          "advisory": "CVE-2025-3194",
+          "upstreamPatchedVersion": null,
+          "localReplacement": "packages/bigint-buffer-safe",
+          "nativeAddon": false
+        },
+        "uuid": {
+          "advisory": "CVE-2026-41907",
+          "patchedLines": [
+            "11.1.1",
+            "12.0.1",
+            "13.0.1"
+          ]
+        },
         "failures": []
       },
       "signal": null
@@ -381,7 +406,7 @@
         "ok": true,
         "version": "1.0.0",
         "apps": 3,
-        "packages": 7,
+        "packages": 8,
         "rootSourceDirectoriesRemoved": true,
         "failures": []
       },
@@ -943,6 +968,7 @@
         "ok": true,
         "version": "1.0.0",
         "packages": [
+          "bigint-buffer",
           "@powerchain/bridge-integration",
           "@powerchain/docs-content",
           "@powerchain/docs-ui",
@@ -991,7 +1017,7 @@
       "result": {
         "ok": true,
         "version": "1.0.0",
-        "scriptCount": 211,
+        "scriptCount": 213,
         "failures": []
       },
       "signal": null

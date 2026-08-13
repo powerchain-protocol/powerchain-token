@@ -74,7 +74,6 @@ if (
 for (
   const dependency of
   [
-    "bigint-buffer@1.1.5",
     "bufferutil@4.1.0",
     "esbuild@0.25.12",
     "utf-8-validate@6.0.6",
@@ -87,6 +86,30 @@ for (
   ) {
     failures.push(
       `approved-build-missing:${dependency}`,
+    );
+  }
+}
+
+
+if (
+  workspace.includes(
+    '"bigint-buffer@1.1.5"',
+  )
+) {
+  failures.push(
+    "vulnerable-bigint-buffer-build-approval-forbidden",
+  );
+}
+
+for (const securityOverride of [
+  '"bigint-buffer": "link:packages/bigint-buffer-safe"',
+  '"uuid@<11.1.1": "11.1.1"',
+  '"uuid@12.0.0": "12.0.1"',
+  '"uuid@13.0.0": "13.0.1"',
+]) {
+  if (!workspace.includes(securityOverride)) {
+    failures.push(
+      `security-override-missing:${securityOverride}`,
     );
   }
 }
@@ -129,8 +152,7 @@ console.log(
       strictDepBuilds:
         true,
       approvedBuilds: [
-        "bigint-buffer@1.1.5",
-        "bufferutil@4.1.0",
+            "bufferutil@4.1.0",
         "esbuild@0.25.12",
         "utf-8-validate@6.0.6",
       ],

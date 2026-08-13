@@ -219,7 +219,9 @@
     "monorepo:check": "node scripts/packages/check-monorepo-layout.mjs && pnpm -r --if-present check",
     "packages:list": "node scripts/packages/list-workspaces.mjs",
     "app:client": "node apps/client/server.mjs",
-    "start:client": "node apps/client/server.mjs"
+    "start:client": "node apps/client/server.mjs",
+    "security:dependencies": "node scripts/security/check-dependency-security.mjs",
+    "security:dependencies:installed": "node scripts/security/verify-installed-dependencies.mjs"
   },
   "devDependencies": {
     "@types/node": "24.3.0",
@@ -350,11 +352,11 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/powerchain-ai/powerchain-token.git"
+    "url": "git+https://github.com/powerchain-network/powerchain-token.git"
   },
   "bugs": {
-    "url": "https://github.com/powerchain-ai/powerchain-token/issues"
+    "url": "https://github.com/powerchain-network/powerchain-token/issues"
   },
-  "homepage": "https://github.com/powerchain-ai/powerchain-token#readme",
+  "homepage": "https://github.com/powerchain-network/powerchain-token#readme",
   "description": "PowerChain PWRC token, wPWRC bridge, client, API, docs, SDK, runtime, contracts, programs and release tooling."
 }

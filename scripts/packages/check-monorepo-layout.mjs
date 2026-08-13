@@ -16,6 +16,7 @@ const requiredPackages = [
   ["packages/bridge-integration/package.json", "@powerchain/bridge-integration"],
   ["packages/docs-ui/package.json", "@powerchain/docs-ui"],
   ["packages/docs-content/package.json", "@powerchain/docs-content"],
+  ["packages/bigint-buffer-safe/package.json", "bigint-buffer"],
 ];
 
 for (const [file, expectedName] of [...requiredApps, ...requiredPackages]) {

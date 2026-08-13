@@ -83,7 +83,6 @@ pnpm `10.21.0` blocks dependency lifecycle scripts unless they are explicitly
 approved. PowerChain pre-approves only these reviewed packages:
 
 ```text
-bigint-buffer@1.1.5
 bufferutil@4.1.0
 esbuild@0.25.12
 utf-8-validate@6.0.6
@@ -100,6 +99,15 @@ pnpm pnpm:ignored-builds
 ```
 
 Do not use `dangerouslyAllowAllBuilds`.
+
+`bigint-buffer@1.1.5` is intentionally **not** build-approved. PowerChain
+redirects that transitive dependency to the local pure-JavaScript
+`packages/bigint-buffer-safe` compatibility package because the public package
+is affected by CVE-2025-3194 and has no patched upstream npm release.
+
+`uuid` affected by CVE-2026-41907 is constrained to official patched releases
+through root pnpm overrides. See
+[`docs/security/DEPENDENCY_SECURITY.md`](../security/DEPENDENCY_SECURITY.md).
 
 ## Telemetry
 

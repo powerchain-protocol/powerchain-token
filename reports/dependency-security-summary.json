@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "repository": "powerchain-network/powerchain-token",
+  "dependencySecurity": {
+    "bigintBuffer": {
+      "advisory": "CVE-2025-3194",
+      "upstreamPatchedVersion": null,
+      "resolution": "packages/bigint-buffer-safe",
+      "nativeAddon": false,
+      "maxBufferBytes": 1048576
+    },
+    "uuid": {
+      "advisory": "CVE-2026-41907",
+      "patchedOverrides": {
+        "<11.1.1": "11.1.1",
+        "12.0.0": "12.0.1",
+        "13.0.0": "13.0.1"
+      }
+    }
+  },
+  "validation": {
+    "workspaces": 11,
+    "productionChecks": 63,
+    "productionPassed": 63,
+    "productionFailed": 0,
+    "dependencySecurity": "PASS",
+    "bigintBufferSafeShim": "PASS",
+    "fullstackPorts": "PASS",
+    "fullstackRuntime": "PASS",
+    "fullstackLive": "PASS",
+    "typescriptSyntaxFiles": 221
+  },
+  "mainnet": {
+    "codeReady": true,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false
+  },
+  "sourceTreeSha256": "2d81ddad1093ba531e2b7e5f94ed28febe63142bd7203e7cee7d685ed950f2d6",
+  "provenancePayloadSha256": "16f6fb56b092c39074c478c102d28d6cbbc7a4006af373a3d6fc0c9f28f7ca51"
+}

@@ -53,7 +53,7 @@ used as library ownership boundaries.
 
 Recommended repository name: **`powerchain-token`**.
 
-Use `powerchain-ai/powerchain-token` only if `powerchain-ai` is the actual
+Use `powerchain-network/powerchain-token` only if `powerchain` is the actual
 controlling GitHub organization. See
 [GitHub Repository Naming](docs/reference/GITHUB_REPOSITORY.md).
 
@@ -185,6 +185,7 @@ Core guides:
 - [API](docs/API.md)
 - [Bridge model](docs/BRIDGE_MODEL.md)
 - [Security](docs/SECURITY.md)
+- [Dependency Security](docs/security/DEPENDENCY_SECURITY.md)
 - [Development](docs/DEVELOPMENT.md)
 - [Testing](docs/TESTING.md)
 - [Operations runbook](docs/OPERATIONS_RUNBOOK.md)

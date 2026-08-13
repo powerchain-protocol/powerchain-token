@@ -48,6 +48,7 @@ and release documentation for PowerChain.
 ## Security
 
 - [Security Model](security/SECURITY_MODEL.md)
+- [Dependency Security](security/DEPENDENCY_SECURITY.md)
 - [AI Security](security/AI_SECURITY.md)
 - [Deployment Evidence](security/DEPLOYMENT_EVIDENCE.md)
 
