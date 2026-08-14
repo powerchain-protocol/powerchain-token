@@ -38,10 +38,20 @@ export function validateEnvironment(
   if (
     production &&
     loaded.serviceFee.enabled &&
-    !loaded.serviceFee.recipient
+    !loaded.serviceFee.sourceDebits.solana.recipient
   ) {
     throw new Error(
-      "PWRC_PRODUCTION_SERVICE_FEE_RECIPIENT_REQUIRED",
+      "PWRC_PRODUCTION_SERVICE_FEE_SOLANA_RECIPIENT_REQUIRED",
+    );
+  }
+
+  if (
+    production &&
+    loaded.serviceFee.enabled &&
+    !loaded.serviceFee.sourceDebits.sui.recipient
+  ) {
+    throw new Error(
+      "PWRC_PRODUCTION_SERVICE_FEE_SUI_RECIPIENT_REQUIRED",
     );
   }
 

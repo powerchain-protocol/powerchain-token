@@ -192,7 +192,26 @@ export function buildFeeQuote({
   const serviceNet = enabled
     ? ceilDiv(amount * BigInt(serviceBps), BPS_DENOMINATOR)
     : 0n;
-  const service = grossUp(serviceNet);
+  const serviceSourceChain =
+    enabled
+      ? operation === "bridge-solana-to-sui"
+        ? "solana"
+        : "sui"
+      : null;
+  const serviceAsset =
+    serviceSourceChain === "solana"
+      ? "PWRC"
+      : serviceSourceChain === "sui"
+        ? "wPWRC"
+        : null;
+  const service =
+    serviceSourceChain === "solana"
+      ? grossUp(serviceNet)
+      : {
+          gross: serviceNet,
+          fee: 0n,
+          net: serviceNet,
+        };
 
   const payload = {
     version: "1.0.0",
@@ -206,7 +225,10 @@ export function buildFeeQuote({
     serviceFeeGrossTransferBaseUnits: service.gross.toString(),
     serviceFeeTransferNativeFeeBaseUnits: service.fee.toString(),
     serviceFeeRecipient: enabled ? serviceRecipient : null,
+    serviceFeeSourceChain: serviceSourceChain,
+    serviceFeeAsset: serviceAsset,
     totalNativeTokenFeesBaseUnits: (principalFee + service.fee).toString(),
+    totalSourceDebitBaseUnits: (amount + service.gross).toString(),
     totalWalletPwrcDebitBaseUnits: (amount + service.gross).toString(),
     issuedAt: new Date(now).toISOString(),
     expiresAt: new Date(now + ttlMs).toISOString(),

@@ -54,6 +54,30 @@ function publicKeyOrNull(
   }
 }
 
+
+function suiAddress(
+  value: string | undefined,
+  fallback: string,
+): string {
+  const normalized =
+    (
+      value?.trim() ||
+      fallback
+    ).toLowerCase();
+
+  if (
+    !/^0x[0-9a-f]{64}$/.test(
+      normalized,
+    )
+  ) {
+    throw new Error(
+      "PWRC_SERVICE_FEE_SUI_RECIPIENT_INVALID",
+    );
+  }
+
+  return normalized;
+}
+
 function solanaCluster(
   value: string | undefined,
 ): SolanaCluster {
@@ -111,19 +135,27 @@ export function loadEnvironment(
       ],
       false,
     );
-  const serviceFeeRecipient =
+  const serviceFeeSolanaRecipient =
     publicKeyOrNull(
       env[
-        "PWRC_SERVICE_FEE_RECIPIENT"
+        "POWERCHAIN_TRANSACTION_FEE_SOLANA"
+      ] ??
+      "FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy",
+    );
+  const serviceFeeSuiRecipient =
+    suiAddress(
+      env[
+        "POWERCHAIN_TRANSACTION_FEE_SUI"
       ],
+      "0xc23c9622a09c5533fd18f35703622dc2df44206749a1761202d2024a04a36f50",
     );
 
   if (
     serviceFeeEnabled &&
-    !serviceFeeRecipient
+    !serviceFeeSolanaRecipient
   ) {
     throw new Error(
-      "PWRC_SERVICE_FEE_RECIPIENT_REQUIRED",
+      "PWRC_SERVICE_FEE_SOLANA_RECIPIENT_REQUIRED",
     );
   }
 
@@ -134,6 +166,33 @@ export function loadEnvironment(
       ],
       false,
     );
+
+  const cdpUserWalletEnabled =
+    bool(
+      env[
+        "POWERCHAIN_CDP_USER_WALLET_ENABLED"
+      ],
+      false,
+    );
+  const cdpProjectId =
+    env[
+      "POWERCHAIN_CDP_PROJECT_ID"
+    ]?.trim() ||
+    null;
+  const cdpAppName =
+    env[
+      "POWERCHAIN_CDP_APP_NAME"
+    ]?.trim() ||
+    "PowerChain";
+
+  if (
+    cdpUserWalletEnabled &&
+    !cdpProjectId
+  ) {
+    throw new Error(
+      "POWERCHAIN_CDP_PROJECT_ID_REQUIRED",
+    );
+  }
 
   if (
     bridgeExecutionEnabled &&
@@ -210,10 +269,22 @@ export function loadEnvironment(
             "PWRC_SERVICE_FEE_BPS"
           ],
         ),
-      recipient:
-        serviceFeeRecipient,
-      asset:
-        "PWRC" as const,
+      sourceDebits: {
+        solana: {
+          asset:
+            "PWRC" as const,
+          recipient:
+            serviceFeeSolanaRecipient,
+        },
+        sui: {
+          asset:
+            "wPWRC" as const,
+          recipient:
+            serviceFeeSuiRecipient,
+        },
+      },
+      separateFromPrincipal:
+        true as const,
     },
     bridge: {
       executionEnabled:
@@ -224,5 +295,54 @@ export function loadEnvironment(
         ]?.trim() ||
         null,
     },
+    cdpUserWallet: {
+      enabled:
+        cdpUserWalletEnabled,
+      projectId:
+        cdpProjectId,
+      appName:
+        cdpAppName,
+    },
   };
+}
+export type PowerChainServiceFeeSourceChain =
+  "solana" |
+  "sui";
+
+export function serviceFeeSourceDebitFor(
+  loaded:
+    ReturnType<
+      typeof loadEnvironment
+    >,
+  sourceChain:
+    "solana",
+):
+  ReturnType<
+    typeof loadEnvironment
+  >["serviceFee"]["sourceDebits"]["solana"];
+
+export function serviceFeeSourceDebitFor(
+  loaded:
+    ReturnType<
+      typeof loadEnvironment
+    >,
+  sourceChain:
+    "sui",
+):
+  ReturnType<
+    typeof loadEnvironment
+  >["serviceFee"]["sourceDebits"]["sui"];
+
+export function serviceFeeSourceDebitFor(
+  loaded:
+    ReturnType<
+      typeof loadEnvironment
+    >,
+  sourceChain:
+    PowerChainServiceFeeSourceChain,
+) {
+  return loaded.serviceFee
+    .sourceDebits[
+      sourceChain
+    ];
 }

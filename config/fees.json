@@ -9,7 +9,6 @@
     "basisPoints": 250,
     "enabledByDefault": false,
     "asset": "PWRC",
-    "recipient": null,
     "operations": [
       "bridge-solana-to-sui",
       "bridge-sui-to-solana"
@@ -19,7 +18,15 @@
       "read-only",
       "quote-preview",
       "signature-only"
-    ]
+    ],
+    "sourceDebitRecipients": {
+      "solana": "FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy",
+      "sui": "0xc23c9622a09c5533fd18f35703622dc2df44206749a1761202d2024a04a36f50"
+    },
+    "sourceAssets": {
+      "bridge-solana-to-sui": "PWRC",
+      "bridge-sui-to-solana": "wPWRC"
+    }
   },
   "networkFee": {
     "separate": true
@@ -29,6 +36,8 @@
     "rounding": "ceil",
     "serviceFeeSeparateFromPrincipal": true,
     "serviceFeeDoesNotReduceBridgeBacking": true,
-    "grossUpPwrcServiceFeeTransfer": true
+    "grossUpPwrcServiceFeeTransfer": true,
+    "serviceFeeIsSeparateSourceDebit": true,
+    "serviceFeeNeverReducesNttPrincipal": true
   }
 }

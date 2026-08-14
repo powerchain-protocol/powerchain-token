@@ -1,3 +1,4 @@
+import "dotenv/config";
 import http from "node:http";
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -35,6 +36,9 @@ import {
   publicMetadataState,
 } from "./lib/metadata.mjs";
 import {
+  resolveServiceFeeRecipient,
+} from "./lib/service-fee-recipients.mjs";
+import {
   installGracefulHttpShutdown,
 } from "../shared/graceful-http.mjs";
 
@@ -65,26 +69,6 @@ const serviceBps =
     process.env.PWRC_SERVICE_FEE_BPS ??
     "250",
   );
-const serviceRecipientRaw =
-  process.env.PWRC_SERVICE_FEE_RECIPIENT
-    ?.trim() ||
-  null;
-
-const serviceRecipient =
-  serviceRecipientRaw
-    ? assertSolanaAddress(
-        serviceRecipientRaw,
-      )
-    : null;
-
-if (
-  serviceEnabled &&
-  !serviceRecipient
-) {
-  throw new Error(
-    "PWRC_SERVICE_FEE_RECIPIENT_REQUIRED",
-  );
-}
 
 const quoteTtlMs =
   Number(
@@ -790,7 +774,10 @@ fetch("/api/v1").then(r=>r.json()).then(api=>{
               operation,
               serviceEnabled,
               serviceBps,
-              serviceRecipient,
+              serviceRecipient:
+                resolveServiceFeeRecipient(
+                  operation,
+                ),
               ttlMs:
                 quoteTtlMs,
             });
@@ -847,7 +834,10 @@ fetch("/api/v1").then(r=>r.json()).then(api=>{
                   ),
                 serviceEnabled,
                 serviceBps,
-                serviceRecipient,
+                serviceRecipient:
+                  resolveServiceFeeRecipient(
+                    "bridge-solana-to-sui",
+                  ),
                 quoteTtlMs,
               }),
               requestId:

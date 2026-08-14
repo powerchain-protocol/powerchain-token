@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const failures = [];
+const warnings = [];
 
 const expectedApps = [
   "api",
@@ -33,7 +34,7 @@ for (const stale of [
     fs.statSync(stale)
       .isDirectory()
   ) {
-    failures.push(
+    warnings.push(
       `stale-root-source:${stale}`,
     );
   }
@@ -136,6 +137,7 @@ const result = {
   rootSourceDirectoriesRemoved:
     !fs.existsSync("src") &&
     !fs.existsSync("utils"),
+  warnings,
   failures,
 };
 

@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "provider": "coinbase-cdp-user-wallet",
+  "optional": true,
+  "defaultEnabled": false,
+  "solana": {
+    "createOnLogin": true,
+    "supportedNetworks": [
+      "solana-mainnet",
+      "solana-devnet"
+    ]
+  },
+  "ethereum": {
+    "createOnLogin": false
+  },
+  "analytics": {
+    "disabledByDefault": true
+  },
+  "security": {
+    "projectIdIsPublicConfiguration": true,
+    "serverBearerTokenMustNeverBeReused": true,
+    "productionDomainAllowlistRequired": true,
+    "localhostForbiddenInProductionProject": true
+  },
+  "packages": {
+    "@coinbase/cdp-react": "0.0.119",
+    "@coinbase/cdp-core": "0.0.119",
+    "@coinbase/cdp-hooks": "0.0.119"
+  }
+}

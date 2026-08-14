@@ -6,3 +6,8 @@ onlyBuiltDependencies:
   - "bufferutil@4.1.0"
   - "esbuild@0.25.12"
   - "utf-8-validate@6.0.6"
+
+# Dependency hygiene
+# uuid 8.3.2 is deprecated. Root package.json overrides only that
+# transitive release to the maintained CommonJS-compatible uuid 11 line.
+

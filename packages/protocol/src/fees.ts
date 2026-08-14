@@ -32,7 +32,10 @@ export interface FeeQuote {
   serviceFeeGrossTransferBaseUnits: bigint;
   serviceFeeTransferNativeFeeBaseUnits: bigint;
   serviceFeeRecipient: string | null;
+  serviceFeeSourceChain: "solana" | "sui" | null;
+  serviceFeeAsset: "PWRC" | "wPWRC" | null;
   totalNativeTokenFeesBaseUnits: bigint;
+  totalSourceDebitBaseUnits: bigint;
   totalWalletPwrcDebitBaseUnits: bigint;
   networkFeeLamports: bigint | null;
 }
@@ -101,6 +104,19 @@ export function quoteFees(input: {
     ? input.serviceFee.basisPoints ?? PWRC_SERVICE_FEE_BPS_DEFAULT
     : 0n;
 
+  const serviceFeeSourceChain =
+    serviceFeeEnabled
+      ? input.operation === "bridge-solana-to-sui"
+        ? "solana"
+        : "sui"
+      : null;
+  const serviceFeeAsset =
+    serviceFeeSourceChain === "solana"
+      ? "PWRC"
+      : serviceFeeSourceChain === "sui"
+        ? "wPWRC"
+        : null;
+
   if (serviceFeeBasisPoints < 0n || serviceFeeBasisPoints > BPS_DENOMINATOR) {
     throw new Error("PWRC_SERVICE_FEE_BPS_INVALID");
   }
@@ -115,7 +131,14 @@ export function quoteFees(input: {
       )
     : 0n;
 
-  const serviceTransfer = grossUpPwrcForNet(serviceFeeNetBaseUnits);
+  const serviceTransfer =
+    serviceFeeSourceChain === "solana"
+      ? grossUpPwrcForNet(serviceFeeNetBaseUnits)
+      : {
+          grossBaseUnits: serviceFeeNetBaseUnits,
+          nativeFeeBaseUnits: 0n,
+          netBaseUnits: serviceFeeNetBaseUnits,
+        };
 
   return {
     version: "1.0.0",
@@ -131,8 +154,13 @@ export function quoteFees(input: {
     serviceFeeRecipient: serviceFeeEnabled
       ? input.serviceFee.recipient ?? null
       : null,
+    serviceFeeSourceChain,
+    serviceFeeAsset,
     totalNativeTokenFeesBaseUnits:
       nativeTransferFeeBaseUnits + serviceTransfer.nativeFeeBaseUnits,
+    totalSourceDebitBaseUnits:
+      input.principalGrossBaseUnits + serviceTransfer.grossBaseUnits,
+    // Backward-compatible alias. For Sui-source operations the source asset is wPWRC.
     totalWalletPwrcDebitBaseUnits:
       input.principalGrossBaseUnits + serviceTransfer.grossBaseUnits,
     networkFeeLamports: input.networkFeeLamports ?? null,

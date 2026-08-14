@@ -19,17 +19,17 @@
   },
   "scripts": {
     "check": "pnpm typecheck && pnpm test && pnpm production:check",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm --filter @powerchain/cdp-user-wallet typecheck",
     "test": "node --import tsx --test tests/*.test.ts",
-    "production:check": "node scripts/production/check-all.mjs",
+    "production:check": "node scripts/bootstrap/ensure-safe-root-files.mjs && node scripts/production/check-all.mjs",
     "fees:check": "node scripts/production/check-fees.mjs",
     "config:check": "node scripts/production/check-config.mjs",
     "stack:check": "node scripts/production/check-stack.mjs",
     "app:api": "node apps/api/server.mjs",
     "app:client": "node apps/client/server.mjs",
     "app:docs": "node apps/docs/server.mjs",
-    "start": "node scripts/fullstack/start.mjs",
-    "start:strict": "node scripts/fullstack/start.mjs --strict-ports",
+    "start": "node scripts/bootstrap/ensure-safe-root-files.mjs && node scripts/fullstack/start.mjs",
+    "start:strict": "node scripts/bootstrap/ensure-safe-root-files.mjs && node scripts/fullstack/start.mjs --strict-ports",
     "mainnet:status": "node scripts/mainnet/status.mjs",
     "mainnet:launch:plan": "node scripts/mainnet/launch-plan.mjs",
     "program:build:token": "anchor build --program-name pwrc_token",
@@ -82,19 +82,39 @@
     "shutdown:check": "node scripts/production/check-graceful-shutdown.mjs",
     "env:coverage:check": "node scripts/production/check-env-coverage.mjs",
     "workspace:graph:check": "node scripts/packages/check-workspace-graph.mjs",
-    "docs:runtime:check": "node scripts/production/check-docs-runtime.mjs"
+    "docs:runtime:check": "node scripts/production/check-docs-runtime.mjs",
+    "repo:bootstrap": "node scripts/bootstrap/ensure-safe-root-files.mjs",
+    "repo:stale:report": "node scripts/bootstrap/report-stale-root.mjs",
+    "identity:check": "node scripts/production/check-identities.mjs",
+    "cdp:user-wallet:check": "node scripts/production/check-cdp-user-wallet.mjs",
+    "service-fee:recipients:check": "node scripts/production/check-service-fee-recipients.mjs",
+    "service-fee:shape:check": "node scripts/production/check-service-fee-shape.mjs",
+    "dependencies:deprecated:check": "node scripts/production/check-deprecated-dependencies.mjs",
+    "runtime:deps:check": "node scripts/production/check-runtime-dependencies-proxy.mjs",
+    "proxy:check": "node scripts/production/check-runtime-dependencies-proxy.mjs",
+    "types:boundaries:check": "node scripts/production/check-types-boundaries.mjs",
+    "test:cdp-wallet": "node --import tsx --test tests/cdp-user-wallet.test.ts"
   },
   "dependencies": {
-    "@anchor-lang/core": "1.0.2",
+    "@coral-xyz/anchor": "0.32.1",
     "@solana/spl-token": "0.4.15",
     "@solana/web3.js": "1.98.4",
+    "@types/node": "24.13.3",
     "axios": "1.19.0",
     "bs58": "6.0.0",
+    "dotenv": "17.4.2",
+    "ws": "8.21.1",
     "zod": "4.0.17"
   },
   "devDependencies": {
-    "@types/node": "24.3.0",
+    "@types/react": "19.2.17",
+    "@types/ws": "8.18.1",
     "tsx": "4.20.5",
-    "typescript": "5.9.2"
+    "typescript": "5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "uuid@8.3.2": "11.1.1"
+    }
   }
 }

@@ -1,4 +1,12 @@
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+const bootstrap="scripts/bootstrap/ensure-safe-root-files.mjs";
+if(fs.existsSync(bootstrap)){
+  const prepared=spawnSync(process.execPath,[bootstrap],{encoding:"utf8"});
+  if(prepared.stdout)process.stdout.write(prepared.stdout);
+  if(prepared.stderr)process.stderr.write(prepared.stderr);
+  if(prepared.status!==0)process.exit(prepared.status??1);
+}
 const checks=[
   "scripts/production/check-config.mjs",
   "scripts/production/check-fees.mjs",
@@ -31,6 +39,13 @@ const checks=[
   "scripts/production/check-env-coverage.mjs",
   "scripts/packages/check-workspace-graph.mjs",
   "scripts/production/check-docs-runtime.mjs",
+  "scripts/production/check-identities.mjs",
+  "scripts/production/check-cdp-user-wallet.mjs",
+  "scripts/production/check-service-fee-recipients.mjs",
+  "scripts/production/check-service-fee-shape.mjs",
+  "scripts/production/check-deprecated-dependencies.mjs",
+  "scripts/production/check-runtime-dependencies-proxy.mjs",
+  "scripts/production/check-types-boundaries.mjs",
   "scripts/security/check-dependencies.mjs"
 ];
 const failures=[];

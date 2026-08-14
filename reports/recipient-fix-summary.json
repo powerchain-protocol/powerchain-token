@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "fixed": {
+    "error": "Property 'recipient' does not exist on type serviceFee",
+    "envValidatorMigratedToSourceDebits": true,
+    "solanaRecipientValidation": true,
+    "suiRecipientValidation": true,
+    "typedAccessor": "serviceFeeSourceDebitFor",
+    "transactionReviewSourceAware": true,
+    "staleLoadedServiceFeeRecipientReferences": 0
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 36,
+      "passed": 36,
+      "failed": 0,
+      "failures": []
+    },
+    "javascriptSyntaxFiles": 76,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 34,
+    "dependencyAwareTypecheckRun": false
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "buildManifestVerified": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "authorizationConsumed": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "reports/mainnet-build-manifest.json",
+      "reports/mainnet-build-manifest.json:not-verified",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json:not-verified",
+      "config/mainnet/release-consumption.json:not-verified"
+    ]
+  },
+  "sourceTreeSha256": "df4786b353c60d64d3276e786079e367de1b40c7cca6a97f5b2d0d22040e0813"
+}

@@ -49,11 +49,13 @@ published package ID.
 ```env
 PWRC_SERVICE_FEE_ENABLED=false
 PWRC_SERVICE_FEE_BPS=250
-PWRC_SERVICE_FEE_RECIPIENT=
+POWERCHAIN_TRANSACTION_FEE_SOLANA=FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy
+POWERCHAIN_TRANSACTION_FEE_SUI=0xc23c9622a09c5533fd18f35703622dc2df44206749a1761202d2024a04a36f50
 ```
 
-The service fee is separate from PWRC's canonical Token-2022 transfer fee and
-remains disabled unless explicitly enabled with a valid recipient.
+The service fee is separate from the bridge principal. Solana-source fees debit
+PWRC to the Solana fee wallet; Sui-source fees debit wPWRC to the Sui fee
+wallet. Neither fee reduces the 1:1 bridge principal.
 
 ## Bridge execution
 
@@ -98,3 +100,33 @@ keypair paths must remain blank in the safe template.
 `.env.production` remains an explicitly fail-closed template: Mainnet program
 IDs, RPC credentials, bridge executor credentials and release authorization
 values are not populated automatically.
+
+## CDP User Wallet frontend variables
+
+```env
+POWERCHAIN_CDP_USER_WALLET_ENABLED=false
+POWERCHAIN_CDP_PROJECT_ID=
+POWERCHAIN_CDP_APP_NAME=PowerChain
+```
+
+`POWERCHAIN_CDP_PROJECT_ID` is frontend project configuration. It is intentionally
+separate from server-only CDP SQL credentials.
+
+The CDP user-wallet config reads `Record<string, string | undefined>` variables
+with bracket access so `noPropertyAccessFromIndexSignature` remains enabled.
+
+## Server proxy variables
+
+```env
+POWERCHAIN_PROXY_ENABLED=false
+POWERCHAIN_PROXY_ALLOWED_HOSTS=
+POWERCHAIN_PROXY_TIMEOUT_MS=10000
+
+POWERCHAIN_WS_PROXY_ENABLED=false
+POWERCHAIN_WS_PROXY_ALLOWED_HOSTS=
+POWERCHAIN_WS_HEARTBEAT_MS=30000
+```
+
+`apps/api/proxy.ts` is not an open HTTP endpoint. It is a server-side upstream
+client utility. HTTP targets require an explicit host allowlist and HTTPS.
+WebSocket targets require an explicit host allowlist and WSS.

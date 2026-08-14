@@ -12,12 +12,19 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ],
+    "jsx": "react-jsx"
   },
   "include": [
     "apps/**/*.ts",
     "packages/**/*.ts",
     "env/**/*.ts",
-    "tests/**/*.ts"
+    "tests/**/*.ts",
+    "packages/**/*.tsx"
+  ],
+  "exclude": [
+    "packages/cdp-user-wallet/**"
   ]
 }

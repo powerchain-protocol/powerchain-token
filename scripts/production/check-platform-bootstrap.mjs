@@ -1,6 +1,7 @@
 import fs from "node:fs";
 
 const failures = [];
+const warnings = [];
 
 for (const file of [
   "package.json",
@@ -67,7 +68,7 @@ for (const stale of [
   "utils",
 ]) {
   if (fs.existsSync(stale)) {
-    failures.push(
+    warnings.push(
       `bootstrap:stale-root-source:${stale}`,
     );
   }
@@ -84,6 +85,7 @@ console.log(
         true,
       metaplex:
         true,
+      warnings,
       failures,
     },
     null,

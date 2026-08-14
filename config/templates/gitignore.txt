@@ -1,0 +1,157 @@
+# PowerChain Token 1.0.0
+# Keep generated artifacts, local state, secrets, credentials, keypairs,
+# dependency stores and editor/OS files out of source control.
+
+# ---------------------------------------------------------------------------
+# Dependencies / package managers
+# ---------------------------------------------------------------------------
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+.pnp.*
+.npmrc.local
+.pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ---------------------------------------------------------------------------
+# Next.js / Turborepo / JS build output
+# ---------------------------------------------------------------------------
+.next/
+.turbo/
+dist/
+build/
+out/
+coverage/
+.cache/
+*.tsbuildinfo
+
+# ---------------------------------------------------------------------------
+# Rust / Cargo / Anchor / Solana
+# ---------------------------------------------------------------------------
+target/
+.anchor/
+.test-ledger/
+*.so
+*.dylib
+*.rlib
+
+# Program keypairs / signer material
+*keypair*.json
+*-keypair.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*mnemonic*
+*seed*
+solana-id.json
+id.json
+
+# Local Solana validator / ledger state
+ledger/
+test-ledger/
+solana-ledger/
+*.ledger/
+
+# ---------------------------------------------------------------------------
+# Sui / Move
+# ---------------------------------------------------------------------------
+.sui/
+sui.keystore
+contracts/**/build/
+contracts/**/.move/
+contracts/**/.coverage/
+Move.local.toml
+
+# Preserve reproducibility lockfiles when generated.
+!Cargo.lock
+!contracts/wpwrc/Move.lock
+!pnpm-lock.yaml
+
+# ---------------------------------------------------------------------------
+# Environment / secrets
+# ---------------------------------------------------------------------------
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Safe committed templates / fail-closed production template
+!.env.example
+!.env.production
+
+# ---------------------------------------------------------------------------
+# CDP / Coinbase credentials
+# ---------------------------------------------------------------------------
+.cdp/
+.coinbase/
+*cdp-credentials*.json
+*coinbase-api-key*.json
+*coinbase-credentials*.json
+
+# ---------------------------------------------------------------------------
+# Deployments / private release material
+# ---------------------------------------------------------------------------
+deployments/**/private/
+deployments/**/raw/
+deployments/**/secrets/
+deployments/**/keys/
+
+config/mainnet/*private*
+config/mainnet/*secret*
+config/mainnet/*signing*
+config/mainnet/program-identities.json
+config/mainnet/evidence.json
+config/mainnet/release-authorization.json
+config/mainnet/release-consumption.json
+
+# Keep safe examples/templates.
+!config/mainnet/*.example.json
+
+# ---------------------------------------------------------------------------
+# Runtime / temporary / logs
+# ---------------------------------------------------------------------------
+runtime/
+tmp/
+temp/
+*.tmp
+*.temp
+*.log
+logs/
+reports/*.tmp
+reports/*.local.json
+reports/.parse-ts.cjs
+
+# Mainnet/Devnet generated status and verification reports are local outputs.
+reports/mainnet-status.json
+reports/devnet-status.json
+reports/*verification.json
+reports/*summary.json
+reports/source-tree.sha256
+reports/mainnet-build-manifest.json
+
+# ---------------------------------------------------------------------------
+# IDE / OS
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+
+# ---------------------------------------------------------------------------
+# Misc
+# ---------------------------------------------------------------------------
+*.swp
+*.swo
+*.bak
+*.orig

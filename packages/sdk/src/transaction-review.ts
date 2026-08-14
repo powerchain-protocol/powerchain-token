@@ -33,9 +33,14 @@ export function createTransactionReview(input: {
       throw new Error("PWRC_SERVICE_FEE_RECIPIENT_REQUIRED");
     }
     instructions.push({
-      program: "Token-2022",
-      purpose: "powerchain-service-fee",
-      recipient: input.feeQuote.serviceFeeRecipient,
+      program:
+        input.feeQuote.serviceFeeSourceChain === "sui"
+          ? "Sui Coin"
+          : "Token-2022",
+      purpose:
+        "powerchain-service-fee-source-debit",
+      recipient:
+        input.feeQuote.serviceFeeRecipient,
       amountBaseUnits:
         input.feeQuote.serviceFeeGrossTransferBaseUnits.toString(),
     });

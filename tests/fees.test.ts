@@ -31,3 +31,25 @@ test("bridge service fee is separate and grossed up",()=>{
   assert.ok(q.serviceFeeGrossTransferBaseUnits>q.serviceFeeNetBaseUnits);
   assert.equal(q.totalWalletPwrcDebitBaseUnits, q.principalGrossBaseUnits+q.serviceFeeGrossTransferBaseUnits);
 });
+
+test("Sui source bridge service fee is a separate wPWRC debit",()=>{
+  const q=quoteFees({
+    operation:"bridge-sui-to-solana",
+    principalGrossBaseUnits:1_000n*1_000_000_000n,
+    serviceFee:{
+      enabled:true,
+      basisPoints:250n,
+      recipient:"0xc23c9622a09c5533fd18f35703622dc2df44206749a1761202d2024a04a36f50"
+    }
+  });
+  assert.equal(q.serviceFeeEnabled,true);
+  assert.equal(q.serviceFeeSourceChain,"sui");
+  assert.equal(q.serviceFeeAsset,"wPWRC");
+  assert.equal(q.serviceFeeNetBaseUnits,25n*1_000_000_000n);
+  assert.equal(q.serviceFeeGrossTransferBaseUnits,q.serviceFeeNetBaseUnits);
+  assert.equal(q.serviceFeeTransferNativeFeeBaseUnits,0n);
+  assert.equal(
+    q.totalSourceDebitBaseUnits,
+    q.principalGrossBaseUnits+q.serviceFeeGrossTransferBaseUnits,
+  );
+});

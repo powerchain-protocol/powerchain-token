@@ -14,6 +14,12 @@ function sha256(
 
 const inputs = [
   "package.json",
+  "pnpm-workspace.yaml",
+  "scripts/production/check-deprecated-dependencies.mjs",
+  "apps/api/proxy.ts",
+  "scripts/production/check-runtime-dependencies-proxy.mjs",
+
+
   "pnpm-lock.yaml",
   "Cargo.toml",
   "Cargo.lock",
@@ -45,6 +51,25 @@ const inputs = [
   "scripts/fullstack/start.mjs",
   "scripts/production/check-env-coverage.mjs",
   "scripts/packages/check-workspace-graph.mjs",
+  "config/fees.json",
+  "config/cdp-user-wallet.json",
+  "packages/cdp-user-wallet/package.json",
+  "packages/cdp-user-wallet/src/index.ts",
+  "packages/cdp-user-wallet/src/react.tsx",
+  "packages/cdp-user-wallet/tsconfig.json",
+  "scripts/production/check-types-boundaries.mjs",
+  "tests/cdp-user-wallet.test.ts",
+  "tests/service-fee-environment-types.ts",
+
+  "apps/api/lib/service-fee-recipients.mjs",
+  "scripts/production/check-identities.mjs",
+  "scripts/production/check-cdp-user-wallet.mjs",
+  "scripts/production/check-service-fee-recipients.mjs",
+  "config/templates/env.example",
+  "config/templates/env.production",
+  "config/templates/gitignore.txt",
+  "scripts/bootstrap/ensure-safe-root-files.mjs",
+
 
 
 ];

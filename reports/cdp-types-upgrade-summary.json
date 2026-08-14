@@ -1,0 +1,64 @@
+{
+  "version": "1.0.0",
+  "fix": {
+    "error": "Cannot find type definition file for 'node'",
+    "rootNodeTypesDirectDependency": "@types/node@24.13.3",
+    "cdpBrowserTypeBoundary": true,
+    "cdpNodeAmbientTypes": false,
+    "cdpTsconfig": "packages/cdp-user-wallet/tsconfig.json",
+    "rootTypecheckComposed": true
+  },
+  "packageUpgrades": {
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.17",
+    "typescript": "5.9.3",
+    "@coinbase/cdp-core": "0.0.119",
+    "@coinbase/cdp-hooks": "0.0.119",
+    "@coinbase/cdp-react": "0.0.119"
+  },
+  "tests": {
+    "cdpConfigTestsAdded": 3,
+    "pureNodeTestsRun": false,
+    "typescriptSyntaxFiles": 36
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 39,
+      "passed": 39,
+      "failed": 0,
+      "failures": []
+    },
+    "javascriptSyntaxFiles": 79,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 36,
+    "dependencyAwarePnpmTypecheckRun": false,
+    "reason": "The generated artifact environment does not have its pnpm workspace dependency graph installed."
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "buildManifestVerified": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "authorizationConsumed": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "reports/mainnet-build-manifest.json",
+      "reports/mainnet-build-manifest.json:not-verified",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json:not-verified",
+      "config/mainnet/release-consumption.json:not-verified"
+    ]
+  },
+  "sourceTreeSha256": "69da69397cbd535c03ba4be636cd79af05f9c505debe2fe4b955a40819569030"
+}

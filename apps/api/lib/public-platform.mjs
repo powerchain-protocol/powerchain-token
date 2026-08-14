@@ -33,6 +33,8 @@ export function publicPlatformState(
           env.CDP_SQL_API_BEARER_TOKEN?.trim() ||
           env.CDP_SQL_API_TOKEN?.trim(),
         ),
+      cdpUserWallet:
+        env.POWERCHAIN_CDP_USER_WALLET_ENABLED === "true",
       bridgeWritesExposed: false,
       mainnetDeploymentWritesExposed: false,
     },
@@ -71,12 +73,30 @@ export function publicFeePolicy(
         serviceEnabled
           ? serviceBps
           : 0,
-      settlementAsset:
-        "PWRC",
+      sourceDebits: {
+        "bridge-solana-to-sui": {
+          chain: "solana",
+          asset: "PWRC",
+          recipient:
+            env.POWERCHAIN_TRANSACTION_FEE_SOLANA ??
+            "FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy",
+        },
+        "bridge-sui-to-solana": {
+          chain: "sui",
+          asset: "wPWRC",
+          recipient:
+            env.POWERCHAIN_TRANSACTION_FEE_SUI ??
+            "0xc23c9622a09c5533fd18f35703622dc2df44206749a1761202d2024a04a36f50",
+        },
+      },
       scope: [
         "bridge-solana-to-sui",
         "bridge-sui-to-solana",
       ],
+      separateFromPrincipal:
+        true,
+      neverReducesNttPrincipal:
+        true,
       ordinaryWalletTransferExcluded:
         true,
     },

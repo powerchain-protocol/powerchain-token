@@ -116,12 +116,14 @@ Keep disabled until the reviewed fee wallet exists:
 ```env
 PWRC_SERVICE_FEE_ENABLED=false
 PWRC_SERVICE_FEE_BPS=250
-PWRC_SERVICE_FEE_RECIPIENT=
+POWERCHAIN_TRANSACTION_FEE_SOLANA=FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy
+POWERCHAIN_TRANSACTION_FEE_SUI=0xc23c9622a09c5533fd18f35703622dc2df44206749a1761202d2024a04a36f50
 ```
 
-The transaction review must display principal recipient, service-fee recipient,
-principal native fee, service fee, native fee on service settlement, total PWRC
-debit, and network fee before signing.
+Bridge service fees are separate source-chain debits and never reduce the 1:1
+bridge/NTT principal. Solana→Sui charges PWRC to the Solana fee wallet; Sui→Solana
+charges wPWRC to the Sui fee wallet. Ordinary wallet transfers do not receive
+the PowerChain service fee.
 
 ## Mainnet
 
@@ -473,4 +475,155 @@ CDP or status work:
 HEAD /api/v1/token
 HEAD /api/v1/metadata
 HEAD /api/v1/openapi.json
+```
+## Optional Coinbase CDP User Wallet
+
+PowerChain now includes `@powerchain/cdp-user-wallet` as an optional tenth
+workspace. It uses the CDP React/Core/Hooks frontend SDK, creates a Solana
+account on login when enabled, and keeps EVM account creation disabled.
+
+```env
+POWERCHAIN_CDP_USER_WALLET_ENABLED=false
+POWERCHAIN_CDP_PROJECT_ID=
+POWERCHAIN_CDP_APP_NAME=PowerChain
+```
+
+The project ID is public frontend configuration. Server credentials such as
+`CDP_SQL_API_BEARER_TOKEN` are never consumed by the browser wallet package.
+
+The repository uses `moduleResolution: "NodeNext"` for CDP SDK compatibility.
+See `docs/CDP_USER_WALLET.md`.
+
+## Safe root-file recovery
+
+Some copy/extract workflows omit dotfiles. Canonical non-hidden copies live
+under `config/templates/`.
+
+Both `pnpm production:check` and `pnpm start` restore `.env.example`,
+`.env.production`, and `.gitignore` only when missing; existing files are not
+overwritten.
+
+Legacy root `src/` or `utils/` directories are reported as cleanup warnings:
+
+```bash
+pnpm repo:stale:report
+```
+
+Current monorepo source belongs under `apps/` and `packages/`.
+### Chain-specific service-fee environment API
+
+The environment model no longer exposes a single ambiguous
+`serviceFee.recipient`. Use the source-chain mapping instead:
+
+```ts
+const solanaFee =
+  env.serviceFee.sourceDebits.solana;
+
+const suiFee =
+  env.serviceFee.sourceDebits.sui;
+```
+
+or the typed helper:
+
+```ts
+serviceFeeSourceDebitFor(
+  env,
+  "solana",
+);
+```
+
+This prevents Solana and Sui fee recipients/assets from being mixed and keeps
+the bridge service fee separate from principal.
+
+## Deprecated dependency policy
+
+The deprecated transitive `uuid@8.3.2` release is overridden to the
+maintained `uuid@11.1.1` line:
+
+```json
+{
+  "pnpm": {
+    "overrides": {
+      "uuid@8.3.2": "11.1.1"
+    }
+  }
+}
+```
+
+This intentionally stops at uuid 11 because uuid 12+ removed CommonJS
+support. After dependency installation, verify the graph with:
+
+```bash
+pnpm why uuid
+pnpm dependencies:deprecated:check
+```
+
+The check also inspects `pnpm-lock.yaml` when a real lockfile exists and
+fails if `uuid@8.3.2` is still resolved.
+
+## Runtime dependencies and proxy
+
+Server runtime dependencies include:
+
+```text
+@coral-xyz/anchor  0.32.1
+axios               1.19.0
+dotenv              17.4.2
+ws                  8.21.1
+@types/ws           8.18.1
+```
+
+Node's `fs` module is used as a built-in and is deliberately not installed from
+npm.
+
+`dotenv/config` is loaded before the API, client, docs, and full-stack startup
+paths so a local root `.env` can populate `process.env`.
+
+A fail-closed server-side proxy utility is available at:
+
+```text
+apps/api/proxy.ts
+```
+
+It does not expose an arbitrary public proxy route. HTTP proxy calls require an
+explicit hostname allowlist and HTTPS; WebSocket clients require an explicit
+hostname allowlist and WSS.
+
+## TypeScript package boundaries
+
+The root tooling/runtime project owns Node ambient types directly:
+
+```text
+@types/node 24.13.3
+```
+
+`packages/cdp-user-wallet` is intentionally browser-only and has its own
+`tsconfig.json` with:
+
+```json
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["react"]
+  }
+}
+```
+
+The CDP wallet package therefore does not depend on Node ambient globals.
+Root typecheck composes both environments explicitly:
+
+```bash
+tsc -p tsconfig.json --noEmit
+pnpm --filter @powerchain/cdp-user-wallet typecheck
+```
+
+Use:
+
+```bash
+pnpm types:boundaries:check
+pnpm typecheck
+pnpm test
+pnpm production:check
 ```

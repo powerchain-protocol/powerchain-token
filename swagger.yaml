@@ -737,6 +737,9 @@ components:
       - issuedAt
       - expiresAt
       - requestId
+      - serviceFeeSourceChain
+      - serviceFeeAsset
+      - totalSourceDebitBaseUnits
       properties:
         version:
           const: 1.0.0
@@ -776,6 +779,24 @@ components:
           type: string
           pattern: ^[a-f0-9]{64}$
         requestId:
+          type: string
+        serviceFeeSourceChain:
+          type:
+          - string
+          - 'null'
+          enum:
+          - solana
+          - sui
+          - null
+        serviceFeeAsset:
+          type:
+          - string
+          - 'null'
+          enum:
+          - PWRC
+          - wPWRC
+          - null
+        totalSourceDebitBaseUnits:
           type: string
     BridgeStatusResponse:
       type: object

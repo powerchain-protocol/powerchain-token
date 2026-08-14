@@ -1131,7 +1131,10 @@
           "quoteFingerprint",
           "issuedAt",
           "expiresAt",
-          "requestId"
+          "requestId",
+          "serviceFeeSourceChain",
+          "serviceFeeAsset",
+          "totalSourceDebitBaseUnits"
         ],
         "properties": {
           "version": {
@@ -1189,6 +1192,31 @@
             "pattern": "^[a-f0-9]{64}$"
           },
           "requestId": {
+            "type": "string"
+          },
+          "serviceFeeSourceChain": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "solana",
+              "sui",
+              null
+            ]
+          },
+          "serviceFeeAsset": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "PWRC",
+              "wPWRC",
+              null
+            ]
+          },
+          "totalSourceDebitBaseUnits": {
             "type": "string"
           }
         }

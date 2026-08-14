@@ -1,0 +1,71 @@
+{
+  "version": "1.0.0",
+  "fixes": {
+    "cdpProjectIdBracketAccess": true,
+    "cdpUserWalletEnvIntegrated": true,
+    "dotenvBootstrap": true,
+    "serviceFeeAccessorOverloads": true,
+    "cdpProviderDeclarationCompatibility": true
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "0.32.1",
+    "axios": "1.19.0",
+    "dotenv": "17.4.2",
+    "ws": "8.21.1",
+    "@types/ws": "8.18.1",
+    "fs": "Node built-in; no npm package",
+    "@anchor-lang/core": "removed as unused duplicate JS Anchor client"
+  },
+  "proxy": {
+    "path": "apps/api/proxy.ts",
+    "http": "HTTPS-only; explicit host allowlist; timeout; redirects disabled",
+    "websocket": "WSS-only; explicit host allowlist; heartbeat; per-message deflate disabled",
+    "openProxyEndpoint": false
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 38,
+      "passed": 38,
+      "failed": 0,
+      "failures": []
+    },
+    "javascriptSyntaxFiles": 78,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 35,
+    "pnpmInstallRun": false,
+    "dependencyAwareTypecheckRun": false,
+    "nextLocalCommands": [
+      "pnpm install",
+      "pnpm typecheck",
+      "pnpm test",
+      "pnpm production:check"
+    ]
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "buildManifestVerified": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "authorizationConsumed": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "reports/mainnet-build-manifest.json",
+      "reports/mainnet-build-manifest.json:not-verified",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json:not-verified",
+      "config/mainnet/release-consumption.json:not-verified"
+    ]
+  },
+  "sourceTreeSha256": "2578f145079164a94cdf8987a9998ca413326940314a718b2de0bf8b6fcddebd"
+}
