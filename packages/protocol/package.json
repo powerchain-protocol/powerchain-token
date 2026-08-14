@@ -4,9 +4,13 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./bridge": "./src/bridge.ts",
     "./constants": "./src/constants.ts",
     "./fees": "./src/fees.ts",
-    "./bridge": "./src/bridge.ts",
-    "./solana": "./src/solana.ts"
-  }
+    "./metadata": "./src/metadata.ts",
+    "./solana": "./src/solana.ts",
+    "./sui": "./src/sui.ts"
+  },
+  "description": "Canonical PowerChain PWRC protocol policy and cross-chain invariants.",
+  "sideEffects": false
 }

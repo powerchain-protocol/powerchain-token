@@ -404,22 +404,73 @@ pnpm test
 ```
 
 See `docs/METAPLEX.md`.
-## Repairing an older local checkout
+### Metadata package boundary
 
-If `pnpm monorepo:check` reports stale root `src` or `utils` directories:
+Metaplex no longer reaches into another workspace's `src/` tree. Canonical
+metadata is published by `@powerchain/protocol/metadata`, consumed by
+`@powerchain/metaplex`, and re-exported by `@powerchain/sdk`.
 
 ```bash
-pnpm monorepo:clean:dry-run
-pnpm monorepo:clean
-pnpm workspace:doctor
-pnpm install
+pnpm workspace:boundaries:check
+pnpm metadata:check
+pnpm metaplex:check
 ```
 
-The cleanup command moves those directories into
-`.powerchain-migration-backup/`; it does not delete them.
+Public metadata discovery is available at:
 
-The repository also carries an IDL compatibility shim so the older
-`../../idl/bindings/interface.js` import resolves during migration, while the
-canonical source uses `../../../../idl/bindings/interface.js`.
+```text
+GET /api/v1/metadata
+```
+## Runtime and package hardening
 
-See `docs/LOCAL_REPAIR.md`.
+The full-stack supervisor and HTTP apps now use explicit graceful shutdown
+paths. API/client servers stop accepting new work, close idle connections, and
+the supervisor waits for child exit before escalating to `SIGKILL`.
+
+Immutable public API surfaces also support deterministic ETags and conditional
+GETs:
+
+```text
+GET /api/v1/token
+GET /api/v1/metadata
+GET /api/v1/openapi.json
+```
+
+Package export and workspace boundary checks are available through:
+
+```bash
+pnpm package:exports:check
+pnpm workspace:boundaries:check
+pnpm api:cache:check
+pnpm shutdown:check
+```
+## Runtime consistency
+
+The production runtime now validates configuration and workspace structure more
+strictly:
+
+```bash
+pnpm env:coverage:check
+pnpm workspace:graph:check
+pnpm docs:runtime:check
+pnpm shutdown:check
+```
+
+`env:coverage:check` scans source for referenced environment variables and
+ensures every runtime key is represented in `.env.example`. Secret-like
+placeholders must remain blank.
+
+`workspace:graph:check` verifies every internal `@powerchain/*` dependency
+resolves to a real workspace and rejects dependency cycles.
+
+The docs server now has validated ports, `/health`, `/ready`, security headers,
+404/405 handling, timeouts and graceful shutdown.
+
+Cacheable canonical resources support `HEAD` without executing dynamic bridge,
+CDP or status work:
+
+```text
+HEAD /api/v1/token
+HEAD /api/v1/metadata
+HEAD /api/v1/openapi.json
+```

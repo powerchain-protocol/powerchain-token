@@ -50,6 +50,7 @@ bridge, Devnet and Mainnet state.
 
 ```text
 GET /api/v1/token
+GET /api/v1/metadata
 GET /api/v1/network
 ```
 

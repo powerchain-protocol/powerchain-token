@@ -30,6 +30,23 @@ const inputs = [
   "config/api.json",
   "swagger/openapi.json",
   "swagger/openapi.yaml",
+  "packages/protocol/package.json",
+  "packages/sdk/package.json",
+  "packages/metaplex/package.json",
+  "packages/protocol/src/metadata.ts",
+  "packages/metaplex/src/index.ts",
+  "apps/api/lib/api-registry.mjs",
+  "apps/api/lib/metadata.mjs",
+  "apps/shared/graceful-http.mjs",
+  ".env.production",
+  ".gitignore",
+  "apps/docs/server.mjs",
+  "apps/client/server.mjs",
+  "scripts/fullstack/start.mjs",
+  "scripts/production/check-env-coverage.mjs",
+  "scripts/packages/check-workspace-graph.mjs",
+
+
 ];
 
 const artifacts = [

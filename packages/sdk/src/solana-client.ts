@@ -9,10 +9,10 @@ import {
   resolveSecondaryRpc,
   resolveWebSocket,
   type SolanaCluster,
-} from "../../protocol/src/solana.js";
+} from "@powerchain/protocol/solana";
 import {
   PWRC_CANONICAL_MINT,
-} from "../../protocol/src/constants.js";
+} from "@powerchain/protocol/constants";
 
 export interface PowerChainSolanaClientConfig {
   cluster: SolanaCluster;

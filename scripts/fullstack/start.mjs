@@ -266,7 +266,42 @@ for (const [name, child] of [
   );
 }
 
-function shutdown(
+async function waitForChildExit(
+  child,
+  timeoutMs,
+) {
+  if (
+    child.exitCode !== null ||
+    child.signalCode !== null
+  ) {
+    return true;
+  }
+
+  return await new Promise(
+    (resolve) => {
+      const timer =
+        setTimeout(
+          () =>
+            resolve(false),
+          timeoutMs,
+        );
+
+      timer.unref();
+
+      child.once(
+        "exit",
+        () => {
+          clearTimeout(
+            timer,
+          );
+          resolve(true);
+        },
+      );
+    },
+  );
+}
+
+async function shutdown(
   signal,
 ) {
   if (shuttingDown) return;
@@ -278,8 +313,8 @@ function shutdown(
 
   for (const child of children) {
     if (
-      child.exitCode ===
-        null
+      child.exitCode === null &&
+      child.signalCode === null
     ) {
       child.kill(
         "SIGTERM",
@@ -287,31 +322,65 @@ function shutdown(
     }
   }
 
-  setTimeout(
-    () => {
-      for (const child of children) {
-        if (
-          child.exitCode ===
-            null
-        ) {
-          child.kill(
-            "SIGKILL",
-          );
-        }
+  const exited =
+    await Promise.all(
+      children.map(
+        (child) =>
+          waitForChildExit(
+            child,
+            3_000,
+          ),
+      ),
+    );
+
+  exited.forEach(
+    (
+      clean,
+      index,
+    ) => {
+      if (
+        !clean &&
+        children[index].exitCode === null
+      ) {
+        children[index].kill(
+          "SIGKILL",
+        );
       }
-      process.exit(0);
     },
-    5_000,
-  ).unref();
+  );
+
+  await Promise.all(
+    children.map(
+      (child) =>
+        waitForChildExit(
+          child,
+          1_000,
+        ),
+    ),
+  );
+
+  process.stderr.write(
+    "PWRC_FULLSTACK_STOPPED\n",
+  );
+
+  process.exitCode =
+    process.exitCode ??
+    0;
 }
 
-process.on(
+process.once(
   "SIGINT",
-  () =>
-    shutdown("SIGINT"),
+  () => {
+    void shutdown(
+      "SIGINT",
+    );
+  },
 );
-process.on(
+process.once(
   "SIGTERM",
-  () =>
-    shutdown("SIGTERM"),
+  () => {
+    void shutdown(
+      "SIGTERM",
+    );
+  },
 );

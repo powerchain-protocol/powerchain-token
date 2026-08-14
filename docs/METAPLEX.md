@@ -77,3 +77,27 @@ PWRC remains a Token-2022 asset using its canonical Token-2022 extensions.
 Metaplex metadata support does not replace the Token-2022 `MetadataPointer` /
 `TokenMetadata` profile or alter PWRC's mint, supply, decimals, or transfer-fee
 policy.
+
+## Package boundary
+
+`@powerchain/metaplex` imports protocol metadata through the public workspace
+subpath:
+
+```ts
+import {
+  PWRC_METADATA,
+} from "@powerchain/protocol/metadata";
+```
+
+It does not import `packages/protocol/src/*` through relative filesystem paths.
+The `workspace:boundaries:check` gate prevents this layering violation from
+returning.
+
+## Public metadata endpoint
+
+```text
+GET /api/v1/metadata
+```
+
+The response exposes only canonical public identities and indicates that
+canonical metadata mutation is not exposed by the API.

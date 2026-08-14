@@ -77,6 +77,13 @@ export const API_ROUTES = Object.freeze([
   },
   {
     method: "GET",
+    path: "/api/v1/metadata",
+    operationId: "getMetadata",
+    tag: "Token",
+    summary: "Canonical PWRC metadata and Metaplex identity",
+  },
+  {
+    method: "GET",
     path: "/api/v1/network",
     operationId: "getNetwork",
     tag: "Network",

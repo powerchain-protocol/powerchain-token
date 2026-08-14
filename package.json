@@ -75,9 +75,14 @@
     "idl:binding:check": "node scripts/production/check-idl-binding.mjs",
     "platform:bootstrap:check": "node scripts/production/check-platform-bootstrap.mjs",
     "production:portable:check": "node scripts/production/test-portable-production-checks.mjs",
-    "monorepo:clean:dry-run": "node scripts/packages/cleanup-stale-root-source.mjs",
-    "monorepo:clean": "node scripts/packages/cleanup-stale-root-source.mjs --apply",
-    "workspace:doctor": "node scripts/packages/workspace-doctor.mjs"
+    "workspace:boundaries:check": "node scripts/packages/check-workspace-boundaries.mjs",
+    "metadata:check": "node scripts/production/check-metadata.mjs",
+    "package:exports:check": "node scripts/packages/check-package-exports.mjs",
+    "api:cache:check": "node scripts/production/check-api-cache.mjs",
+    "shutdown:check": "node scripts/production/check-graceful-shutdown.mjs",
+    "env:coverage:check": "node scripts/production/check-env-coverage.mjs",
+    "workspace:graph:check": "node scripts/packages/check-workspace-graph.mjs",
+    "docs:runtime:check": "node scripts/production/check-docs-runtime.mjs"
   },
   "dependencies": {
     "@anchor-lang/core": "1.0.2",

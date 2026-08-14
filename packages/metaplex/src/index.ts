@@ -12,11 +12,8 @@ import {
   createUmi,
 } from "@metaplex-foundation/umi-bundle-defaults";
 import {
-  METAPLEX_TOKEN_METADATA_PROGRAM_ID,
-  PWRC_CANONICAL_MINT,
-  PWRC_METADATA_IMAGE_URI,
-  PWRC_METADATA_URI,
-} from "../../protocol/src/constants.js";
+  PWRC_METADATA,
+} from "@powerchain/protocol/metadata";
 
 export interface PowerChainMetadataIdentity {
   mint: string;
@@ -59,7 +56,7 @@ export function getPwrcMetadataPda(
       {
         mint:
           publicKey(
-            PWRC_CANONICAL_MINT,
+            PWRC_METADATA.mint,
           ),
       },
     );
@@ -75,17 +72,17 @@ export function getPwrcMetadataIdentity(
 ): PowerChainMetadataIdentity {
   return {
     mint:
-      PWRC_CANONICAL_MINT,
+      PWRC_METADATA.mint,
     tokenMetadataProgramId:
-      METAPLEX_TOKEN_METADATA_PROGRAM_ID,
+      PWRC_METADATA.tokenMetadataProgramId,
     metadataPda:
       getPwrcMetadataPda(
         umi,
       ).toString(),
     uri:
-      PWRC_METADATA_URI,
+      PWRC_METADATA.uri,
     image:
-      PWRC_METADATA_IMAGE_URI,
+      PWRC_METADATA.image,
   };
 }
 
@@ -98,7 +95,7 @@ export async function fetchPwrcMetaplexMetadata(
       {
         mint:
           publicKey(
-            PWRC_CANONICAL_MINT,
+            PWRC_METADATA.mint,
           ),
       },
     );

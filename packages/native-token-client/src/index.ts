@@ -3,9 +3,9 @@ export {
   PWRC_DECIMALS,
   PWRC_GENESIS_BASE_UNITS,
   PWRC_TRANSFER_FEE_BPS,
-} from "../../protocol/src/constants.js";
+} from "@powerchain/protocol/constants";
 
 export {
   nativePwrcTransferFee,
   quoteFees,
-} from "../../protocol/src/fees.js";
+} from "@powerchain/protocol/fees";

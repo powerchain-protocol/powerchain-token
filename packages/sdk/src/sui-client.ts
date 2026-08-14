@@ -5,7 +5,7 @@ import {
   resolveSuiWebSocket,
   type SuiNetwork,
   type WpwrcDeployment,
-} from "../../protocol/src/sui.js";
+} from "@powerchain/protocol/sui";
 
 export interface PowerChainSuiClientConfig {
   network:

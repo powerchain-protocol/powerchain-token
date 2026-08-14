@@ -5,4 +5,4 @@ export {
   type FeeQuote,
   type FeeOperation,
   type ServiceFeePolicy,
-} from "../../protocol/src/fees.js";
+} from "@powerchain/protocol/fees";

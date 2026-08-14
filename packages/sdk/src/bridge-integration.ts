@@ -1,7 +1,7 @@
 import {
   assertBridgeConservation,
   quoteSolanaToSuiBridge,
-} from "../../protocol/src/bridge.js";
+} from "@powerchain/protocol/bridge";
 import {
   createPowerChainSolanaClients,
 } from "./solana-client.js";

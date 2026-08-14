@@ -31,6 +31,12 @@ import {
   publicFeePolicy,
   publicPlatformState,
 } from "./lib/public-platform.mjs";
+import {
+  publicMetadataState,
+} from "./lib/metadata.mjs";
+import {
+  installGracefulHttpShutdown,
+} from "../shared/graceful-http.mjs";
 
 const host =
   process.env.PWRC_API_HOST ??
@@ -124,6 +130,13 @@ const checkRate =
       60_000,
   });
 
+const cacheableHeadPaths =
+  new Set([
+    "/api/v1/token",
+    "/api/v1/metadata",
+    "/api/v1/openapi.json",
+  ]);
+
 function cdpConfigured() {
   return Boolean(
     process.env.CDP_SQL_API_BEARER_TOKEN?.trim() ||
@@ -201,6 +214,66 @@ function raw(
   );
 
   res.end(body);
+}
+
+
+function stableJsonEtag(
+  payload,
+) {
+  return `"${crypto
+    .createHash("sha256")
+    .update(
+      JSON.stringify(
+        payload,
+      ),
+    )
+    .digest("base64url")}"`;
+}
+
+function jsonCached(
+  req,
+  res,
+  payload,
+  {
+    maxAge =
+      300,
+    staleWhileRevalidate =
+      60,
+  } = {},
+) {
+  const etag =
+    stableJsonEtag(
+      payload,
+    );
+
+  if (
+    req.headers[
+      "if-none-match"
+    ] === etag
+  ) {
+    res.writeHead(
+      304,
+      {
+        ...commonHeaders(),
+        "cache-control":
+          `public, max-age=${maxAge}, stale-while-revalidate=${staleWhileRevalidate}`,
+        etag,
+      },
+    );
+    res.end();
+    return;
+  }
+
+  return json(
+    res,
+    200,
+    payload,
+    {
+      "cache-control":
+        `public, max-age=${maxAge}, stale-while-revalidate=${staleWhileRevalidate}`,
+      etag,
+    },
+  );
 }
 
 function errorResponse(
@@ -345,8 +418,24 @@ const server =
         );
       }
 
+      const url =
+        new URL(
+          req.url ?? "/",
+          `http://${host}:${port}`,
+        );
+
+      const isHead =
+        req.method ===
+          "HEAD";
+
       if (
-        req.method !== "GET"
+        req.method !== "GET" &&
+        !(
+          isHead &&
+          cacheableHeadPaths.has(
+            url.pathname,
+          )
+        )
       ) {
         return errorResponse(
           res,
@@ -355,16 +444,31 @@ const server =
           id,
           {
             allow:
-              "GET",
+              cacheableHeadPaths.has(
+                url.pathname,
+              )
+                ? "GET, HEAD"
+                : "GET",
           },
         );
       }
 
-      const url =
-        new URL(
-          req.url ?? "/",
-          `http://${host}:${port}`,
-        );
+      if (isHead) {
+        const end =
+          res.end.bind(res);
+
+        res.end =
+          (
+            _chunk,
+            encoding,
+            callback,
+          ) =>
+            end(
+              undefined,
+              encoding,
+              callback,
+            );
+      }
 
 
       if (
@@ -507,10 +611,14 @@ fetch("/api/v1").then(r=>r.json()).then(api=>{
         url.pathname ===
           "/api/v1/openapi.json"
       ) {
-        return json(
+        return jsonCached(
+          req,
           res,
-          200,
           readOpenApiJson(),
+          {
+            maxAge:
+              60,
+          },
         );
       }
 
@@ -593,9 +701,9 @@ fetch("/api/v1").then(r=>r.json()).then(api=>{
         url.pathname ===
           "/api/v1/token"
       ) {
-        return json(
+        return jsonCached(
+          req,
           res,
-          200,
           {
             version:
               "1.0.0",
@@ -619,8 +727,26 @@ fetch("/api/v1").then(r=>r.json()).then(api=>{
               250,
             nativeTransferFeeCapTokens:
               "1000000",
-            requestId:
-              id,
+          },
+          {
+            maxAge:
+              300,
+          },
+        );
+      }
+
+
+      if (
+        url.pathname ===
+          "/api/v1/metadata"
+      ) {
+        return jsonCached(
+          req,
+          res,
+          publicMetadataState(),
+          {
+            maxAge:
+              300,
           },
         );
       }
@@ -891,5 +1017,13 @@ server.listen(
       }) +
       "\n",
     );
+  },
+);
+
+installGracefulHttpShutdown(
+  server,
+  {
+    component:
+      "@powerchain/api",
   },
 );

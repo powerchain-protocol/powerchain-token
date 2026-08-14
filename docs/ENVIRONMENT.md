@@ -82,3 +82,19 @@ These credentials must never be exposed by browser/client bundles.
 Mainnet deployment, Sui publish, finalization, and authorization consumption
 all default to disabled. Do not change those values in committed templates to
 simulate release readiness.
+## Environment coverage check
+
+Run:
+
+```bash
+pnpm env:coverage:check
+```
+
+The check scans JavaScript/TypeScript runtime source for `process.env` access
+and verifies that every referenced variable is represented in `.env.example`.
+Credential-like keys such as bearer tokens, API keys, auth tokens, secrets and
+keypair paths must remain blank in the safe template.
+
+`.env.production` remains an explicitly fail-closed template: Mainnet program
+IDs, RPC credentials, bridge executor credentials and release authorization
+values are not populated automatically.

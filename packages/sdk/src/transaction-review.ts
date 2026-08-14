@@ -1,4 +1,4 @@
-import type { FeeQuote } from "../../protocol/src/fees.js";
+import type { FeeQuote } from "@powerchain/protocol/fees";
 
 export interface TransactionReview {
   version: "1.0.0";

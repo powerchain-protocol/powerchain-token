@@ -22,8 +22,15 @@ const checks=[
   "scripts/packages/check-monorepo-layout.mjs",
   "scripts/telemetry/check-disabled.mjs",
   "scripts/production/check-metaplex.mjs",
+  "scripts/production/check-metadata.mjs",
   "scripts/production/check-idl-binding.mjs",
-  "scripts/production/check-local-migration.mjs",
+  "scripts/packages/check-workspace-boundaries.mjs",
+  "scripts/packages/check-package-exports.mjs",
+  "scripts/production/check-api-cache.mjs",
+  "scripts/production/check-graceful-shutdown.mjs",
+  "scripts/production/check-env-coverage.mjs",
+  "scripts/packages/check-workspace-graph.mjs",
+  "scripts/production/check-docs-runtime.mjs",
   "scripts/security/check-dependencies.mjs"
 ];
 const failures=[];

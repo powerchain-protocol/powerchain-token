@@ -516,6 +516,19 @@ paths:
             application/yaml:
               schema:
                 type: string
+  /api/v1/metadata:
+    get:
+      tags:
+      - Token
+      summary: Canonical PWRC metadata and Metaplex identity
+      operationId: getMetadata
+      responses:
+        '200':
+          description: Canonical metadata identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataResponse'
 components:
   schemas:
     ErrorResponse:
@@ -928,5 +941,36 @@ components:
           $ref: '#/components/schemas/DevnetStatusResponse'
         mainnet:
           $ref: '#/components/schemas/ReleaseStatusResponse'
+        requestId:
+          type: string
+    MetadataResponse:
+      type: object
+      required:
+      - version
+      - mint
+      - tokenProgram
+      - tokenMetadataProgram
+      - uri
+      - image
+      - token2022
+      - canonicalMetadataWriteExposed
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        mint:
+          const: PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
+        tokenProgram:
+          const: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+        tokenMetadataProgram:
+          const: metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s
+        uri:
+          const: https://token.powerchain.energy/metadata/metadata.json
+        image:
+          const: https://token.powerchain.energy/assets/tokens/pwrc-logo.png
+        token2022:
+          type: object
+        canonicalMetadataWriteExposed:
+          const: false
         requestId:
           type: string

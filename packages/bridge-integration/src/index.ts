@@ -1,4 +1,4 @@
 export {
   quoteSolanaToSuiBridge,
   assertBridgeConservation,
-} from "../../protocol/src/bridge.js";
+} from "@powerchain/protocol/bridge";

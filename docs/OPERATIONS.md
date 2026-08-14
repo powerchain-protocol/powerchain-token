@@ -87,3 +87,18 @@ pnpm cdp:check
 
 Do not use CDP SQL query results as the sole source for bridge settlement or
 Mainnet deployment evidence.
+## Runtime lifecycle checks
+
+Before deployment:
+
+```bash
+pnpm workspace:graph:check
+pnpm package:exports:check
+pnpm docs:runtime:check
+pnpm shutdown:check
+pnpm env:coverage:check
+```
+
+The API, client and docs HTTP servers all use the shared graceful-shutdown
+helper. The full-stack supervisor waits for child processes to exit before
+escalating termination.
