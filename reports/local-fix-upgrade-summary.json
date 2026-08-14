@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "fixes": {
+    "nonDestructiveStaleRootMigration": true,
+    "oldIdlImportCompatibility": true,
+    "canonicalIdlImport": "../../../../idl/bindings/interface.js",
+    "workspaceDoctor": true,
+    "metaplexWorkspace": "@powerchain/metaplex",
+    "metaplexMetadataProgramId": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 25,
+      "passed": 25,
+      "failed": 0,
+      "failures": []
+    },
+    "migrationDryRun": "PASS",
+    "migrationBackupApply": "PASS",
+    "javascriptSyntaxFiles": 62,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 31,
+    "dependencyAwareTypecheckRun": false,
+    "pnpmInstallRun": false
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "buildManifestVerified": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "authorizationConsumed": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "reports/mainnet-build-manifest.json",
+      "reports/mainnet-build-manifest.json:not-verified",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json:not-verified",
+      "config/mainnet/release-consumption.json:not-verified"
+    ]
+  },
+  "sourceTreeSha256": "c8fe366b28d72b48c5d6521da46174bcc1fc2fc59eb29f6653d13a17dcbfc9d8"
+}

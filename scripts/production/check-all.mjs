@@ -23,6 +23,7 @@ const checks=[
   "scripts/telemetry/check-disabled.mjs",
   "scripts/production/check-metaplex.mjs",
   "scripts/production/check-idl-binding.mjs",
+  "scripts/production/check-local-migration.mjs",
   "scripts/security/check-dependencies.mjs"
 ];
 const failures=[];

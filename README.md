@@ -404,3 +404,22 @@ pnpm test
 ```
 
 See `docs/METAPLEX.md`.
+## Repairing an older local checkout
+
+If `pnpm monorepo:check` reports stale root `src` or `utils` directories:
+
+```bash
+pnpm monorepo:clean:dry-run
+pnpm monorepo:clean
+pnpm workspace:doctor
+pnpm install
+```
+
+The cleanup command moves those directories into
+`.powerchain-migration-backup/`; it does not delete them.
+
+The repository also carries an IDL compatibility shim so the older
+`../../idl/bindings/interface.js` import resolves during migration, while the
+canonical source uses `../../../../idl/bindings/interface.js`.
+
+See `docs/LOCAL_REPAIR.md`.
