@@ -26,6 +26,7 @@ const inputs = [
   "config/programs.json",
   "config/networks.json",
   "config/cdp-sql.json",
+  "config/metaplex.json",
   "config/api.json",
   "swagger/openapi.json",
   "swagger/openapi.yaml",

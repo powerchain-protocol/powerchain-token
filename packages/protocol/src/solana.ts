@@ -1,5 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import {
+  METAPLEX_TOKEN_METADATA_PROGRAM_ID,
   PWRC_LOCK_LOCALNET_PROGRAM_ID,
   PWRC_TOKEN_VERIFIER_PROGRAM_ID,
   SOLANA_TOKEN_2022_PROGRAM_ID,
@@ -24,8 +25,6 @@ export const SOLANA_TOKEN_PROGRAM_ID =
   "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" as const;
 export const SOLANA_ASSOCIATED_TOKEN_PROGRAM_ID =
   "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL" as const;
-export const METAPLEX_TOKEN_METADATA_PROGRAM_ID =
-  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s" as const;
 
 export const SOLANA_PUBLIC_RPC = {
   localnet:

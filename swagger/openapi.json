@@ -998,6 +998,7 @@
           "symbol",
           "mint",
           "tokenProgram",
+          "metadataProgram",
           "decimals",
           "genesisSupplyTokens",
           "genesisSupplyBaseUnits",
@@ -1038,6 +1039,9 @@
           },
           "requestId": {
             "type": "string"
+          },
+          "metadataProgram": {
+            "const": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
           }
         }
       },

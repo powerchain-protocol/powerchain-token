@@ -362,3 +362,45 @@ Production checks compare the runtime route registry against OpenAPI to prevent
 endpoint/spec drift.
 
 See `docs/API.md`.
+## Environment and repository hygiene
+
+Use the safe template:
+
+```bash
+cp .env.example .env
+```
+
+`.gitignore` now excludes local environment files, dependency/build output,
+Anchor/Solana/Sui runtime state, deployment raw output, private keypairs,
+Coinbase/CDP credential files, and generated release/status reports while
+preserving reproducibility lockfiles and safe example files.
+
+See `docs/ENVIRONMENT.md`.
+## Metaplex
+
+Metaplex integration is isolated in `@powerchain/metaplex`, consumed by
+`@powerchain/sdk`.
+
+```text
+Token Metadata program
+metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s
+
+@metaplex-foundation/mpl-token-metadata  3.4.0
+@metaplex-foundation/umi                 1.5.1
+@metaplex-foundation/umi-bundle-defaults 1.5.1
+@metaplex-foundation/mpl-toolbox         0.11.4
+```
+
+After extracting the source:
+
+```bash
+pnpm install
+pnpm metaplex:check
+pnpm idl:binding:check
+pnpm monorepo:check
+pnpm production:check
+pnpm typecheck
+pnpm test
+```
+
+See `docs/METAPLEX.md`.

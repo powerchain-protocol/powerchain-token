@@ -642,6 +642,7 @@ components:
       - symbol
       - mint
       - tokenProgram
+      - metadataProgram
       - decimals
       - genesisSupplyTokens
       - genesisSupplyBaseUnits
@@ -671,6 +672,8 @@ components:
           const: '1000000'
         requestId:
           type: string
+        metadataProgram:
+          const: metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s
     NetworkResponse:
       type: object
       required:

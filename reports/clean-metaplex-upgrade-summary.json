@@ -1,0 +1,72 @@
+{
+  "version": "1.0.0",
+  "fixedFromProvidedLog": {
+    "staleRootSourceSrc": true,
+    "staleRootSourceUtils": true,
+    "idlBindingPath": "../../../../idl/bindings/interface.js",
+    "platformBootstrap": true,
+    "portableProductionChecks": true,
+    "telemetryDisabled": true
+  },
+  "organization": {
+    "apps": [
+      "api",
+      "client",
+      "docs"
+    ],
+    "workspacePackage": "@powerchain/metaplex",
+    "packageCount": 9,
+    "duplicateMetaplexDependenciesRemoved": true
+  },
+  "metaplex": {
+    "metadataProgramId": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+    "dependencies": {
+      "@metaplex-foundation/mpl-token-metadata": "3.4.0",
+      "@metaplex-foundation/mpl-toolbox": "0.11.4",
+      "@metaplex-foundation/umi": "1.5.1",
+      "@metaplex-foundation/umi-bundle-defaults": "1.5.1"
+    },
+    "metadataWritesExposed": false
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 24,
+      "passed": 24,
+      "failed": 0,
+      "failures": []
+    },
+    "javascriptSyntaxFiles": 59,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 30,
+    "pnpmInstallRun": false,
+    "dependencyAwareTypecheckRun": false,
+    "installBlocker": "sandbox cannot reach registry.npmjs.org"
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "buildManifestVerified": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "authorizationConsumed": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "reports/mainnet-build-manifest.json",
+      "reports/mainnet-build-manifest.json:not-verified",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json:not-verified",
+      "config/mainnet/release-consumption.json:not-verified"
+    ]
+  },
+  "sourceTreeSha256": "d5e769e600383e64995a7850cb31d1ed4d9deda2124d764889f461d543b965bd"
+}

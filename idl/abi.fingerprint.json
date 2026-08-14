@@ -1,9 +1,0 @@
-{
-  "version": "1.0.0",
-  "algorithm": "sha256",
-  "domain": "POWERCHAIN_IDL_ABI_V1",
-  "bridgeAnchorExpectedSha256": "3af44fe38207ab69f3b0cb968defc4b4acba2b61deaacc1dc4e2b6ce2e90aec3",
-  "tokenAnchorExpectedSha256": "0310b84115a2eb1de016608f97f9e4a422a0f49b74111bf1dc413b2e8cfde0e7",
-  "suiSourceInterfaceSha256": "f577cd73aad5fa30d956018fd6c10280d84bf631a08ba609e37d0300ae5ece63",
-  "combinedAbiSha256": "5ec0f3f78c6c009c03e1e25e879c0d5abbb76c8b341352814ac6dd27cc83fbe5"
-}

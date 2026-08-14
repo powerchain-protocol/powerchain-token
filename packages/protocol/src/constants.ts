@@ -11,6 +11,13 @@ export const PWRC_GENESIS_BASE_UNITS =
 export const PWRC_MAX_BASE_UNITS = PWRC_GENESIS_BASE_UNITS;
 export const U64_MAX = 18_446_744_073_709_551_615n;
 
+export const METAPLEX_TOKEN_METADATA_PROGRAM_ID =
+  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s" as const;
+export const PWRC_METADATA_URI =
+  "https://token.powerchain.energy/metadata/metadata.json" as const;
+export const PWRC_METADATA_IMAGE_URI =
+  "https://token.powerchain.energy/assets/tokens/pwrc-logo.png" as const;
+
 export const SOLANA_TOKEN_2022_PROGRAM_ID =
   "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as const;
 

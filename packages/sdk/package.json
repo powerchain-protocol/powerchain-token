@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "@powerchain/metaplex": "workspace:*",
     "@powerchain/protocol": "workspace:*",
     "@solana/web3.js": "1.98.4"
   },

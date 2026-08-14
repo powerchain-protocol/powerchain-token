@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "envExample": {
+    "complete": true,
+    "safeDefaults": true,
+    "realSecretsIncluded": false,
+    "lines": 189
+  },
+  "gitignore": {
+    "hardened": true,
+    "lines": 157,
+    "reproducibilityLockfilesPreserved": true
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 18,
+      "passed": 18,
+      "failed": 0,
+      "failures": []
+    },
+    "javascriptSyntaxFiles": 52,
+    "shellSyntaxFiles": 8
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "buildManifestVerified": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "authorizationConsumed": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "reports/mainnet-build-manifest.json",
+      "reports/mainnet-build-manifest.json:not-verified",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json:not-verified",
+      "config/mainnet/release-consumption.json:not-verified"
+    ]
+  },
+  "sourceTreeSha256": "b06edff8521a67e4de40be72d0c78da1e9a335df26eb7c86d0dc0c5d2b6eb94a"
+}

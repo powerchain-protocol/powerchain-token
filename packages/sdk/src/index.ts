@@ -5,3 +5,4 @@ export * from "./sui-client.js";
 export * from "./bridge-integration.js";
 export * from "./cdp-solana-data.js";
 export * from "./api-client.js";
+export * from "./metaplex.js";

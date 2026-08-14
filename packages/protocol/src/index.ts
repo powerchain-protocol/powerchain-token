@@ -8,3 +8,4 @@ export * from "./urls.js";
 export * from "./retry.js";
 export * from "./sui.js";
 export * from "./bridge-trace.js";
+export * from "./idl/bindings.js";

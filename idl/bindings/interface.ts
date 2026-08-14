@@ -1,86 +1,18 @@
 /**
- * Source-derived PowerChain interface descriptor.
+ * Source-level ABI binding descriptor.
  *
- * This is not generated transaction codec code.
- * Runtime Anchor encoding requires verified generated IDLs.
+ * This is not a generated deployment IDL and must not be used as deployment
+ * evidence. Generated Anchor/Sui artifacts remain separate Mainnet gates.
  */
+export const POWERCHAIN_IDL_BINDING_VERSION = "1.0.0" as const;
 
-export const POWERCHAIN_BINDINGS_VERSION =
-  "1.0.0" as const;
+export const POWERCHAIN_IDL_GENERATED_ARTIFACT_VERIFIED = false as const;
 
-export const POWERCHAIN_ABI_FINGERPRINT =
-  "5ec0f3f78c6c009c03e1e25e879c0d5abbb76c8b341352814ac6dd27cc83fbe5" as const;
-
-export const PWRC_LOCK_INSTRUCTIONS =
-  [
-  "initialize",
-  "lockToSui",
-  "releaseFromSui",
-  "setPaused",
-  "proposeOperator",
-  "cancelOperatorRotation",
-  "acceptOperator",
-  "proposeGovernor",
-  "cancelGovernorRotation",
-  "acceptGovernor"
+export const POWERCHAIN_EXPECTED_ANCHOR_PROGRAMS = [
+  "pwrc_lock",
+  "pwrc_token",
 ] as const;
 
-export const PWRC_TOKEN_VERIFIER_INSTRUCTIONS =
-  [
-  "verifyCanonicalMint"
+export const POWERCHAIN_EXPECTED_SUI_MODULES = [
+  "wpwrc",
 ] as const;
-
-export const WPWRC_BRIDGE_ENTRY_FUNCTIONS =
-  [
-  "configure_authorities",
-  "mint_from_bridge",
-  "burn_for_solana",
-  "set_paused",
-  "stage_canonical_burn_intent",
-  "cancel_canonical_burn_intent",
-  "lower_canonical_supply_ceiling",
-  "propose_bridge_authority",
-  "cancel_bridge_authority",
-  "accept_bridge_authority",
-  "propose_governor",
-  "cancel_governor",
-  "accept_governor"
-] as const;
-
-export type PwrcLockInstruction =
-  (typeof PWRC_LOCK_INSTRUCTIONS)[number];
-
-export type PwrcTokenVerifierInstruction =
-  (typeof PWRC_TOKEN_VERIFIER_INSTRUCTIONS)[number];
-
-export type WpwrcBridgeEntryFunction =
-  (typeof WPWRC_BRIDGE_ENTRY_FUNCTIONS)[number];
-
-export const POWERCHAIN_INTERFACE_BINDING = {
-  version: "1.0.0",
-  abiFingerprint:
-    POWERCHAIN_ABI_FINGERPRINT,
-  anchor: {
-    pwrcLock: {
-      program: "pwrc_lock",
-      instructions:
-        PWRC_LOCK_INSTRUCTIONS,
-      generatedIdlRequiredForEncoding:
-        true,
-    },
-    pwrcToken: {
-      program: "pwrc_token",
-      instructions:
-        PWRC_TOKEN_VERIFIER_INSTRUCTIONS,
-      generatedIdlRequiredForEncoding:
-        true,
-    },
-  },
-  sui: {
-    package: "wpwrc",
-    entryFunctions:
-      WPWRC_BRIDGE_ENTRY_FUNCTIONS,
-    verifiedPackageIdRequiredForExecution:
-      true,
-  },
-} as const;

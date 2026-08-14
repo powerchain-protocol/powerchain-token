@@ -607,6 +607,8 @@ fetch("/api/v1").then(r=>r.json()).then(api=>{
               "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
             tokenProgram:
               "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            metadataProgram:
+              "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
             decimals:
               9,
             genesisSupplyTokens:

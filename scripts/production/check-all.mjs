@@ -17,6 +17,12 @@ const checks=[
   "scripts/production/test-cdp-solana-sql.mjs",
   "scripts/production/check-openapi.mjs",
   "scripts/production/test-api-endpoints.mjs",
+  "scripts/production/check-platform-bootstrap.mjs",
+  "scripts/production/test-portable-production-checks.mjs",
+  "scripts/packages/check-monorepo-layout.mjs",
+  "scripts/telemetry/check-disabled.mjs",
+  "scripts/production/check-metaplex.mjs",
+  "scripts/production/check-idl-binding.mjs",
   "scripts/security/check-dependencies.mjs"
 ];
 const failures=[];

@@ -34,6 +34,14 @@ const programs =
     ),
   );
 
+const metaplex =
+  JSON.parse(
+    fs.readFileSync(
+      "config/metaplex.json",
+      "utf8",
+    ),
+  );
+
 const networks =
   JSON.parse(
     fs.readFileSync(
@@ -59,6 +67,8 @@ const expected = {
     "1000000",
   verifier:
     "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+  metaplexMetadataProgram:
+    "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
   wpwrcGenesis:
     "0",
 };
@@ -112,6 +122,16 @@ for (const [
     "programs.pwrcToken.sourceProgramId",
     programs.pwrcToken?.sourceProgramId,
     expected.verifier,
+  ],
+  [
+    "metaplex.tokenMetadataProgramId",
+    metaplex.tokenMetadataProgramId,
+    expected.metaplexMetadataProgram,
+  ],
+  [
+    "token.metadata.programId",
+    token.metadata?.programId,
+    expected.metaplexMetadataProgram,
   ],
   [
     "bridge.wrapped.decimals",
