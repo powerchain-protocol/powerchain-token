@@ -1,15 +1,12 @@
 {
   "ok": true,
   "version": "1.0.0",
-  "configurationReady": true,
-  "deploymentReady": false,
+  "buildArtifactsReady": false,
+  "deploymentEvidenceVerified": false,
+  "qualified": false,
   "blockers": [
-    "solana.canonicalMint",
-    "solana.bridgeProgramId",
-    "solana.bridgeVault",
-    "solana.tokenVerifierProgramId",
-    "sui.packageId",
-    "sui.coinType",
-    "sui.bridgeControllerId"
+    "target/deploy/pwrc_lock.so",
+    "target/deploy/pwrc_token.so",
+    "devnet-deployment-evidence:not-verified"
   ]
 }

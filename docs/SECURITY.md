@@ -1,131 +1,43 @@
-# Security
+# Security Boundaries
 
-This document is the consolidated high-level security guide. Specialized
-security documents remain under `docs/`.
+- Canonical token policy is checked for drift across JSON configuration,
+  protocol constants and program source.
+- Solana deployment IDs cannot be System, Token, Token-2022, Associated Token
+  or Metaplex metadata program IDs.
+- Mainnet program IDs are explicit; the Localnet bridge-lock ID never falls
+  through to Mainnet.
+- Mainnet primary and secondary RPCs must differ.
+- Sui aliases are not deployment evidence.
+- wPWRC starts at zero supply and is minted only through bridge-controller
+  authority with replay-protected source messages.
+- Monetary writes are single-attempt and reconciled after ambiguity.
+- Service fees remain separate from bridge principal/backing.
+- Private program/deployer keypairs and API secrets are excluded by `.gitignore`.
+- Release evidence and authorization are separate gates.
 
-## Core principles
 
-### Fail closed
+## Release authorization consumption
 
-Missing build artifacts, deployment evidence, signatures, RPC observations or
-authorization prevent Mainnet readiness.
+Authorization and consumption are separate security events. A valid
+authorization cannot be reused implicitly: the release workflow produces a
+one-time receipt using create-exclusive file semantics and binds it to the exact
+authorization, evidence and build manifest.
 
-### No blind monetary retry
+This makes the final release state explicit and auditable instead of treating
+the mere presence of an authorization JSON file as sufficient.
 
-A submitted transaction/executor request may have landed even when the client
-did not receive a success response. Ambiguous outcomes require reconciliation.
+## Coinbase CDP SQL trust boundary
 
-### Server-owned economics
+Coinbase CDP SQL API is treated as a read-only analytics/indexing dependency.
+Its server-side Bearer credential is never referenced by browser source, and
+clients cannot submit arbitrary SQL.
 
-The API recomputes canonical fee-aware quotes. Browser values are not treated as
-authoritative monetary calculations.
+CDP indexed results may support history, analytics and discovery, but they
+cannot independently authorize wPWRC minting, canonical PWRC release, program
+deployment, mint-authority claims, supply claims, or Mainnet release state.
+Those decisions continue to use finalized chain/RPC evidence and PowerChain's
+release verification gates.
 
-### Server-only execution
-
-Private executor configuration and execution authorization remain outside the
-browser.
-
-## Token security
-
-The canonical Token-2022 profile requires:
-
-```text
-TransferFeeConfig
-MetadataPointer
-TokenMetadata
-```
-
-Forbidden extensions include:
-
-```text
-PermanentDelegate
-MintCloseAuthority
-DefaultAccountState
-InterestBearingConfig
-ScaledUiAmount
-Pausable
-NonTransferable
-```
-
-Mint/freeze/fee-authority assertions that depend on deployment state require
-real chain verification.
-
-## Bridge security
-
-- chain-specific address validation;
-- replay reservation;
-- deterministic quote fingerprints;
-- durable idempotency;
-- no blind execution retry;
-- finalized chain-state semantics;
-- wrapped supply/backing conservation checks;
-- zero wrapped genesis supply.
-
-## API security
-
-- bounded JSON body size;
-- read/write rate limiting;
-- server-only bearer authorization;
-- mandatory idempotency key for execution;
-- 30-second request timeout;
-- 20-second executor timeout;
-- defensive response headers;
-- opt-in CORS;
-- structured secret redaction;
-- no credential forwarding from the browser proxy.
-
-## Executor failure classification
-
-Timeout, transport failure and executor 5xx are ambiguous. The persistent
-record remains reconcilable instead of being automatically retried.
-
-## Cryptographic release security
-
-Release inputs use:
-
-- deterministic SHA-256 commitments;
-- strict canonical JSON;
-- Ed25519 evidence signatures;
-- signed build/evidence/provenance bindings;
-- independent RPC observations;
-- short-lived authorization;
-- 256-bit nonce;
-- atomic one-time authorization consumption.
-
-## Filesystem/config security
-
-Root tooling provides:
-
-- repository path containment;
-- symlink rejection for protected config reads;
-- exclusive temporary-file creation;
-- `fsync`;
-- atomic same-directory rename;
-- randomized temporary names.
-
-## Secret redaction
-
-Structured logging redacts common secret-bearing field names, bearer tokens,
-credential assignments, and secret-like URL query values.
-
-Redaction is defense in depth. Secrets should not intentionally enter logs.
-
-## Operational security
-
-Before Mainnet:
-
-1. qualify exact toolchains;
-2. generate real lockfiles/artifacts;
-3. verify program/mint/vault/package/controller identities;
-4. verify authorities;
-5. observe state from independent RPC providers;
-6. sign evidence using approved release keys;
-7. create and sign a short-lived release authorization;
-8. run Mainnet preflight;
-9. consume authorization only at the actual execution boundary.
-
-## Reporting
-
-Do not publish private keys, seed phrases or credentials in issue reports.
-Include sanitized request IDs, deterministic hashes, chain signatures/slots or
-checkpoints, and non-secret verifier output.
+The CDP endpoint is pinned to `api.cdp.coinbase.com` over HTTPS to prevent a
+configuration error from forwarding the Bearer credential to an arbitrary
+host.

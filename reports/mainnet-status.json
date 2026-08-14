@@ -1,60 +1,24 @@
 {
-  "ok": false,
+  "ok": true,
   "version": "1.0.0",
   "codeReady": true,
   "buildReady": false,
+  "buildManifestVerified": false,
   "deploymentEvidenceReady": false,
   "releaseAuthorized": false,
   "authorizationConsumed": false,
   "releaseState": "SOURCE_READY",
   "readyForMainnet": false,
-  "phases": {
-    "static": {
-      "ready": true,
-      "blockers": []
-    },
-    "build": {
-      "ready": false,
-      "blockers": [
-        "pnpm-lock.yaml",
-        "contracts/wpwrc/Move.lock",
-        "target/deploy/pwrc_lock.so",
-        "target/deploy/pwrc_token.so",
-        "idl/generated/pwrc_lock.json",
-        "idl/generated/pwrc_token.json",
-        "idl/generated/wpwrc.modules.json",
-        "idl.releaseManifest:not-ready",
-        "mainnet.build-manifest-verification:failed"
-      ]
-    },
-    "evidence": {
-      "ready": false,
-      "blockers": [
-        "evidence:missing:config/mainnet/evidence.json",
-        "evidence-bindings:missing:config/mainnet/evidence.json"
-      ]
-    },
-    "authorization": {
-      "ready": false,
-      "blockers": [
-        "authorization:missing:config/mainnet/release-authorization.json",
-        "authorization-unused:missing:config/mainnet/release-authorization.json"
-      ]
-    }
-  },
   "blockers": [
     "pnpm-lock.yaml",
+    "Cargo.lock",
     "contracts/wpwrc/Move.lock",
     "target/deploy/pwrc_lock.so",
     "target/deploy/pwrc_token.so",
-    "idl/generated/pwrc_lock.json",
-    "idl/generated/pwrc_token.json",
-    "idl/generated/wpwrc.modules.json",
-    "idl.releaseManifest:not-ready",
-    "mainnet.build-manifest-verification:failed",
-    "evidence:missing:config/mainnet/evidence.json",
-    "evidence-bindings:missing:config/mainnet/evidence.json",
-    "authorization:missing:config/mainnet/release-authorization.json",
-    "authorization-unused:missing:config/mainnet/release-authorization.json"
+    "reports/mainnet-build-manifest.json",
+    "reports/mainnet-build-manifest.json:not-verified",
+    "config/mainnet/evidence.json:not-verified",
+    "config/mainnet/release-authorization.json:not-verified",
+    "config/mainnet/release-consumption.json:not-verified"
   ]
 }

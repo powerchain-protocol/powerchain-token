@@ -1,0 +1,11 @@
+import fs from "node:fs";
+const token=JSON.parse(fs.readFileSync("config/token.json","utf8"));
+const failures=[];
+if(token.version!=="1.0.0")failures.push("version");
+if(token.mint!=="PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc")failures.push("mint");
+if(token.decimals!==9)failures.push("decimals");
+if(token.genesisSupplyBaseUnits!=="18446000000000000000")failures.push("supply");
+if(token.transferFee?.basisPoints!==250)failures.push("native-fee-bps");
+if(token.transferFee?.maximumFeeTokens!=="1000000")failures.push("native-fee-cap");
+console.log(JSON.stringify({ok:!failures.length,version:"1.0.0",failures},null,2));
+if(failures.length)process.exit(1);

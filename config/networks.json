@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "solana": {
+    "localnet": {
+      "rpc": "http://127.0.0.1:8899",
+      "ws": "ws://127.0.0.1:8900",
+      "pwrcLockProgramId": "7JAV3PsxkHh5oKAFDMKqVpKaV2P2P5Vj3Qv15hH8wPwr",
+      "pwrcTokenProgramId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu"
+    },
+    "devnet": {
+      "rpc": "https://api.devnet.solana.com",
+      "pwrcLockProgramId": null,
+      "pwrcTokenProgramId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+      "deploymentEvidenceRequired": true
+    },
+    "mainnet-beta": {
+      "rpc": null,
+      "secondaryRpc": null,
+      "ws": null,
+      "pwrcLockProgramId": null,
+      "pwrcTokenProgramId": null,
+      "dedicatedRpcRequiredInProduction": true,
+      "independentRpcVerificationRequired": true,
+      "deploymentEvidenceRequired": true
+    }
+  },
+  "sui": {
+    "alias": "powerchain",
+    "aliasAddress": "0x4a4a81c5e4a520c1b4d7b5b572a0567f48c6c7e85257f0a13e65639cfba49fb1",
+    "devnet": {
+      "rpc": "https://fullnode.devnet.sui.io:443",
+      "packageId": null
+    },
+    "testnet": {
+      "rpc": "https://fullnode.testnet.sui.io:443",
+      "packageId": null
+    },
+    "mainnet": {
+      "rpc": null,
+      "secondaryRpc": null,
+      "packageId": null,
+      "coinType": null,
+      "bridgeControllerId": null,
+      "metadataCapabilityId": null,
+      "dedicatedRpcRequiredInProduction": true,
+      "deploymentEvidenceRequired": true
+    }
+  }
+}

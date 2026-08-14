@@ -1,18 +1,12 @@
 {
   "version": "1.0.0",
-  "type": "powerchain-mainnet-release-authorization",
-  "network": {
-    "solana": "mainnet-beta",
-    "sui": "mainnet"
-  },
-  "nonce": null,
-  "issuedAt": null,
+  "release": "powerchain-token-1.0.0",
+  "authorizedAt": null,
   "expiresAt": null,
+  "consumedAt": null,
   "evidenceSha256": null,
-  "provenancePayloadSha256": null,
   "buildManifestSha256": null,
-  "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
-  "signerPublicKeySpkiBase64": null,
-  "signedPayloadSha256": null,
-  "signatureBase64": null
+  "approvers": [],
+  "signatureEvidence": [],
+  "note": "Template only. Populate from the approved governance/signing process."
 }

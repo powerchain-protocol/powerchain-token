@@ -1,0 +1,929 @@
+openapi: 3.1.0
+info:
+  title: PowerChain Token API
+  version: 1.0.0
+  summary: PWRC token, fee, bridge, release-status and Solana indexed-data API.
+  description: PowerChain Token 1.0.0 API. Public surface is read-only plus deterministic
+    quote endpoints. No bridge mint/release, deployment, release authorization or
+    other monetary write endpoint is exposed.
+  license:
+    name: Apache-2.0
+servers:
+- url: http://127.0.0.1:8787
+  description: Preferred local API
+- url: https://api.powerchain.energy
+  description: Production API when deployed
+tags:
+- name: System
+- name: Token
+- name: Network
+- name: Fees
+- name: Bridge
+- name: Release
+- name: Solana Data
+paths:
+  /api/v1:
+    get:
+      tags:
+      - System
+      summary: API discovery
+      operationId: getApiIndex
+      responses:
+        '200':
+          description: API index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiIndexResponse'
+  /api/v1/health:
+    get:
+      tags:
+      - System
+      summary: Liveness check
+      operationId: getHealth
+      responses:
+        '200':
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /api/v1/ready:
+    get:
+      tags:
+      - System
+      summary: Readiness check
+      operationId: getReadiness
+      description: Runtime readiness. Mainnet release readiness is exposed separately
+        and remains fail-closed.
+      responses:
+        '200':
+          description: Runtime readiness
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessResponse'
+  /api/v1/version:
+    get:
+      tags:
+      - System
+      summary: Version information
+      operationId: getVersion
+      responses:
+        '200':
+          description: Version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionResponse'
+  /api/v1/openapi.json:
+    get:
+      tags:
+      - System
+      summary: OpenAPI 3.1 specification
+      operationId: getOpenApi
+      responses:
+        '200':
+          description: OpenAPI JSON
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/platform:
+    get:
+      tags:
+      - System
+      summary: Public platform capabilities and canonical assets
+      operationId: getPlatform
+      responses:
+        '200':
+          description: Platform state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformResponse'
+  /api/v1/token:
+    get:
+      tags:
+      - Token
+      summary: Canonical PWRC token profile
+      operationId: getToken
+      responses:
+        '200':
+          description: PWRC profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+  /api/v1/network:
+    get:
+      tags:
+      - Network
+      summary: Configured Solana, Sui and indexed-data state
+      operationId: getNetwork
+      responses:
+        '200':
+          description: Network state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NetworkResponse'
+  /api/v1/fees/policy:
+    get:
+      tags:
+      - Fees
+      summary: Public PWRC native and PowerChain service-fee policy
+      operationId: getFeePolicy
+      responses:
+        '200':
+          description: Fee policy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeePolicyResponse'
+  /api/v1/fees/quote:
+    get:
+      tags:
+      - Fees
+      summary: Quote PWRC native and service fees
+      operationId: quoteFees
+      parameters:
+      - name: amountBaseUnits
+        in: query
+        required: true
+        schema:
+          type: string
+          pattern: ^[1-9][0-9]*$
+          description: Unsigned integer base units.
+      - name: operation
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - bridge-solana-to-sui
+          - bridge-sui-to-solana
+          - wallet-transfer
+          - quote-preview
+          default: quote-preview
+      responses:
+        '200':
+          description: Fee quote
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeQuoteResponse'
+        '400':
+          description: Invalid quote request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/bridge/status:
+    get:
+      tags:
+      - Bridge
+      summary: Bridge configuration and execution status
+      operationId: getBridgeStatus
+      responses:
+        '200':
+          description: Bridge status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BridgeStatusResponse'
+  /api/v1/bridge/quote/solana-to-sui:
+    get:
+      tags:
+      - Bridge
+      summary: Quote Solana PWRC to Sui wPWRC bridge amounts
+      operationId: quoteSolanaToSuiBridge
+      parameters:
+      - name: amountBaseUnits
+        in: query
+        required: true
+        schema:
+          type: string
+          pattern: ^[1-9][0-9]*$
+          description: Unsigned integer base units.
+      responses:
+        '200':
+          description: Bridge quote
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BridgeQuoteResponse'
+        '400':
+          description: Invalid bridge quote request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/release/status:
+    get:
+      tags:
+      - Release
+      summary: Sanitized Mainnet release status
+      operationId: getReleaseStatus
+      responses:
+        '200':
+          description: Mainnet release status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseStatusResponse'
+  /api/v1/devnet/status:
+    get:
+      tags:
+      - Release
+      summary: Sanitized Devnet qualification status
+      operationId: getDevnetStatus
+      responses:
+        '200':
+          description: Devnet status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DevnetStatusResponse'
+  /api/v1/data/solana/pwrc/transfers:
+    get:
+      tags:
+      - Solana Data
+      summary: Recent indexed PWRC transfers
+      operationId: getPwrcTransfers
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 90
+          default: 7
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+      responses:
+        '200':
+          description: Indexed Solana data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CdpDataResponse'
+        '400':
+          description: Invalid query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: CDP upstream request failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: CDP SQL credential unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/data/solana/pwrc/instructions:
+    get:
+      tags:
+      - Solana Data
+      summary: Decoded Token-2022 transfer instructions for PWRC
+      operationId: getPwrcInstructions
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 90
+          default: 7
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+      responses:
+        '200':
+          description: Indexed Solana data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CdpDataResponse'
+        '400':
+          description: Invalid query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: CDP upstream request failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: CDP SQL credential unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/data/solana/pwrc/transfer-context:
+    get:
+      tags:
+      - Solana Data
+      summary: PWRC transfers joined to decoded instructions
+      operationId: getPwrcTransferContext
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 90
+          default: 7
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+      responses:
+        '200':
+          description: Indexed Solana data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CdpDataResponse'
+        '400':
+          description: Invalid query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: CDP upstream request failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: CDP SQL credential unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/data/solana/pwrc/volume:
+    get:
+      tags:
+      - Solana Data
+      summary: Indexed PWRC daily transfer volume
+      operationId: getPwrcVolume
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 90
+          default: 7
+      responses:
+        '200':
+          description: Indexed Solana data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CdpDataResponse'
+        '400':
+          description: Invalid query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: CDP upstream request failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: CDP SQL credential unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/data/solana/wallet/transfers:
+    get:
+      tags:
+      - Solana Data
+      summary: Indexed wallet transfer history by owner address
+      operationId: getWalletTransfers
+      parameters:
+      - name: wallet
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 32
+          maxLength: 44
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 90
+          default: 7
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+      - name: pwrcOnly
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Indexed Solana data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CdpDataResponse'
+        '400':
+          description: Invalid query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: CDP upstream request failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: CDP SQL credential unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/status:
+    get:
+      tags:
+      - System
+      summary: Aggregate runtime, bridge, Devnet and Mainnet status
+      operationId: getStatus
+      responses:
+        '200':
+          description: Aggregate status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+  /api/v1/openapi.yaml:
+    get:
+      tags:
+      - System
+      summary: OpenAPI 3.1 YAML specification
+      operationId: getOpenApiYaml
+      responses:
+        '200':
+          description: OpenAPI YAML
+          content:
+            application/yaml:
+              schema:
+                type: string
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      - errorCode
+      - requestId
+      properties:
+        error:
+          type: string
+        errorCode:
+          type: string
+        requestId:
+          type: string
+    ApiIndexResponse:
+      type: object
+      required:
+      - version
+      - basePath
+      - documentation
+      - endpoints
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        basePath:
+          const: /api/v1
+        documentation:
+          type: object
+        endpoints:
+          type: array
+          items:
+            type: object
+        requestId:
+          type: string
+    HealthResponse:
+      type: object
+      required:
+      - ok
+      - version
+      - serviceFeeEnabled
+      - requestId
+      properties:
+        ok:
+          const: true
+        version:
+          const: 1.0.0
+        serviceFeeEnabled:
+          type: boolean
+        requestId:
+          type: string
+    ReadinessResponse:
+      type: object
+      required:
+      - ok
+      - ready
+      - version
+      - runtime
+      - release
+      - requestId
+      properties:
+        ok:
+          type: boolean
+        ready:
+          type: boolean
+        version:
+          const: 1.0.0
+        runtime:
+          type: object
+        release:
+          type: object
+        requestId:
+          type: string
+    VersionResponse:
+      type: object
+      required:
+      - version
+      - apiVersion
+      - release
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        apiVersion:
+          const: v1
+        release:
+          const: powerchain-token-1.0.0
+        requestId:
+          type: string
+    PlatformResponse:
+      type: object
+      required:
+      - version
+      - apiVersion
+      - product
+      - canonicalAsset
+      - wrappedAsset
+      - features
+      - documentation
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        apiVersion:
+          const: v1
+        product:
+          const: PowerChain Token
+        canonicalAsset:
+          type: object
+        wrappedAsset:
+          type: object
+        features:
+          type: object
+        documentation:
+          type: object
+        requestId:
+          type: string
+    TokenResponse:
+      type: object
+      required:
+      - version
+      - name
+      - symbol
+      - mint
+      - tokenProgram
+      - decimals
+      - genesisSupplyTokens
+      - genesisSupplyBaseUnits
+      - nativeTransferFeeBps
+      - nativeTransferFeeCapTokens
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        name:
+          const: PowerChain
+        symbol:
+          const: PWRC
+        mint:
+          const: PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
+        tokenProgram:
+          const: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+        decimals:
+          const: 9
+        genesisSupplyTokens:
+          const: '18446000000'
+        genesisSupplyBaseUnits:
+          const: '18446000000000000000'
+        nativeTransferFeeBps:
+          const: 250
+        nativeTransferFeeCapTokens:
+          const: '1000000'
+        requestId:
+          type: string
+    NetworkResponse:
+      type: object
+      required:
+      - version
+      - solana
+      - sui
+      - data
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        solana:
+          type: object
+        sui:
+          type: object
+        data:
+          type: object
+        requestId:
+          type: string
+    FeePolicyResponse:
+      type: object
+      required:
+      - version
+      - nativeToken2022Fee
+      - serviceFee
+      - networkFee
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        nativeToken2022Fee:
+          type: object
+        serviceFee:
+          type: object
+        networkFee:
+          type: object
+        requestId:
+          type: string
+    FeeQuoteResponse:
+      type: object
+      required:
+      - version
+      - operation
+      - principalGrossBaseUnits
+      - nativeTransferFeeBaseUnits
+      - principalNetBaseUnits
+      - quoteFingerprint
+      - issuedAt
+      - expiresAt
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        operation:
+          type: string
+        principalGrossBaseUnits:
+          type: string
+        nativeTransferFeeBaseUnits:
+          type: string
+        principalNetBaseUnits:
+          type: string
+        serviceFeeEnabled:
+          type: boolean
+        serviceFeeBasisPoints:
+          type: integer
+        serviceFeeNetBaseUnits:
+          type: string
+        serviceFeeGrossTransferBaseUnits:
+          type: string
+        serviceFeeTransferNativeFeeBaseUnits:
+          type: string
+        serviceFeeRecipient:
+          type:
+          - string
+          - 'null'
+        totalNativeTokenFeesBaseUnits:
+          type: string
+        totalWalletPwrcDebitBaseUnits:
+          type: string
+        issuedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        quoteFingerprint:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        requestId:
+          type: string
+    BridgeStatusResponse:
+      type: object
+      required:
+      - version
+      - enabled
+      - executionMode
+      - canonical
+      - wrapped
+      - supportedQuoteDirections
+      - writesExposedByThisApi
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        enabled:
+          type: boolean
+        executionMode:
+          type: string
+        canonical:
+          type: object
+        wrapped:
+          type: object
+        supportedQuoteDirections:
+          type: array
+          items:
+            type: string
+        writesExposedByThisApi:
+          const: false
+        requestId:
+          type: string
+    BridgeQuoteResponse:
+      type: object
+      required:
+      - version
+      - direction
+      - canonical
+      - wrapped
+      - fees
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        direction:
+          const: solana-to-sui
+        canonical:
+          type: object
+        wrapped:
+          type: object
+        fees:
+          $ref: '#/components/schemas/FeeQuoteResponse'
+        requestId:
+          type: string
+    ReleaseStatusResponse:
+      type: object
+      required:
+      - version
+      - codeReady
+      - buildReady
+      - buildManifestVerified
+      - deploymentEvidenceReady
+      - releaseAuthorized
+      - authorizationConsumed
+      - releaseState
+      - readyForMainnet
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        codeReady:
+          type: boolean
+        buildReady:
+          type: boolean
+        buildManifestVerified:
+          type: boolean
+        deploymentEvidenceReady:
+          type: boolean
+        releaseAuthorized:
+          type: boolean
+        authorizationConsumed:
+          type: boolean
+        releaseState:
+          type: string
+          enum:
+          - SOURCE_READY
+          - BUILD_READY
+          - EVIDENCE_READY
+          - AUTHORIZED
+          - CONSUMED
+        readyForMainnet:
+          type: boolean
+        requestId:
+          type: string
+    DevnetStatusResponse:
+      type: object
+      required:
+      - version
+      - buildArtifactsReady
+      - deploymentEvidenceVerified
+      - qualified
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        buildArtifactsReady:
+          type: boolean
+        deploymentEvidenceVerified:
+          type: boolean
+        qualified:
+          type: boolean
+        requestId:
+          type: string
+    CdpDataResponse:
+      type: object
+      required:
+      - version
+      - provider
+      - network
+      - kind
+      - queryWindow
+      - canonicalMint
+      - result
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        provider:
+          const: coinbase-cdp-sql-api
+        network:
+          const: solana-mainnet
+        kind:
+          type: string
+        queryWindow:
+          type: object
+        canonicalMint:
+          const: PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
+        metadata:
+          type:
+          - object
+          - 'null'
+        schema: {}
+        result:
+          type: array
+        requestId:
+          type: string
+    StatusResponse:
+      type: object
+      required:
+      - version
+      - runtime
+      - bridge
+      - devnet
+      - mainnet
+      - requestId
+      properties:
+        version:
+          const: 1.0.0
+        runtime:
+          type: object
+        bridge:
+          $ref: '#/components/schemas/BridgeStatusResponse'
+        devnet:
+          $ref: '#/components/schemas/DevnetStatusResponse'
+        mainnet:
+          $ref: '#/components/schemas/ReleaseStatusResponse'
+        requestId:
+          type: string

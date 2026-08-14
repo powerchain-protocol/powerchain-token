@@ -1,232 +1,120 @@
 import fs from "node:fs";
-import path from "node:path";
 import crypto from "node:crypto";
+import {
+  spawnSync,
+} from "node:child_process";
 
-const authorizationFile =
-  process.argv[2] ??
-  "config/mainnet/release-authorization.json";
+const confirmation =
+  process.env[
+    "PWRC_RELEASE_CONSUMPTION_CONFIRMATION"
+  ];
 
-if (!fs.existsSync(authorizationFile)) {
+if (
+  confirmation !==
+    "PWRC-1.0.0-CONSUME-AUTHORIZATION"
+) {
   throw new Error(
-    `PWRC_RELEASE_AUTHORIZATION_MISSING:${authorizationFile}`,
+    "PWRC_RELEASE_CONSUMPTION_CONFIRMATION_REQUIRED",
   );
 }
 
-const verificationFile =
-  "reports/mainnet-release-authorization-verification.json";
+const consumedBy =
+  process.env[
+    "PWRC_RELEASE_CONSUMED_BY"
+  ]?.trim();
 
-if (!fs.existsSync(verificationFile)) {
+if (!consumedBy) {
   throw new Error(
-    "PWRC_RELEASE_AUTHORIZATION_NOT_VERIFIED",
+    "PWRC_RELEASE_CONSUMED_BY_REQUIRED",
   );
 }
 
-const verification =
-  JSON.parse(
-    fs.readFileSync(
-      verificationFile,
-      "utf8",
+for (const script of [
+  "scripts/mainnet/verify-build-manifest.mjs",
+  "scripts/mainnet/verify-evidence.mjs",
+  "scripts/mainnet/verify-release-authorization.mjs",
+]) {
+  const result =
+    spawnSync(
+      process.execPath,
+      [
+        script,
+      ],
+      {
+        encoding:
+          "utf8",
+      },
+    );
+
+  if (result.status !== 0) {
+    process.stderr.write(
+      result.stdout ??
+      "",
+    );
+    process.stderr.write(
+      result.stderr ??
+      "",
+    );
+    throw new Error(
+      `PWRC_RELEASE_PREREQUISITE_FAILED:${script}`,
+    );
+  }
+}
+
+const output =
+  "config/mainnet/release-consumption.json";
+
+if (fs.existsSync(output)) {
+  throw new Error(
+    "PWRC_RELEASE_AUTHORIZATION_ALREADY_CONSUMED",
+  );
+}
+
+function sha256(path) {
+  return crypto
+    .createHash("sha256")
+    .update(fs.readFileSync(path))
+    .digest("hex");
+}
+
+const receipt = {
+  version:
+    "1.0.0",
+  release:
+    "powerchain-token-1.0.0",
+  authorizationSha256:
+    sha256(
+      "config/mainnet/release-authorization.json",
     ),
-  );
-
-if (verification.ok !== true) {
-  throw new Error(
-    "PWRC_RELEASE_AUTHORIZATION_NOT_VERIFIED",
-  );
-}
-
-
-const preflightProofFile =
-  "reports/mainnet-preflight-proof.json";
-
-if (!fs.existsSync(preflightProofFile)) {
-  throw new Error(
-    "PWRC_MAINNET_PREFLIGHT_PROOF_REQUIRED",
-  );
-}
-
-const preflightProof =
-  JSON.parse(
-    fs.readFileSync(
-      preflightProofFile,
-      "utf8",
+  evidenceSha256:
+    sha256(
+      "config/mainnet/evidence.json",
     ),
-  );
-
-const preflightTime =
-  Date.parse(
-    preflightProof.generatedAt,
-  );
-
-if (
-  preflightProof.version !==
-    "1.0.0" ||
-  preflightProof.readyForMainnet !==
-    true ||
-  preflightProof.releaseState !==
-    "AUTHORIZED" ||
-  !Number.isFinite(
-    preflightTime,
-  ) ||
-  Date.now() -
-      preflightTime >
-    5 * 60 * 1000
-) {
-  throw new Error(
-    "PWRC_MAINNET_PREFLIGHT_PROOF_STALE_OR_INVALID",
-  );
-}
-
-const authorization =
-  JSON.parse(
-    fs.readFileSync(
-      authorizationFile,
-      "utf8",
+  buildManifestSha256:
+    sha256(
+      "reports/mainnet-build-manifest.json",
     ),
-  );
+  consumedAt:
+    new Date()
+      .toISOString(),
+  consumedBy,
+  confirmation:
+    "PWRC-1.0.0-CONSUME-AUTHORIZATION",
+};
 
-const nonce =
-  authorization.nonce;
-
-if (
-  typeof nonce !==
-    "string" ||
-  !/^[a-f0-9]{64}$/i.test(
-    nonce,
-  )
-) {
-  throw new Error(
-    "PWRC_RELEASE_AUTHORIZATION_NONCE_INVALID",
-  );
-}
-
-if (
-  preflightProof.authorizationNonce !==
-    nonce
-) {
-  throw new Error(
-    "PWRC_MAINNET_PREFLIGHT_PROOF_NONCE_MISMATCH",
-  );
-}
-
-if (
-  verification.nonce !==
-    nonce
-) {
-  throw new Error(
-    "PWRC_RELEASE_AUTHORIZATION_VERIFICATION_STALE",
-  );
-}
-
-const directory =
-  "deployments/mainnet/authorizations";
-
-fs.mkdirSync(
-  directory,
+fs.writeFileSync(
+  output,
+  `${JSON.stringify(receipt, null, 2)}\n`,
   {
-    recursive: true,
+    flag:
+      "wx",
   },
 );
 
-const destination =
-  path.join(
-    directory,
-    `${nonce.toLowerCase()}.json`,
-  );
-
-let fd;
-
-try {
-  fd =
-    fs.openSync(
-      destination,
-      "wx",
-      0o600,
-    );
-} catch (error) {
-  if (
-    error &&
-    typeof error === "object" &&
-    error.code === "EEXIST"
-  ) {
-    throw new Error(
-      "PWRC_RELEASE_AUTHORIZATION_ALREADY_CONSUMED",
-    );
-  }
-
-  throw error;
-}
-
-try {
-  const record = {
-    version: "1.0.0",
-    type:
-      "powerchain-mainnet-release-authorization-consumption",
-    nonce,
-    authorizationSha256:
-      verification
-        .authorizationSha256,
-    consumedAt:
-      new Date()
-        .toISOString(),
-    processId:
-      process.pid,
-  };
-
-  fs.writeFileSync(
-    fd,
-    `${JSON.stringify(
-      record,
-      null,
-      2,
-    )}\n`,
-  );
-
-  fs.fsyncSync(fd);
-  fs.closeSync(fd);
-  fd = undefined;
-
-  try {
-    const dirFd =
-      fs.openSync(
-        directory,
-        "r",
-      );
-
-    fs.fsyncSync(dirFd);
-    fs.closeSync(dirFd);
-  } catch {
-    // Some filesystems do not permit directory fsync.
-  }
-
-  console.log(
-    JSON.stringify(
-      {
-        ok: true,
-        version: "1.0.0",
-        nonce,
-        consumedFile:
-          destination,
-        authorizationSha256:
-          verification
-            .authorizationSha256,
-      },
-      null,
-      2,
-    ),
-  );
-} catch (error) {
-  if (fd !== undefined) {
-    try {
-      fs.closeSync(fd);
-    } catch {}
-  }
-
-  try {
-    fs.unlinkSync(
-      destination,
-    );
-  } catch {}
-
-  throw error;
-}
+console.log(
+  JSON.stringify(
+    receipt,
+    null,
+    2,
+  ),
+);

@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "repository": "powerchain-protocol/powerchain-token",
+  "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+  "nativeFee": {
+    "bps": 250,
+    "capTokens": "1000000"
+  },
+  "serviceFee": {
+    "defaultBps": 250,
+    "enabledByDefault": false,
+    "recipient": null,
+    "walletTransferExcluded": true
+  },
+  "validation": {
+    "json": true,
+    "javascriptSyntaxFiles": 13,
+    "typescriptSyntax": {
+      "ok": true,
+      "files": 15,
+      "failures": []
+    },
+    "productionChecks": {
+      "scripts/production/check-config.mjs": true,
+      "scripts/production/check-fees.mjs": true,
+      "scripts/production/check-stack.mjs": true,
+      "scripts/security/check-dependencies.mjs": true,
+      "scripts/production/check-all.mjs": true,
+      "scripts/mainnet/status.mjs": true
+    }
+  },
+  "mainnet": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "config/mainnet/evidence.json",
+      "config/mainnet/release-authorization.json"
+    ]
+  }
+}

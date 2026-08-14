@@ -1,0 +1,95 @@
+{
+  "version": "1.0.0",
+  "repository": "powerchain-protocol/powerchain-token",
+  "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+  "pwrcTokenSourceProgramId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+  "upgrades": {
+    "helpers": [
+      "helpers.ts",
+      "urls.ts",
+      "retry.ts"
+    ],
+    "solana": {
+      "reservedProgramIdGuard": true,
+      "devnetProgramResolution": true,
+      "mainnetExplicitProgramIds": true,
+      "dedicatedPrimaryRpc": true,
+      "independentSecondaryRpc": true,
+      "secureWebSocketPolicy": true,
+      "programKeypairCheck": true,
+      "devnetDeployScript": true,
+      "mainnetDeployScript": true,
+      "anchorVerifyScript": true
+    },
+    "sui": {
+      "typedNetworkResolver": true,
+      "deploymentLoader": true,
+      "activeCliEnvironmentGate": true,
+      "devnetPublishScript": true,
+      "mainnetPublishScript": true,
+      "independentRpcVerification": true,
+      "bridgeReplayProtection": true,
+      "bridgeMintBurnEvents": true,
+      "treasuryCapControllerCustody": true
+    },
+    "env": {
+      "exampleExpanded": true,
+      "productionFailClosed": true,
+      "gitignoreHardened": true
+    },
+    "stack": {
+      "apiNetworkEndpoint": true,
+      "apiHealthWait": true,
+      "clientHealthWait": true,
+      "unexpectedChildShutdown": true,
+      "autoPortFallback": true
+    },
+    "mainnet": {
+      "structuredEvidenceVerifier": true,
+      "structuredReleaseAuthorizationVerifier": true,
+      "sourceReadyFailClosed": true
+    }
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 7,
+      "passed": 7,
+      "failed": 0,
+      "failures": []
+    },
+    "javascriptSyntaxFiles": 26,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 22,
+    "liveFullstackSmoke": "PASS",
+    "cargoAvailable": false,
+    "anchorAvailable": false,
+    "solanaCliAvailable": false,
+    "suiCliAvailable": false,
+    "dockerAvailable": false,
+    "cargoBuildRun": false,
+    "anchorBuildRun": false,
+    "suiMoveBuildRun": false
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json"
+    ]
+  },
+  "sourceTreeSha256": "f0249414d7fbc213fcab58aafbfae106e6bd33cb99f6b4bb477063fc6f6b5a26"
+}

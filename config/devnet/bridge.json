@@ -1,28 +1,24 @@
 {
   "version": "1.0.0",
-  "status": "configuration-ready-deployment-evidence-required",
+  "network": "devnet",
   "solana": {
-    "network": "devnet",
-    "rpcUrl": "https://api.devnet.solana.com",
-    "canonicalMint": null,
-    "bridgeProgramId": null,
-    "bridgeVault": null,
-    "tokenVerifierProgramId": null,
-    "publicRpcAllowed": true
+    "rpc": "https://api.devnet.solana.com",
+    "pwrcTokenProgramId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+    "pwrcLockProgramId": null,
+    "programsVerified": false
   },
   "sui": {
     "network": "devnet",
-    "rpcUrl": "https://fullnode.devnet.sui.io:443",
+    "rpc": "https://fullnode.devnet.sui.io:443",
     "packageId": null,
     "coinType": null,
-    "bridgeControllerId": null
+    "bridgeControllerId": null,
+    "verified": false
   },
-  "policy": {
-    "decimals": 9,
-    "transferFeeBasisPoints": 250,
-    "maximumTransferFeeTokens": "1000000",
-    "zeroWrappedGenesis": true,
-    "authenticatedMessagesRequired": true,
-    "deploymentEvidenceRequired": true
+  "bridge": {
+    "enabled": false,
+    "serviceFeeEnabled": false,
+    "requiresFinalizedSolanaObservation": true,
+    "requiresCheckpointedSuiObservation": true
   }
 }

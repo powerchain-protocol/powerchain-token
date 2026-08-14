@@ -1,0 +1,38 @@
+{
+  "version": "1.0.0",
+  "provider": "coinbase-developer-platform",
+  "product": "sql-api",
+  "status": "public-beta",
+  "network": "solana-mainnet",
+  "endpoint": "https://api.cdp.coinbase.com/platform/v2/data/query/run",
+  "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+  "tables": {
+    "transfers": "solana.transfers",
+    "instructions": "solana.instructions"
+  },
+  "programs": {
+    "token": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "token2022": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "system": "11111111111111111111111111111111"
+  },
+  "queryPolicy": {
+    "readOnly": true,
+    "activeRowsOnly": true,
+    "activeAction": 1,
+    "defaultDays": 7,
+    "maxDays": 90,
+    "defaultLimit": 100,
+    "maxLimit": 1000,
+    "requestTimeoutMs": 10000,
+    "cacheMaxAgeMs": 15000,
+    "rawSqlFromClient": false
+  },
+  "security": {
+    "serverOnlyCredential": true,
+    "credentialEnv": "CDP_SQL_API_BEARER_TOKEN",
+    "allowClientSuppliedSql": false,
+    "validateBase58Addresses": true,
+    "boundTimeWindows": true,
+    "boundRowLimits": true
+  }
+}

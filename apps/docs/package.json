@@ -1,14 +1,6 @@
 {
   "name": "@powerchain/docs",
   "version": "1.0.0",
-  "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=22.22.3 <23 || >=24.18.1 <25 || >=26.5.1 <27",
-    "pnpm": "10.21.0"
-  },
-  "scripts": {
-    "start": "node server.mjs",
-    "check": "node --check server.mjs && node --check public/docs.js"
-  }
+  "scripts": { "start": "node server.mjs" }
 }

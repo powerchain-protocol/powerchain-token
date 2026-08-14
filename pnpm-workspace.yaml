@@ -1,28 +1,7 @@
 packages:
-  - "packages/*"
   - "apps/*"
+  - "packages/*"
 
-# PowerChain Node is provided by the host/version manager.
-# Do not use pnpm useNodeVersion/nodeVersion here: forcing a downloaded Node
-# can crash before repository checks run on older macOS libc++ runtimes.
-engineStrict: true
-
-
-
-# Security dependency overrides.
-# - bigint-buffer has no patched upstream release for CVE-2025-3194, so the
-#   dependency graph is redirected to a local pure-JS compatibility package.
-# - uuid is forced onto patched versions for CVE-2026-41907 while preserving
-#   the patched major line where possible.
-overrides:
-  "bigint-buffer": "link:packages/bigint-buffer-safe"
-  "uuid@<11.1.1": "11.1.1"
-  "uuid@12.0.0": "12.0.1"
-  "uuid@13.0.0": "13.0.1"
-
-# pnpm 10.21.0 dependency-build policy.
-# These exact packages are explicitly reviewed/approved to run install scripts.
-strictDepBuilds: true
 onlyBuiltDependencies:
   - "bufferutil@4.1.0"
   - "esbuild@0.25.12"

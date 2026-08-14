@@ -1,0 +1,57 @@
+{
+  "version": "1.0.0",
+  "apiVersion": "v1",
+  "basePath": "/api/v1",
+  "openapi": {
+    "version": "3.1.0",
+    "json": "swagger/openapi.json",
+    "yaml": "swagger/openapi.yaml",
+    "runtimeJsonEndpoint": "/api/v1/openapi.json",
+    "runtimeYamlEndpoint": "/swagger/openapi.yaml"
+  },
+  "policy": {
+    "methods": [
+      "GET"
+    ],
+    "writesExposed": false,
+    "defaultRateLimitPerMinute": 120,
+    "requestTimeoutMs": 15000,
+    "headersTimeoutMs": 10000,
+    "keepAliveTimeoutMs": 5000,
+    "maxRequestsPerSocket": 1000,
+    "errors": "stable-code-plus-request-id"
+  },
+  "groups": {
+    "system": [
+      "/api/v1",
+      "/api/v1/health",
+      "/api/v1/ready",
+      "/api/v1/version",
+      "/api/v1/openapi.json"
+    ],
+    "token": [
+      "/api/v1/token"
+    ],
+    "network": [
+      "/api/v1/network"
+    ],
+    "fees": [
+      "/api/v1/fees/quote"
+    ],
+    "bridge": [
+      "/api/v1/bridge/status",
+      "/api/v1/bridge/quote/solana-to-sui"
+    ],
+    "release": [
+      "/api/v1/release/status",
+      "/api/v1/devnet/status"
+    ],
+    "solanaData": [
+      "/api/v1/data/solana/pwrc/transfers",
+      "/api/v1/data/solana/pwrc/volume",
+      "/api/v1/data/solana/pwrc/instructions",
+      "/api/v1/data/solana/pwrc/transfer-context",
+      "/api/v1/data/solana/wallet/transfers"
+    ]
+  }
+}

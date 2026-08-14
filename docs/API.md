@@ -1,229 +1,145 @@
-# PowerChain Platform API
+# PowerChain Token API
 
 **Version:** `1.0.0`  
-**Default URL:** `http://127.0.0.1:8787`  
-**OpenAPI:** `openapi/powerchain.v1.json`
+**API:** `v1`  
+**OpenAPI:** `3.1.0`
 
-The API is the server-side control plane for canonical token information,
-Mainnet readiness, fee-aware bridge quotes and tightly gated execution.
+The API is intentionally read-only plus deterministic quote endpoints. It does
+not expose bridge mint/release, Solana program deployment, Sui publication,
+release authorization, or other monetary write operations.
 
-## Common response behavior
-
-JSON routes return:
-
-- `Cache-Control: no-store`;
-- `X-Request-Id`;
-- defensive content/security headers;
-- rate-limit headers.
-
-Request IDs are bounded safe ASCII. If a supplied request ID is invalid, the
-server generates one.
-
-## Health
-
-### `GET /api/v1/health`
-
-Process liveness.
-
-This endpoint does not assert Mainnet deployment readiness.
-
-## Readiness
-
-### `GET /api/v1/ready`
-
-Returns source/runtime readiness plus build/evidence/authorization state.
-
-A code-ready repository may return HTTP 200 while `readyForMainnet` is false.
-Those are different concepts.
-
-## Version
-
-### `GET /api/v1/version`
-
-Returns API and repository version.
-
-## Token profile
-
-### `GET /api/v1/token`
-
-Returns the canonical PWRC profile, including:
+## Discovery and Swagger
 
 ```text
-mint      PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
-decimals  9
-fee       250 bps
-fee cap   1000000 PWRC
+GET /api/v1
+GET /api/v1/openapi.json
+GET /api/v1/openapi.yaml
+GET /swagger
+GET /swagger/openapi.yaml
+GET /swagger/swagger.yaml
+GET /swagger.yaml
 ```
 
-## Metrics
+`/api/v1` is the machine-readable route index. `/swagger` is the lightweight
+human-readable endpoint explorer.
 
-### `GET /api/v1/metrics`
+Canonical specifications are stored in:
 
-Returns bounded process-local counters and uptime.
+```text
+swagger/openapi.json
+swagger/openapi.yaml
+swagger/swagger.yaml
+swagger.yaml
+```
 
-Metrics intentionally exclude private keys, credentials, wallet material and
-request bodies.
+## System
 
-## Mainnet status
+```text
+GET /api/v1/health
+GET /api/v1/ready
+GET /api/v1/version
+GET /api/v1/status
+GET /api/v1/platform
+```
 
-### `GET /api/v1/mainnet/status`
+`health` is liveness. `ready` describes runtime readiness and does not imply
+that Mainnet deployment is authorized. `/api/v1/status` aggregates runtime,
+bridge, Devnet and Mainnet state.
 
-Runs/reads the fail-closed Mainnet release status.
+## Token and network
 
-Ordinary reads use a short status cache. Monetary execution requests a fresh
-status.
+```text
+GET /api/v1/token
+GET /api/v1/network
+```
 
-## Bridge capabilities
+The canonical PWRC mint is:
 
-### `GET /api/v1/bridge/capabilities`
+```text
+PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
+```
 
-Reports quote availability, executor configuration and whether execution is
-currently possible.
+## Fees
 
-`execute: false` is expected until all Mainnet and executor gates pass.
+```text
+GET /api/v1/fees/policy
 
-## Bridge quote
+GET /api/v1/fees/quote
+  ?amountBaseUnits=<integer>
+  &operation=<operation>
+```
 
-### `POST /api/v1/bridge/quote`
+The policy endpoint separates PWRC's native Token-2022 transfer fee from the
+optional PowerChain operation-level service fee.
 
-Request:
+## Bridge
+
+```text
+GET /api/v1/bridge/status
+
+GET /api/v1/bridge/quote/solana-to-sui
+  ?amountBaseUnits=<integer>
+```
+
+Bridge quote responses keep canonical locked backing and wPWRC mint base units
+equal. No bridge write endpoint is exposed.
+
+## Release status
+
+```text
+GET /api/v1/devnet/status
+GET /api/v1/release/status
+```
+
+Mainnet states are:
+
+```text
+SOURCE_READY
+BUILD_READY
+EVIDENCE_READY
+AUTHORIZED
+CONSUMED
+```
+
+Only the existing release workflow can advance these states.
+
+## Coinbase CDP indexed Solana data
+
+```text
+GET /api/v1/data/solana/pwrc/transfers
+GET /api/v1/data/solana/pwrc/volume
+GET /api/v1/data/solana/pwrc/instructions
+GET /api/v1/data/solana/pwrc/transfer-context
+GET /api/v1/data/solana/wallet/transfers
+```
+
+These are analytics/read endpoints backed by fixed server-side SQL templates.
+Raw SQL is not accepted from clients.
+
+## Error envelope
+
+API errors use:
 
 ```json
 {
-  "direction": "solana-to-sui",
-  "amountBaseUnits": "1000000000"
+  "error": "PWRC_ERROR_CODE",
+  "errorCode": "PWRC_ERROR_CODE",
+  "requestId": "..."
 }
 ```
 
-Directions:
+Responses include `x-request-id`, rate-limit headers and conservative security
+headers.
 
-```text
-solana-to-sui
-sui-to-solana
+## Contract drift
+
+Run:
+
+```bash
+pnpm openapi:check
+pnpm api:endpoints:check
 ```
 
-The amount is an integer string in base units. Zero and negative values are
-rejected.
-
-The server computes:
-
-```text
-fee = min(ceil(gross × 250 / 10000), 1_000_000 PWRC)
-```
-
-Example for `1,000,000,000` base units:
-
-```text
-gross  1,000,000,000
-fee       25,000,000
-net      975,000,000
-```
-
-The response includes a 64-character deterministic SHA-256 quote fingerprint.
-
-## Bridge execute
-
-### `POST /api/v1/bridge/execute`
-
-This is a server-to-server endpoint.
-
-Required headers:
-
-```text
-Authorization: Bearer <PWRC_BRIDGE_API_AUTH_TOKEN>
-Idempotency-Key: <safe unique operation key>
-Content-Type: application/json
-```
-
-Required body fields include:
-
-```json
-{
-  "direction": "solana-to-sui",
-  "amountBaseUnits": "1000000000",
-  "destinationAddress": "0x...",
-  "quoteFingerprint": "<64 hex>"
-}
-```
-
-Execution requires all of:
-
-1. Mainnet release status is ready;
-2. execution adapter is explicitly enabled;
-3. inbound bearer token is configured and valid;
-4. idempotency key is valid;
-5. quote is recomputed and fingerprint matches;
-6. destination address is valid for the destination chain;
-7. external executor URL/key are configured.
-
-### Destination validation
-
-Solana → Sui:
-
-```text
-0x + 64 hexadecimal characters
-```
-
-Sui → Solana:
-
-```text
-base58 address decoding to 32 bytes
-```
-
-### Idempotency
-
-Before the external executor is contacted, the request is canonicalized and
-hashed. The key is atomically reserved.
-
-Reuse behavior:
-
-| Existing state | Same request | Result |
-|---|---|---|
-| none | yes | reserve and execute |
-| reserved/ambiguous | yes | reconciliation required |
-| succeeded | yes | stored success may be replayed |
-| failed | yes | conflict/previous failure |
-| any | different request | idempotency conflict |
-
-### Ambiguous outcomes
-
-The API treats these as ambiguous:
-
-- executor timeout;
-- transport/network failure;
-- executor 5xx.
-
-It does not blindly retry because the executor may have received the monetary
-operation.
-
-## Execution status
-
-### `GET /api/v1/bridge/executions/{idempotencyKey}`
-
-Authenticated server-to-server reconciliation/status lookup.
-
-## Status codes
-
-Common codes:
-
-```text
-200  successful read / replayed terminal success
-202  execution accepted/completed by configured executor
-400  invalid request
-401  execution authentication failure
-404  route or execution record not found
-405  known route with wrong method
-409  quote/idempotency/reconciliation conflict
-413  request body too large
-415  JSON content type required
-429  rate limit exceeded
-502  ambiguous upstream/network executor failure
-503  execution/Mainnet/auth configuration not ready
-504  ambiguous executor timeout
-```
-
-## CORS
-
-CORS is opt-in through `PWRC_API_ALLOWED_ORIGIN`. Monetary execution headers are
-not enabled by the default browser CORS path. The browser app should use the
-same-origin web proxy.
+The OpenAPI checker compares every registered API route, method, tag and
+`operationId` against `swagger/openapi.json`. Adding a runtime route without
+updating Swagger fails production validation.

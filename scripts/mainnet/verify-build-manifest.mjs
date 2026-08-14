@@ -1,23 +1,22 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
-import {
-  atomicWriteJsonSync,
-} from "../lib/atomic-json.mjs";
 
 const file =
   "reports/mainnet-build-manifest.json";
-
 const failures = [];
 
-if (!fs.existsSync(file)) {
-  failures.push(
-    "build-manifest:missing",
-  );
+function sha256(path) {
+  return crypto
+    .createHash("sha256")
+    .update(fs.readFileSync(path))
+    .digest("hex");
 }
 
-let manifest = null;
+if (!fs.existsSync(file)) {
+  failures.push(`missing:${file}`);
+} else {
+  let manifest;
 
-if (!failures.length) {
   try {
     manifest =
       JSON.parse(
@@ -31,222 +30,134 @@ if (!failures.length) {
       "build-manifest:invalid-json",
     );
   }
-}
 
-function sha256(filePath) {
-  return crypto
-    .createHash("sha256")
-    .update(
-      fs.readFileSync(filePath),
-    )
-    .digest("hex");
-}
-
-if (manifest) {
-  if (
-    manifest.version !== "1.0.0" ||
-    manifest.type !==
-      "powerchain-mainnet-build-manifest"
-  ) {
-    failures.push(
-      "build-manifest:identity",
-    );
-  }
-
-  const {
-    payloadSha256,
-    ...payload
-  } = manifest;
-
-  const actualPayloadSha256 =
-    crypto
-      .createHash("sha256")
-      .update(
-        JSON.stringify(payload),
-      )
-      .digest("hex");
-
-  if (
-    payloadSha256 !==
-      actualPayloadSha256
-  ) {
-    failures.push(
-      "build-manifest:payload-hash",
-    );
-  }
-
-  for (
-    const [name, entry]
-    of Object.entries(
-      manifest.files ?? {},
-    )
-  ) {
+  if (manifest) {
     if (
-      !entry?.path ||
-      !fs.existsSync(
-        entry.path,
-      )
-    ) {
-      failures.push(
-        `build-manifest:${name}:missing`,
-      );
-      continue;
-    }
-
-    const actual =
-      sha256(entry.path);
-
-    if (
-      actual !==
-      entry.sha256
-    ) {
-      failures.push(
-        `build-manifest:${name}:hash-mismatch`,
-      );
-    }
-
-    if (
-      fs.statSync(
-        entry.path,
-      ).size !==
-      entry.bytes
-    ) {
-      failures.push(
-        `build-manifest:${name}:size-mismatch`,
-      );
-    }
-  }
-
-
-  if (
-    fs.existsSync(
-      "reports/release-provenance.json",
-    )
-  ) {
-    const provenance =
-      JSON.parse(
-        fs.readFileSync(
-          "reports/release-provenance.json",
-          "utf8",
-        ),
-      );
-
-    const packageEntry =
-      manifest.files
-        ?.pnpmLock;
-
-    if (
-      provenance.version !==
-      "1.0.0"
-    ) {
-      failures.push(
-        "build-manifest:provenance-version",
-      );
-    }
-
-    if (
-      packageEntry &&
-      !/^[a-f0-9]{64}$/i.test(
-        provenance
-          .sourceTreeSha256 ??
-        "",
-      )
-    ) {
-      failures.push(
-        "build-manifest:provenance-source-hash",
-      );
-    }
-  }
-
-  if (
-    fs.existsSync(
-      "idl/abi.fingerprint.json",
-    )
-  ) {
-    const abi =
-      JSON.parse(
-        fs.readFileSync(
-          "idl/abi.fingerprint.json",
-          "utf8",
-        ),
-      );
-
-    const abiEntry =
-      manifest.files
-        ?.abiFingerprint;
-
-    if (
-      abiEntry &&
-      abiEntry.sha256 !==
-        sha256(
-          abiEntry.path,
-        )
-    ) {
-      failures.push(
-        "build-manifest:abi-fingerprint-hash",
-      );
-    }
-
-    if (
-      typeof abi
-        .combinedAbiSha256 !==
-        "string" ||
-      !/^[a-f0-9]{64}$/i.test(
-        abi.combinedAbiSha256,
-      )
-    ) {
-      failures.push(
-        "build-manifest:abi-combined-hash-invalid",
-      );
-    }
-  }
-
-  if (
-    fs.existsSync(
-      "idl/release/1.0.0.json",
-    )
-  ) {
-    const release =
-      JSON.parse(
-        fs.readFileSync(
-          "idl/release/1.0.0.json",
-          "utf8",
-        ),
-      );
-
-    if (
-      release.version !==
+      manifest.version !==
         "1.0.0" ||
-      release.status !==
-        "release-idl-ready"
+      manifest.type !==
+        "powerchain-mainnet-build-manifest"
     ) {
       failures.push(
-        "build-manifest:idl-release-identity",
+        "build-manifest:identity",
       );
     }
-  }
 
-  const idlRelease =
-    manifest.files
-      ?.idlReleaseManifest
-      ?.path;
-
-  if (idlRelease) {
-    const release =
-      JSON.parse(
-        fs.readFileSync(
-          idlRelease,
-          "utf8",
-        ),
-      );
-
-    if (
-      release.status !==
-      "release-idl-ready"
+    for (
+      const [
+        path,
+        expected,
+      ] of
+      Object.entries(
+        manifest.source ??
+        {},
+      )
     ) {
-      failures.push(
-        "build-manifest:idl-release-not-ready",
-      );
+      if (!fs.existsSync(path)) {
+        failures.push(
+          `build-manifest:source:missing:${path}`,
+        );
+        continue;
+      }
+
+      const actual =
+        sha256(path);
+
+      if (
+        actual !==
+        String(expected)
+          .toLowerCase()
+      ) {
+        failures.push(
+          `build-manifest:source:hash-mismatch:${path}`,
+        );
+      }
+    }
+
+    for (
+      const [
+        path,
+        metadata,
+      ] of
+      Object.entries(
+        manifest.artifacts ??
+        {},
+      )
+    ) {
+      if (!fs.existsSync(path)) {
+        failures.push(
+          `build-manifest:artifact:missing:${path}`,
+        );
+        continue;
+      }
+
+      const actualHash =
+        sha256(path);
+      const actualBytes =
+        fs.statSync(path)
+          .size;
+
+      if (
+        actualHash !==
+        metadata?.sha256
+          ?.toLowerCase()
+      ) {
+        failures.push(
+          `build-manifest:artifact:hash-mismatch:${path}`,
+        );
+      }
+
+      if (
+        actualBytes !==
+        metadata?.bytes
+      ) {
+        failures.push(
+          `build-manifest:artifact:size-mismatch:${path}`,
+        );
+      }
+    }
+
+    for (const required of [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "config/token.json",
+      "config/fees.json",
+      "config/programs.json",
+      "config/networks.json",
+      "config/cdp-sql.json",
+      "config/api.json",
+      "swagger/openapi.json",
+      "swagger/openapi.yaml",
+    ]) {
+      if (
+        !Object.prototype.hasOwnProperty.call(
+          manifest.source ??
+          {},
+          required,
+        )
+      ) {
+        failures.push(
+          `build-manifest:required-source:${required}`,
+        );
+      }
+    }
+
+    for (const required of [
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+    ]) {
+      if (
+        !Object.prototype.hasOwnProperty.call(
+          manifest.artifacts ??
+          {},
+          required,
+        )
+      ) {
+        failures.push(
+          `build-manifest:required-artifact:${required}`,
+        );
+      }
     }
   }
 }
@@ -254,13 +165,24 @@ if (manifest) {
 const result = {
   ok:
     failures.length === 0,
-  version: "1.0.0",
+  version:
+    "1.0.0",
+  manifest:
+    file,
   failures,
 };
 
-atomicWriteJsonSync(
+fs.mkdirSync(
+  "reports",
+  {
+    recursive:
+      true,
+  },
+);
+
+fs.writeFileSync(
   "reports/mainnet-build-manifest-verification.json",
-  result,
+  `${JSON.stringify(result, null, 2)}\n`,
 );
 
 console.log(

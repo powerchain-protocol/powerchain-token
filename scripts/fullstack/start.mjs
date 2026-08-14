@@ -1,75 +1,95 @@
-import { spawn } from "node:child_process";
 import {
-  allocateFreePort,
-  canListen,
-  parsePort,
-  portOwner,
-} from "./ports.mjs";
+  spawn,
+} from "node:child_process";
+import net from "node:net";
 
-const args =
-  new Set(
-    process.argv.slice(2),
+const strict =
+  process.argv.includes(
+    "--strict-ports",
   );
 
-const autoPorts =
-  args.has(
-    "--auto-ports",
-  ) ||
-  process.env
-    .PWRC_FULLSTACK_AUTO_PORTS ===
-    "true";
-
-const apiHost =
-  process.env.PWRC_API_HOST ??
+const host =
   "127.0.0.1";
 
-const clientHost =
-  process.env.PWRC_CLIENT_HOST ??
-  "127.0.0.1";
+async function portFree(
+  port,
+) {
+  return await new Promise(
+    (resolve) => {
+      const socket =
+        net.createServer();
 
-let apiPort =
-  parsePort(
-    process.env.PWRC_API_PORT,
-    8787,
+      socket.once(
+        "error",
+        () =>
+          resolve(false),
+      );
+
+      socket.listen(
+        port,
+        host,
+        () =>
+          socket.close(
+            () =>
+              resolve(true),
+          ),
+      );
+    },
   );
+}
 
-let clientPort =
-  parsePort(
-    process.env.PWRC_CLIENT_PORT,
-    3000,
-  );
+async function choosePort(
+  preferred,
+) {
+  if (
+    await portFree(
+      preferred,
+    )
+  ) {
+    return preferred;
+  }
 
-const children =
-  new Map();
+  if (strict) {
+    throw new Error(
+      `PWRC_FULLSTACK_PORT_IN_USE:${preferred}`,
+    );
+  }
 
-let shuttingDown =
-  false;
+  for (
+    let port =
+      preferred + 1;
+    port <
+      preferred + 200;
+    port += 1
+  ) {
+    if (
+      await portFree(
+        port,
+      )
+    ) {
+      return port;
+    }
+  }
 
-function delay(ms) {
-  return new Promise(
-    (resolve) =>
-      setTimeout(resolve, ms),
+  throw new Error(
+    "PWRC_FULLSTACK_NO_FREE_PORT",
   );
 }
 
 async function waitForHttp(
   url,
-  child,
-  name,
+  timeoutMs,
 ) {
-  for (
-    let attempt = 0;
-    attempt < 80;
-    attempt += 1
-  ) {
-    if (
-      child.exitCode !== null
-    ) {
-      throw new Error(
-        `PWRC_FULLSTACK_CHILD_EXIT:${name}:${child.exitCode}`,
-      );
-    }
+  const deadline =
+    Date.now() +
+    timeoutMs;
 
+  let lastError;
+
+  while (
+    Date.now() <
+    deadline
+  ) {
     try {
       const response =
         await fetch(
@@ -85,368 +105,213 @@ async function waitForHttp(
       if (response.ok) {
         return;
       }
-    } catch {}
 
-    await delay(100);
+      lastError =
+        new Error(
+          `HTTP_${response.status}`,
+        );
+    } catch (error) {
+      lastError = error;
+    }
+
+    await new Promise(
+      (resolve) =>
+        setTimeout(
+          resolve,
+          100,
+        ),
+    );
   }
 
   throw new Error(
-    `PWRC_FULLSTACK_START_TIMEOUT:${name}:${url}`,
+    `PWRC_FULLSTACK_HEALTH_TIMEOUT:${url}:${lastError instanceof Error ? lastError.message : "unknown"}`,
   );
 }
 
-function startChild(
-  name,
+const apiPort =
+  await choosePort(
+    Number(
+      process.env[
+        "PWRC_API_PORT"
+      ] ??
+        8787,
+    ),
+  );
+
+const clientPort =
+  await choosePort(
+    Number(
+      process.env[
+        "PWRC_CLIENT_PORT"
+      ] ??
+        3000,
+    ),
+  );
+
+const children =
+  [];
+let shuttingDown =
+  false;
+
+function spawnNode(
   script,
   env,
 ) {
   const child =
     spawn(
       process.execPath,
-      [script],
+      [
+        script,
+      ],
       {
-        cwd:
-          process.cwd(),
+        stdio:
+          "inherit",
         env: {
           ...process.env,
           ...env,
         },
-        stdio:
-          "inherit",
       },
     );
 
-  children.set(name, child);
-
-  child.once(
-    "exit",
-    (code, signal) => {
-      children.delete(name);
-
-      if (
-        !shuttingDown &&
-        (
-          code !== 0 ||
-          signal
-        )
-      ) {
-        console.error(
-          `PWRC_FULLSTACK_CHILD_EXIT:${name}:${code ?? "signal"}:${signal ?? ""}`,
-        );
-
-        void shutdown(
-          "child-exit",
-          1,
-        );
-      }
-    },
+  children.push(
+    child,
   );
 
   return child;
 }
 
-async function shutdown(
-  reason,
-  exitCode = 0,
-) {
-  if (shuttingDown) {
-    return;
-  }
+const api =
+  spawnNode(
+    "apps/api/server.mjs",
+    {
+      PWRC_API_PORT:
+        String(apiPort),
+    },
+  );
 
-  shuttingDown = true;
-
-  for (
-    const child of
-    children.values()
-  ) {
+api.once(
+  "exit",
+  (code) => {
     if (
-      child.exitCode === null
+      code !== null &&
+      code !== 0
     ) {
-      child.kill("SIGTERM");
-    }
-  }
-
-  const deadline =
-    Date.now() + 5_000;
-
-  while (
-    children.size > 0 &&
-    Date.now() < deadline
-  ) {
-    await delay(50);
-  }
-
-  for (
-    const child of
-    children.values()
-  ) {
-    if (
-      child.exitCode === null
-    ) {
-      child.kill("SIGKILL");
-    }
-  }
-
-  if (
-    reason !== "normal"
-  ) {
-    console.error(
-      `PWRC_FULLSTACK_SHUTDOWN:${reason}`,
-    );
-  }
-
-  process.exit(exitCode);
-}
-
-async function resolvePort({
-  name,
-  host,
-  requested,
-}) {
-  if (
-    await canListen(
-      host,
-      requested,
-    )
-  ) {
-    return requested;
-  }
-
-  const owner =
-    portOwner(
-      host,
-      requested,
-    );
-
-  if (!autoPorts) {
-    console.error(
-      `PWRC_FULLSTACK_PORT_IN_USE:${name}:${host}:${requested}`,
-    );
-
-    if (owner) {
-      console.error(
-        "Listening process:",
+      process.stderr.write(
+        `PWRC_FULLSTACK_CHILD_EXIT:api:${code}\n`,
       );
-      console.error(owner);
     }
-
-    console.error("");
-    console.error(
-      "Stop the existing process, choose another port, or use:",
-    );
-    console.error(
-      "  pnpm fullstack:start:auto",
-    );
-
-    throw new Error(
-      `PWRC_FULLSTACK_PORT_IN_USE:${name}:${requested}`,
-    );
-  }
-
-  const fallback =
-    await allocateFreePort(host);
-
-  console.warn(
-    `PWRC_FULLSTACK_PORT_FALLBACK:${name}:${requested}->${fallback}`,
-  );
-
-  return fallback;
-}
-
-async function main() {
-  apiPort =
-    await resolvePort({
-      name:
-        "api",
-      host:
-        apiHost,
-      requested:
-        apiPort,
-    });
-
-  clientPort =
-    await resolvePort({
-      name:
-        "client",
-      host:
-        clientHost,
-      requested:
-        clientPort,
-    });
-
-  if (
-    apiHost === clientHost &&
-    apiPort === clientPort
-  ) {
-    throw new Error(
-      "PWRC_FULLSTACK_PORT_COLLISION",
-    );
-  }
-
-  const apiUrl =
-    `http://${apiHost}:${apiPort}`;
-
-  const api =
-    startChild(
-      "api",
-      "apps/api/server.mjs",
-      {
-        PWRC_API_HOST:
-          apiHost,
-        PWRC_API_PORT:
-          String(apiPort),
-      },
-    );
-
-  try {
-    await waitForHttp(
-      `${apiUrl}/api/v1/health`,
-      api,
-      "api",
-    );
-  } catch (error) {
-    console.error(
-      error instanceof Error
-        ? error.message
-        : String(error),
-    );
-    await shutdown(
-      "api-start-failed",
-      1,
-    );
-    return;
-  }
-
-  const clientUrl =
-    `http://${clientHost}:${clientPort}`;
-
-  const client =
-    startChild(
-      "client",
-      "apps/client/server.mjs",
-      {
-        PWRC_CLIENT_HOST:
-          clientHost,
-        PWRC_CLIENT_PORT:
-          String(clientPort),
-        PWRC_CLIENT_API_URL:
-          apiUrl,
-      },
-    );
-
-  try {
-    await waitForHttp(
-      `${clientUrl}/`,
-      client,
-      "client",
-    );
-  } catch (error) {
-    console.error(
-      error instanceof Error
-        ? error.message
-        : String(error),
-    );
-    await shutdown(
-      "client-start-failed",
-      1,
-    );
-    return;
-  }
-
-  console.log(
-    JSON.stringify(
-      {
-        ok:
-          true,
-        version:
-          "1.0.0",
-        fullstack:
-          "started",
-        autoPorts,
-        api: {
-          host:
-            apiHost,
-          port:
-            apiPort,
-          url:
-            apiUrl,
-        },
-        client: {
-          host:
-            clientHost,
-          port:
-            clientPort,
-          url:
-            clientUrl,
-          apiTarget:
-            apiUrl,
-        },
-      },
-      null,
-      2,
-    ),
-  );
-}
-
-process.on(
-  "SIGINT",
-  () => {
-    void shutdown(
-      "SIGINT",
-      0,
-    );
-  },
-);
-
-process.on(
-  "SIGTERM",
-  () => {
-    void shutdown(
-      "SIGTERM",
-      0,
-    );
-  },
-);
-
-process.on(
-  "uncaughtException",
-  (error) => {
-    console.error(
-      "PWRC_FULLSTACK_UNCAUGHT_EXCEPTION",
-      error,
-    );
-    void shutdown(
-      "uncaught-exception",
-      1,
-    );
-  },
-);
-
-process.on(
-  "unhandledRejection",
-  (error) => {
-    console.error(
-      "PWRC_FULLSTACK_UNHANDLED_REJECTION",
-      error,
-    );
-    void shutdown(
-      "unhandled-rejection",
-      1,
-    );
   },
 );
 
 try {
-  await main();
+  await waitForHttp(
+    `http://${host}:${apiPort}/api/v1/health`,
+    8_000,
+  );
 } catch (error) {
-  console.error(
-    error instanceof Error
-      ? error.message
-      : String(error),
+  api.kill(
+    "SIGTERM",
+  );
+  throw error;
+}
+
+const client =
+  spawnNode(
+    "apps/client/server.mjs",
+    {
+      PWRC_CLIENT_PORT:
+        String(clientPort),
+      PWRC_CLIENT_API_URL:
+        `http://${host}:${apiPort}`,
+    },
   );
 
-  await shutdown(
-    "startup-failed",
-    1,
+try {
+  await waitForHttp(
+    `http://${host}:${clientPort}/`,
+    8_000,
+  );
+} catch (error) {
+  for (const child of children) {
+    child.kill(
+      "SIGTERM",
+    );
+  }
+  throw error;
+}
+
+process.stderr.write(
+  `PWRC_FULLSTACK_READY:api=http://${host}:${apiPort}:client=http://${host}:${clientPort}\n`,
+);
+
+for (const [name, child] of [
+  ["api", api],
+  ["client", client],
+]) {
+  child.on(
+    "exit",
+    (code, signal) => {
+      if (
+        !shuttingDown &&
+        (code !== 0 || signal)
+      ) {
+        process.stderr.write(
+          `PWRC_FULLSTACK_CHILD_EXIT:${name}:code=${code}:signal=${signal}\n`,
+        );
+        shutdown(
+          `child-exit:${name}`,
+        );
+      }
+    },
   );
 }
+
+function shutdown(
+  signal,
+) {
+  if (shuttingDown) return;
+  shuttingDown = true;
+
+  process.stderr.write(
+    `PWRC_FULLSTACK_SHUTDOWN:${signal}\n`,
+  );
+
+  for (const child of children) {
+    if (
+      child.exitCode ===
+        null
+    ) {
+      child.kill(
+        "SIGTERM",
+      );
+    }
+  }
+
+  setTimeout(
+    () => {
+      for (const child of children) {
+        if (
+          child.exitCode ===
+            null
+        ) {
+          child.kill(
+            "SIGKILL",
+          );
+        }
+      }
+      process.exit(0);
+    },
+    5_000,
+  ).unref();
+}
+
+process.on(
+  "SIGINT",
+  () =>
+    shutdown("SIGINT"),
+);
+process.on(
+  "SIGTERM",
+  () =>
+    shutdown("SIGTERM"),
+);

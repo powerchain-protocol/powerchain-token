@@ -1,66 +1,29 @@
 {
   "version": "1.0.0",
-  "status": "blocked-until-deployment-evidence",
+  "network": "mainnet",
+  "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
   "solana": {
-    "network": "mainnet-beta",
-    "rpcUrl": null,
-    "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
-    "bridgeProgramId": null,
-    "bridgeVault": null,
-    "mintVerified": false,
-    "programVerified": false,
-    "vaultVerified": false,
-    "mintAuthorityRevoked": false,
-    "freezeAuthorityNull": false,
-    "bridgeVerifierVerified": false,
-    "mintProvided": true,
-    "transferFeeConfigVerified": false,
-    "transferFeeBasisPoints": 250,
-    "maximumTransferFeeTokens": "1000000",
-    "maximumTransferFeeBaseUnits": "1000000000000000",
-    "transferFeeConfigAuthorityVerified": false,
-    "withdrawWithheldAuthorityVerified": false
+    "rpc": null,
+    "secondaryRpc": null,
+    "pwrcTokenSourceProgramId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+    "pwrcTokenProgramId": null,
+    "pwrcLockProgramId": null,
+    "programsVerified": false
   },
   "sui": {
-    "network": "mainnet",
-    "rpcUrl": "https://fullnode.mainnet.sui.io:443",
+    "rpc": null,
+    "secondaryRpc": null,
     "packageId": null,
     "coinType": null,
-    "currencyObjectId": null,
     "bridgeControllerId": null,
-    "packageVerified": false,
-    "currencyVerified": false,
-    "controllerVerified": false,
-    "genesisWrappedSupplyBaseUnits": "0",
-    "decimals": 9,
-    "treasuryCapEncapsulated": true,
-    "bridgeAuthorityVerified": false,
-    "moveLockSha256": null,
-    "suiCliVersion": null
+    "metadataCapabilityId": null,
+    "verified": false
   },
-  "governance": {
-    "operator": null,
-    "governor": null,
-    "operatorGovernorSeparated": false,
-    "bridgeAuthorityCustody": "unconfigured"
-  },
-  "policy": {
-    "canonicalDecimals": 9,
-    "wrappedDecimals": 9,
-    "ratio": "1:1",
-    "baseUnitFactor": "1",
-    "wrappedMintPolicy": "bridge-only",
-    "authenticatedBridgeMessagesRequired": true,
-    "solanaTransferFeeAwareBridge": true,
-    "solanaToSuiWrappedAmount": "gross-transfer-minus-token2022-transfer-fee",
-    "suiToSolanaReleaseAmount": "wrapped-burn-equals-gross-canonical-release"
-  },
-  "abi": {
-    "version": "1.0.0",
-    "combinedSha256": "5ec0f3f78c6c009c03e1e25e879c0d5abbb76c8b341352814ac6dd27cc83fbe5",
-    "releaseManifestPath": "idl/release/1.0.0.json",
-    "generatedAnchorIdlRequired": true,
-    "suiNormalizedModulesRequired": true,
-    "generatedTokenVerifierIdlRequired": true
+  "bridge": {
+    "enabled": false,
+    "serviceFeeEnabled": false,
+    "finalizedOnly": true,
+    "independentRpcVerification": true,
+    "reconciliationRequiredForAmbiguousWrites": true
   }
 }

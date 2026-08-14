@@ -1,21 +1,34 @@
 {
   "version": "1.0.0",
-  "asset": "PWRC",
-  "decimals": 9,
-  "protocolFee": {
-    "enabled": false,
-    "basisPoints": 0,
-    "collectionMode": "none",
-    "note": "No additional custom protocol-router fee is charged. The canonical fee is the Token-2022 TransferFeeConfig extension."
-  },
-  "token2022TransferFeeExtension": {
-    "status": "required-enabled",
+  "nativeToken2022Fee": {
     "basisPoints": 250,
-    "percentage": "2.5%",
     "maximumFeeTokens": "1000000",
-    "maximumFeeBaseUnits": "1000000000000000",
-    "rounding": "ceil-before-cap",
-    "withheldAtDestination": true,
-    "authorityEvidenceRequired": true
+    "maximumFeeBaseUnits": "1000000000000000"
+  },
+  "serviceFee": {
+    "basisPoints": 250,
+    "enabledByDefault": false,
+    "asset": "PWRC",
+    "recipient": null,
+    "operations": [
+      "bridge-solana-to-sui",
+      "bridge-sui-to-solana"
+    ],
+    "excludedOperations": [
+      "wallet-transfer",
+      "read-only",
+      "quote-preview",
+      "signature-only"
+    ]
+  },
+  "networkFee": {
+    "separate": true
+  },
+  "accounting": {
+    "integerBaseUnitsOnly": true,
+    "rounding": "ceil",
+    "serviceFeeSeparateFromPrincipal": true,
+    "serviceFeeDoesNotReduceBridgeBacking": true,
+    "grossUpPwrcServiceFeeTransfer": true
   }
 }

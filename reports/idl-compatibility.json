@@ -1,8 +1,0 @@
-{
-  "ok": true,
-  "version": "1.0.0",
-  "baseline": "idl/baseline/1.0.0.json",
-  "breaking": [],
-  "additive": [],
-  "failures": []
-}

@@ -1,16 +1,19 @@
-import { PWRC_MAX_BASE_UNITS, PWRC_SCALE } from "./constants.js";
+import { PWRC_SCALE } from "./constants.js";
 
-export function toBaseUnits(wholeTokens: bigint): bigint {
-  const raw = wholeTokens * PWRC_SCALE;
-  if (raw < 0n || raw > PWRC_MAX_BASE_UNITS) {
-    throw new Error("PWRC_AMOUNT_OUT_OF_RANGE");
-  }
-  return raw;
+export function parsePwrcAmount(value: string): bigint {
+  const match = /^([0-9]+)(?:\.([0-9]{0,9}))?$/.exec(value.trim());
+  if (!match) throw new Error("PWRC_AMOUNT_INVALID");
+  const whole = BigInt(match[1] ?? "0");
+  const fraction = (match[2] ?? "").padEnd(9, "0");
+  return whole * PWRC_SCALE + BigInt(fraction || "0");
 }
 
-export function formatBaseUnits(raw: bigint): string {
-  if (raw < 0n) throw new Error("PWRC_NEGATIVE_AMOUNT");
-  const whole = raw / PWRC_SCALE;
-  const fractional = (raw % PWRC_SCALE).toString().padStart(9, "0");
-  return `${whole}.${fractional}`;
+export function formatPwrcAmount(baseUnits: bigint): string {
+  if (baseUnits < 0n) throw new Error("PWRC_AMOUNT_NEGATIVE");
+  const whole = baseUnits / PWRC_SCALE;
+  const fraction = (baseUnits % PWRC_SCALE)
+    .toString()
+    .padStart(9, "0")
+    .replace(/0+$/, "");
+  return fraction ? `${whole}.${fraction}` : whole.toString();
 }

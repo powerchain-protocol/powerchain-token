@@ -1,0 +1,11 @@
+import fs from "node:fs";
+const fees=JSON.parse(fs.readFileSync("config/fees.json","utf8"));
+const failures=[];
+if(fees.nativeToken2022Fee?.basisPoints!==250)failures.push("native-bps");
+if(fees.nativeToken2022Fee?.maximumFeeTokens!=="1000000")failures.push("native-cap");
+if(fees.serviceFee?.basisPoints!==250)failures.push("service-bps");
+if(fees.serviceFee?.enabledByDefault!==false)failures.push("service-default");
+if(!fees.serviceFee?.excludedOperations?.includes("wallet-transfer"))failures.push("wallet-transfer-exclusion");
+if(fees.accounting?.serviceFeeDoesNotReduceBridgeBacking!==true)failures.push("backing-separation");
+console.log(JSON.stringify({ok:!failures.length,version:"1.0.0",failures},null,2));
+if(failures.length)process.exit(1);

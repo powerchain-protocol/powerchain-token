@@ -1,146 +1,149 @@
-export class FixedWindowRateLimiter {
-  #entries =
-    new Map();
-
-  constructor({
-    limit,
-    windowMs,
-    maxEntries = 10_000,
-  }) {
-    if (
-      !Number.isSafeInteger(limit) ||
-      limit < 1 ||
-      !Number.isSafeInteger(windowMs) ||
-      windowMs < 1 ||
-      !Number.isSafeInteger(maxEntries) ||
-      maxEntries < 1
-    ) {
-      throw new Error(
-        "PWRC_RATE_LIMIT_CONFIG_INVALID",
-      );
-    }
-
-    this.limit =
-      limit;
-    this.windowMs =
-      windowMs;
-    this.maxEntries =
-      maxEntries;
+export function createFixedWindowRateLimiter({
+  limit = 120,
+  windowMs = 60_000,
+  maxBuckets = 10_000,
+} = {}) {
+  if (
+    !Number.isSafeInteger(limit) ||
+    limit < 1 ||
+    !Number.isSafeInteger(windowMs) ||
+    windowMs < 1_000 ||
+    !Number.isSafeInteger(maxBuckets) ||
+    maxBuckets < 100
+  ) {
+    throw new Error(
+      "PWRC_RATE_LIMIT_POLICY_INVALID",
+    );
   }
 
-  consume(
+  const buckets =
+    new Map();
+
+  function prune(now) {
+    for (
+      const [
+        key,
+        bucket,
+      ] of buckets
+    ) {
+      if (
+        now >=
+        bucket.resetAt
+      ) {
+        buckets.delete(
+          key,
+        );
+      }
+    }
+
+    if (
+      buckets.size >
+      maxBuckets
+    ) {
+      const overflow =
+        buckets.size -
+        maxBuckets;
+
+      let removed =
+        0;
+
+      for (
+        const key of
+        buckets.keys()
+      ) {
+        buckets.delete(
+          key,
+        );
+        removed +=
+          1;
+
+        if (
+          removed >=
+          overflow
+        ) {
+          break;
+        }
+      }
+    }
+  }
+
+  let operations =
+    0;
+
+  return function check(
     key,
     now = Date.now(),
   ) {
-    const safeKey =
-      typeof key === "string" &&
-      key
-        ? key
-        : "unknown";
-
-    const existing =
-      this.#entries.get(
-        safeKey,
-      );
-
-    const record =
-      !existing ||
-      now >=
-        existing.resetAt
-        ? {
-            count: 0,
-            resetAt:
-              now +
-              this.windowMs,
-          }
-        : existing;
-
-    record.count += 1;
-
-    this.#entries.set(
-      safeKey,
-      record,
-    );
+    operations +=
+      1;
 
     if (
-      this.#entries.size >
-      this.maxEntries
+      operations % 256 ===
+      0
     ) {
-      this.#prune(now);
+      prune(now);
+    }
+
+    const current =
+      buckets.get(key);
+
+    if (
+      !current ||
+      now >=
+        current.resetAt
+    ) {
+      const next = {
+        count:
+          1,
+        resetAt:
+          now +
+          windowMs,
+      };
+
+      buckets.set(
+        key,
+        next,
+      );
+
+      return {
+        allowed:
+          true,
+        remaining:
+          limit -
+          1,
+        resetAt:
+          next.resetAt,
+      };
+    }
+
+    current.count +=
+      1;
+
+    if (
+      current.count >
+      limit
+    ) {
+      return {
+        allowed:
+          false,
+        remaining:
+          0,
+        resetAt:
+          current.resetAt,
+      };
     }
 
     return {
       allowed:
-        record.count <=
-        this.limit,
-      limit:
-        this.limit,
+        true,
       remaining:
         Math.max(
           0,
-          this.limit -
-            record.count,
+          limit -
+          current.count,
         ),
       resetAt:
-        record.resetAt,
+        current.resetAt,
     };
-  }
-
-  #prune(now) {
-    for (
-      const [key, value]
-      of this.#entries
-    ) {
-      if (
-        now >=
-        value.resetAt
-      ) {
-        this.#entries.delete(
-          key,
-        );
-      }
-
-      if (
-        this.#entries.size <=
-        this.maxEntries
-      ) {
-        break;
-      }
-    }
-
-    while (
-      this.#entries.size >
-      this.maxEntries
-    ) {
-      const first =
-        this.#entries
-          .keys()
-          .next()
-          .value;
-
-      if (
-        first === undefined
-      ) {
-        break;
-      }
-
-      this.#entries.delete(
-        first,
-      );
-    }
-  }
-}
-
-export function clientRateLimitKey(
-  request,
-) {
-  const address =
-    request.socket
-      ?.remoteAddress;
-
-  return typeof address ===
-      "string" &&
-    address
-      ? address
-      : "unknown";
+  };
 }

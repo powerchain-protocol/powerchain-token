@@ -1,35 +1,15 @@
 [workspace]
+resolver = "2"
 members = [
   "programs/pwrc-lock",
-  "programs/token",
+  "programs/token"
 ]
-exclude = [
-  "programs/pwrc-fees",
-]
-resolver = "2"
 
 [workspace.package]
 version = "1.0.0"
 edition = "2021"
-license = "UNLICENSED"
-publish = false
+license = "Apache-2.0"
 
 [workspace.dependencies]
-anchor-lang = "=0.32.1"
-anchor-spl = { version = "=0.32.1", features = ["token_2022", "token_2022_extensions"] }
-
-[profile.release]
-overflow-checks = true
-lto = "fat"
-codegen-units = 1
-opt-level = 3
-strip = "symbols"
-
-[profile.release.build-override]
-opt-level = 3
-incremental = false
-codegen-units = 1
-
-[profile.dev]
-overflow-checks = true
-debug = true
+anchor-lang = "=1.0.2"
+anchor-spl = { version = "=1.0.2", features = ["token_2022"] }

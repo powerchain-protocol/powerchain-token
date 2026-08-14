@@ -1,92 +1,48 @@
 {
   "version": "1.0.0",
-  "environment": "mainnet",
+  "network": "production",
   "solana": {
-    "rpcUrl": null,
     "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
-    "bridgeProgramId": null,
-    "bridgeVault": null,
-    "tokenVerifierProgramId": null,
-    "mintState": {
-      "verified": false,
-      "mintAuthorityRevoked": false,
-      "freezeAuthorityNull": false,
-      "transferFeeConfigVerified": false,
-      "transferFeeBasisPoints": 250,
-      "maximumTransferFeeTokens": "1000000",
-      "transferFeeConfigAuthority": null,
-      "withdrawWithheldAuthority": null
-    },
-    "program": {
-      "verified": false,
+    "canonicalMintVerified": false,
+    "pwrcLockProgram": {
+      "programId": null,
       "executable": false,
       "upgradeAuthority": null,
       "binarySha256": null,
       "deploymentTransaction": null,
-      "deploymentSlot": null
+      "deploymentSlot": null,
+      "primaryRpcVerified": false,
+      "secondaryRpcVerified": false
     },
-    "vault": {
-      "verified": false,
-      "owner": null,
-      "mint": null
+    "pwrcTokenProgram": {
+      "programId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+      "executable": false,
+      "upgradeAuthority": null,
+      "binarySha256": null,
+      "deploymentTransaction": null,
+      "deploymentSlot": null,
+      "primaryRpcVerified": false,
+      "secondaryRpcVerified": false,
+      "anchorVerified": false
     }
   },
   "sui": {
-    "rpcUrl": "https://fullnode.mainnet.sui.io:443",
     "packageId": null,
     "coinType": null,
-    "currencyObjectId": null,
     "bridgeControllerId": null,
-    "moveLockSha256": null,
-    "suiCliVersion": null,
-    "packageVerified": false,
-    "currencyVerified": false,
-    "controllerVerified": false,
-    "bridgeAuthority": null,
-    "bridgeAuthorityVerified": false,
-    "genesisWrappedSupplyBaseUnits": "0"
-  },
-  "governance": {
-    "operator": null,
-    "governor": null,
-    "operatorGovernorSeparated": false,
-    "custodyPolicyReviewed": false
+    "metadataCapabilityId": null,
+    "publishTransaction": null,
+    "checkpoint": null,
+    "primaryRpcVerified": false,
+    "secondaryRpcVerified": false,
+    "zeroGenesisSupplyVerified": false,
+    "nineDecimalsVerified": false
   },
   "release": {
     "sourceTreeSha256": null,
-    "provenancePayloadSha256": null,
-    "abiCombinedSha256": null,
-    "generatedPwrcLockIdlSha256": null,
-    "generatedPwrcTokenIdlSha256": null,
-    "suiNormalizedModulesSha256": null,
     "pnpmLockSha256": null,
-    "evidenceSignerPublicKeySpkiBase64": null,
-    "signedPayloadSha256": null,
-    "evidenceSignatureBase64": null,
+    "cargoLockSha256": null,
+    "moveLockSha256": null,
     "buildManifestSha256": null
-  },
-  "observations": {
-    "observedAt": null,
-    "maxObservationAgeSeconds": 3600,
-    "solana": {
-      "primaryRpcUrl": null,
-      "secondaryRpcUrl": null,
-      "primaryFinalizedSlot": null,
-      "secondaryFinalizedSlot": null,
-      "maxSlotDrift": 150,
-      "primaryStateSha256": null,
-      "secondaryStateSha256": null,
-      "stateAgreement": false
-    },
-    "sui": {
-      "primaryRpcUrl": "https://fullnode.mainnet.sui.io:443",
-      "secondaryRpcUrl": null,
-      "primaryCheckpoint": null,
-      "secondaryCheckpoint": null,
-      "maxCheckpointDrift": 20,
-      "primaryStateSha256": null,
-      "secondaryStateSha256": null,
-      "stateAgreement": false
-    }
   }
 }

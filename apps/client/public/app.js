@@ -1,233 +1,28 @@
-const API = "";
+const scale=1000000000n;
+const amount=document.querySelector("#amount");
+const operation=document.querySelector("#operation");
+const result=document.querySelector("#result");
 
-async function api(
-  path,
-  options,
-) {
-  const response =
-    await fetch(
-      `${API}${path}`,
-      {
-        ...options,
-        headers: {
-          "Content-Type":
-            "application/json",
-          ...(options?.headers ??
-            {}),
-        },
-      },
-    );
-
-  const body =
-    await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      body?.error?.code ??
-      `HTTP_${response.status}`,
-    );
-  }
-
-  return body;
+function baseUnits(value){
+  const [whole,frac=""]=value.trim().split(".");
+  if(!/^\d+$/.test(whole)||!/^\d{0,9}$/.test(frac))throw new Error("Invalid PWRC amount");
+  return BigInt(whole)*scale+BigInt(frac.padEnd(9,"0")||"0");
 }
+function display(value){return (BigInt(value)/scale).toString()+" PWRC";}
 
-function renderDl(
-  element,
-  entries,
-) {
-  element.replaceChildren();
-
-  for (
-    const [key, value]
-    of entries
-  ) {
-    const dt =
-      document.createElement(
-        "dt",
-      );
-    const dd =
-      document.createElement(
-        "dd",
-      );
-    dt.textContent = key;
-    dd.textContent =
-      String(value);
-    element.append(
-      dt,
-      dd,
-    );
-  }
-}
-
-async function load() {
-  const [
-    health,
-    token,
-    ready,
-    capabilities,
-  ] =
-    await Promise.all([
-      api(
-        "/api/v1/health",
-      ),
-      api(
-        "/api/v1/token",
-      ),
-      api(
-        "/api/v1/ready",
-      ),
-      api(
-        "/api/v1/bridge/capabilities",
-      ),
-    ]);
-
-  document
-    .querySelector(
-      "#health",
-    )
-    .textContent =
-      health.status;
-
-  renderDl(
-    document.querySelector(
-      "#token",
-    ),
-    [
-      [
-        "Mint",
-        token.token.mint,
-      ],
-      [
-        "Decimals",
-        token.token.decimals,
-      ],
-      [
-        "Supply",
-        token.token.genesisSupplyTokens,
-      ],
-      [
-        "Transfer fee",
-        `${token.token.transferFee.basisPoints} bps`,
-      ],
-      [
-        "Fee cap",
-        token.token.transferFee.maximumFeeTokens,
-      ],
-    ],
-  );
-
-  renderDl(
-    document.querySelector(
-      "#readiness",
-    ),
-    [
-      [
-        "Code",
-        ready.codeReady,
-      ],
-      [
-        "Build",
-        ready.buildReady,
-      ],
-      [
-        "Evidence",
-        ready.deploymentEvidenceReady,
-      ],
-      [
-        "Authorized",
-        ready.releaseAuthorized,
-      ],
-      [
-        "State",
-        ready.releaseState,
-      ],
-      [
-        "Mainnet",
-        ready.readyForMainnet,
-      ],
-    ],
-  );
-
-  document
-    .querySelector(
-      "#capability",
-    )
-    .textContent =
-      capabilities.execute
-        ? "Bridge execution is enabled and Mainnet gates are satisfied."
-        : "Quote-only mode. Execution remains fail-closed until Mainnet and executor gates are satisfied.";
-}
-
-document
-  .querySelector(
-    "#quote-form",
-  )
-  .addEventListener(
-    "submit",
-    async (event) => {
-      event.preventDefault();
-
-      const output =
-        document.querySelector(
-          "#quote",
-        );
-
-      try {
-        const result =
-          await api(
-            "/api/v1/bridge/quote",
-            {
-              method:
-                "POST",
-              body:
-                JSON.stringify({
-                  direction:
-                    document
-                      .querySelector(
-                        "#direction",
-                      )
-                      .value,
-                  amountBaseUnits:
-                    document
-                      .querySelector(
-                        "#amount",
-                      )
-                      .value,
-                }),
-            },
-          );
-
-        output.textContent =
-          JSON.stringify(
-            result.quote,
-            null,
-            2,
-          );
-      } catch (error) {
-        output.textContent =
-          error instanceof Error
-            ? error.message
-            : "Quote failed";
-      }
-    },
-  );
-
-load().catch(
-  (error) => {
-    document
-      .querySelector(
-        "#health",
-      )
-      .textContent =
-        "offline";
-
-    document
-      .querySelector(
-        "#capability",
-      )
-      .textContent =
-        error instanceof Error
-          ? error.message
-          : "API unavailable";
-  },
-);
+document.querySelector("#quote").addEventListener("click",async()=>{
+  try{
+    const units=baseUnits(amount.value);
+    const response=await fetch(`/api/v1/fees/quote?amountBaseUnits=${units}&operation=${encodeURIComponent(operation.value)}`);
+    const q=await response.json();
+    if(!response.ok)throw new Error(q.error??"Quote failed");
+    result.innerHTML=[
+      ["Principal",display(q.principalGrossBaseUnits)],
+      ["Native Token-2022 fee",display(q.nativeTransferFeeBaseUnits)],
+      ["Principal net",display(q.principalNetBaseUnits)],
+      ["PowerChain service fee",display(q.serviceFeeNetBaseUnits)],
+      ["Native fee on service transfer",display(q.serviceFeeTransferNativeFeeBaseUnits)],
+      ["Total PWRC debit",display(q.totalWalletPwrcDebitBaseUnits)],
+    ].map(([label,value])=>`<div class="fee"><span>${label}</span><strong>${value}</strong></div>`).join("");
+  }catch(error){result.textContent=error.message;}
+});

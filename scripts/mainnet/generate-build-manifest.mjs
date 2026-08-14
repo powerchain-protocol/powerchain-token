@@ -1,51 +1,9 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
-import {
-  atomicWriteJsonSync,
-} from "../lib/atomic-json.mjs";
 
-const required = {
-  pnpmLock:
-    "pnpm-lock.yaml",
-  moveLock:
-    "contracts/wpwrc/Move.lock",
-  pwrcLockBinary:
-    "target/deploy/pwrc_lock.so",
-  pwrcTokenBinary:
-    "target/deploy/pwrc_token.so",
-  pwrcLockIdl:
-    "idl/generated/pwrc_lock.json",
-  pwrcTokenIdl:
-    "idl/generated/pwrc_token.json",
-  suiNormalizedModules:
-    "idl/generated/wpwrc.modules.json",
-  abiFingerprint:
-    "idl/abi.fingerprint.json",
-  idlReleaseManifest:
-    "idl/release/1.0.0.json",
-};
-
-const missing =
-  Object.values(required)
-    .filter(
-      (file) =>
-        !fs.existsSync(file),
-    );
-
-if (missing.length) {
-  console.error(
-    JSON.stringify({
-      ok: false,
-      version: "1.0.0",
-      error:
-        "PWRC_BUILD_MANIFEST_INPUTS_MISSING",
-      missing,
-    }, null, 2),
-  );
-  process.exit(2);
-}
-
-function sha256(file) {
+function sha256(
+  file,
+) {
   return crypto
     .createHash("sha256")
     .update(
@@ -54,47 +12,96 @@ function sha256(file) {
     .digest("hex");
 }
 
-const files =
-  Object.fromEntries(
-    Object.entries(required)
-      .map(
-        ([key, file]) => [
-          key,
-          {
-            path: file,
-            sha256:
-              sha256(file),
-            bytes:
-              fs.statSync(file)
-                .size,
-          },
-        ],
-      ),
+const inputs = [
+  "package.json",
+  "pnpm-lock.yaml",
+  "Cargo.toml",
+  "Cargo.lock",
+  "Anchor.toml",
+  "rust-toolchain.toml",
+  "contracts/wpwrc/Move.toml",
+  "contracts/wpwrc/Move.lock",
+  "config/token.json",
+  "config/fees.json",
+  "config/programs.json",
+  "config/networks.json",
+  "config/cdp-sql.json",
+  "config/api.json",
+  "swagger/openapi.json",
+  "swagger/openapi.yaml",
+];
+
+const artifacts = [
+  "target/deploy/pwrc_lock.so",
+  "target/deploy/pwrc_token.so",
+];
+
+const missing = [
+  ...inputs,
+  ...artifacts,
+].filter(
+  (file) =>
+    !fs.existsSync(file),
+);
+
+if (missing.length) {
+  console.error(
+    JSON.stringify(
+      {
+        ok:
+          false,
+        version:
+          "1.0.0",
+        missing,
+      },
+      null,
+      2,
+    ),
   );
-
-const payload = {
-  version: "1.0.0",
-  type:
-    "powerchain-mainnet-build-manifest",
-  files,
-};
-
-const payloadSha256 =
-  crypto
-    .createHash("sha256")
-    .update(
-      JSON.stringify(payload),
-    )
-    .digest("hex");
+  process.exit(2);
+}
 
 const manifest = {
-  ...payload,
-  payloadSha256,
+  version:
+    "1.0.0",
+  type:
+    "powerchain-mainnet-build-manifest",
+  generatedAt:
+    new Date().toISOString(),
+  source: Object.fromEntries(
+    inputs.map(
+      (file) => [
+        file,
+        sha256(file),
+      ],
+    ),
+  ),
+  artifacts: Object.fromEntries(
+    artifacts.map(
+      (file) => [
+        file,
+        {
+          sha256:
+            sha256(file),
+          bytes:
+            fs.statSync(file)
+              .size,
+        },
+      ],
+    ),
+  ),
 };
 
-atomicWriteJsonSync(
+fs.mkdirSync(
+  "reports",
+  {
+    recursive: true,
+  },
+);
+
+fs.writeFileSync(
   "reports/mainnet-build-manifest.json",
-  manifest,
+  `${JSON.stringify(manifest, null, 2)}\n`,
 );
 
 console.log(

@@ -1,9 +1,0 @@
-{
-  "ok": false,
-  "version": "1.0.0",
-  "nonce": null,
-  "consumedFile": null,
-  "failures": [
-    "authorization-unused:missing:config/mainnet/release-authorization.json"
-  ]
-}

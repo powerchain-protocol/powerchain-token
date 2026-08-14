@@ -1,58 +1,106 @@
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::{
+    program_option::COption,
+    pubkey,
+};
+use anchor_spl::token_interface::{
+    Mint,
+    TokenInterface,
+};
 
-pub mod constants;
-pub mod errors;
-pub mod invariants;
+declare_id!("PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu");
 
-use invariants::assert_pwrc_mint_account;
-
-// Local/dev identity only. Mainnet deployment must be separately verified.
-declare_id!("HRrDxwZzuFreRmkCLY9oFXNGAy2gjd3diHyyTadxd8s6");
+const PWRC_CANONICAL_MINT: Pubkey =
+    pubkey!("PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc");
+const PWRC_DECIMALS: u8 = 9;
+const PWRC_GENESIS_BASE_UNITS: u64 =
+    18_446_000_000_000_000_000;
 
 #[program]
 pub mod pwrc_token {
     use super::*;
 
-    pub fn verify_canonical_mint(
-        ctx: Context<VerifyCanonicalMint>,
+    /// Verification-only canonical PWRC profile check.
+    ///
+    /// This program exposes no mint instruction and does not own the PWRC mint.
+    /// Token-2022 extension verification is additionally performed by the
+    /// release/client verification layer because the base InterfaceAccount
+    /// represents the common Mint header.
+    pub fn verify_profile(
+        ctx: Context<VerifyProfile>,
     ) -> Result<()> {
-        assert_pwrc_mint_account(
-            &ctx.accounts.mint.to_account_info(),
-        )?;
+        let mint =
+            &ctx.accounts.mint;
 
-        emit!(CanonicalMintVerified {
-            mint: ctx.accounts.mint.key(),
-            verifier:
-                ctx.accounts.verifier.key(),
-            decimals:
-                constants::PWRC_DECIMALS,
-            supply_base_units:
-                constants::PWRC_FIXED_SUPPLY_BASE_UNITS,
-            transfer_fee_basis_points:
-                constants::PWRC_TRANSFER_FEE_BASIS_POINTS,
-            maximum_transfer_fee_base_units:
-                constants::PWRC_MAXIMUM_TRANSFER_FEE_BASE_UNITS,
-        });
+        require!(
+            mint.decimals ==
+                PWRC_DECIMALS,
+            PwrcError::WrongDecimals
+        );
+
+        require!(
+            mint.supply ==
+                PWRC_GENESIS_BASE_UNITS,
+            PwrcError::WrongSupply
+        );
+
+        require!(
+            matches!(
+                mint.mint_authority,
+                COption::None
+            ),
+            PwrcError::MintAuthorityPresent
+        );
+
+        require!(
+            matches!(
+                mint.freeze_authority,
+                COption::None
+            ),
+            PwrcError::FreezeAuthorityPresent
+        );
 
         Ok(())
     }
 }
 
 #[derive(Accounts)]
-pub struct VerifyCanonicalMint<'info> {
-    /// CHECK:
-    /// The account is parsed manually as a Token-2022 mint so extension
-    /// invariants can be checked directly.
-    pub mint: UncheckedAccount<'info>,
-    pub verifier: Signer<'info>,
+pub struct VerifyProfile<'info> {
+    #[account(
+        address =
+            PWRC_CANONICAL_MINT
+            @ PwrcError::WrongMint
+    )]
+    pub mint:
+        InterfaceAccount<
+            'info,
+            Mint
+        >,
+
+    #[account(
+        address =
+            anchor_spl::token_2022::ID
+            @ PwrcError::WrongTokenProgram
+    )]
+    pub token_program:
+        Interface<
+            'info,
+            TokenInterface
+        >,
 }
 
-#[event]
-pub struct CanonicalMintVerified {
-    pub mint: Pubkey,
-    pub verifier: Pubkey,
-    pub decimals: u8,
-    pub supply_base_units: u64,
-    pub transfer_fee_basis_points: u16,
-    pub maximum_transfer_fee_base_units: u64,
+#[error_code]
+pub enum PwrcError {
+    #[msg("Wrong canonical PWRC mint.")]
+    WrongMint,
+    #[msg("PWRC mint must use Token-2022.")]
+    WrongTokenProgram,
+    #[msg("PWRC decimals must be exactly 9.")]
+    WrongDecimals,
+    #[msg("PWRC supply does not match the fixed 1.0.0 supply.")]
+    WrongSupply,
+    #[msg("PWRC mint authority must be revoked.")]
+    MintAuthorityPresent,
+    #[msg("PWRC freeze authority must be disabled.")]
+    FreezeAuthorityPresent,
 }

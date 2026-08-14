@@ -1,0 +1,73 @@
+{
+  "version": "1.0.0",
+  "repository": "powerchain-protocol/powerchain-token",
+  "improvements": {
+    "quoteFingerprintAndExpiry": true,
+    "strictU64QuoteAmount": true,
+    "strictOperationAllowlist": true,
+    "boundedRateLimiter": true,
+    "serviceFeeRecipientValidation": true,
+    "semanticDevnetEvidence": true,
+    "suiPublishInference": true,
+    "mainnetEvidenceActualFileBindings": true,
+    "authorizationEvidenceBuildBindings": true
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 12,
+      "passed": 12,
+      "failed": 0,
+      "failures": []
+    },
+    "javascriptSyntaxFiles": 36,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 24,
+    "fullstackSmoke": "PASS",
+    "feeQuoteSmoke": "PASS",
+    "tools": {
+      "cargo": null,
+      "anchor": null,
+      "solana": null,
+      "solana-keygen": null,
+      "sui": null,
+      "docker": null
+    },
+    "cargoBuildRun": false,
+    "anchorBuildRun": false,
+    "suiMoveBuildRun": false
+  },
+  "devnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "buildArtifactsReady": false,
+    "deploymentEvidenceVerified": false,
+    "qualified": false,
+    "blockers": [
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "devnet-deployment-evidence:not-verified"
+    ]
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json"
+    ]
+  },
+  "sourceTreeSha256": "49d9020ced65524a54ebdab827d720f6287fd4e0231ad9f7ef8dca94747f86ac"
+}

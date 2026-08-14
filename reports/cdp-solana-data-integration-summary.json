@@ -1,0 +1,90 @@
+{
+  "version": "1.0.0",
+  "repository": "powerchain-protocol/powerchain-token",
+  "integration": {
+    "provider": "coinbase-cdp-sql-api",
+    "network": "solana-mainnet",
+    "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+    "tables": [
+      "solana.transfers",
+      "solana.instructions"
+    ],
+    "routes": [
+      "/api/v1/data/solana/pwrc/transfers",
+      "/api/v1/data/solana/pwrc/volume",
+      "/api/v1/data/solana/pwrc/instructions",
+      "/api/v1/data/solana/pwrc/transfer-context",
+      "/api/v1/data/solana/wallet/transfers"
+    ],
+    "rawClientSqlAllowed": false,
+    "credentialServerOnly": true,
+    "maxDays": 90,
+    "maxLimit": 1000,
+    "cacheMaxAgeDefaultMs": 15000,
+    "cacheMaxAgeMaximumMs": 900000,
+    "endpointPinnedToCoinbase": true
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 16,
+      "passed": 16,
+      "failed": 0,
+      "failures": []
+    },
+    "javascriptSyntaxFiles": 45,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 25,
+    "liveStackSmoke": "PASS",
+    "missingCredentialFailClosed": "PASS",
+    "tools": {
+      "cargo": null,
+      "anchor": null,
+      "solana": null,
+      "solana-keygen": null,
+      "sui": null,
+      "docker": null
+    },
+    "cargoBuildRun": false,
+    "anchorBuildRun": false,
+    "suiMoveBuildRun": false
+  },
+  "devnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "buildArtifactsReady": false,
+    "deploymentEvidenceVerified": false,
+    "qualified": false,
+    "blockers": [
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "devnet-deployment-evidence:not-verified"
+    ]
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "buildManifestVerified": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "authorizationConsumed": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "reports/mainnet-build-manifest.json",
+      "reports/mainnet-build-manifest.json:not-verified",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json:not-verified",
+      "config/mainnet/release-consumption.json:not-verified"
+    ]
+  },
+  "sourceTreeSha256": "b4053591a27871207f4d3102b355f4e0d50586e62a7a6b85c588db78686a3146"
+}

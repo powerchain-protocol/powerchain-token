@@ -1,85 +1,33 @@
 {
   "version": "1.0.0",
-  "bridgeAssetId": "powerchain-wpwrc",
   "canonical": {
-    "name": "PowerChain",
-    "symbol": "PWRC",
     "chain": "solana",
-    "decimals": 9,
-    "standard": "Token-2022",
-    "metadata": "metadata/metadata.json",
-    "devnet": {
-      "mint": null
-    },
-    "mainnet-beta": {
-      "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc"
-    },
-    "network": "mainnet-beta",
-    "transferFee": {
-      "enabled": true,
-      "basisPoints": 250,
-      "percentage": "2.5%",
-      "maximumFeeTokens": "1000000",
-      "maximumFeeBaseUnits": "1000000000000000"
-    }
+    "symbol": "PWRC",
+    "decimals": 9
   },
   "wrapped": {
-    "name": "Wrapped PowerChain",
-    "symbol": "wPWRC",
     "chain": "sui",
+    "symbol": "wPWRC",
+    "name": "Wrapped PowerChain",
     "decimals": 9,
-    "kind": "wrapped-bridged-token",
-    "backingRatio": "1:1",
-    "metadata": "metadata/wpwrc.metadata.json",
-    "testnet": {
-      "packageId": null,
-      "coinType": null,
-      "metadataObjectId": null
-    },
-    "mainnet": {
-      "packageId": null,
-      "coinType": null,
-      "metadataObjectId": null
-    },
-    "maxSupplyBaseUnits": "18446000000000000000",
-    "baseUnitConversion": {
-      "canonicalDecimals": 9,
-      "wrappedDecimals": 9,
-      "canonicalBaseUnitsPerWrappedBaseUnit": "1",
-      "uiRatio": "1 PWRC = 1 wPWRC"
-    },
     "genesisSupplyBaseUnits": "0",
-    "role": "bridged representation"
+    "maxBaseUnits": "18446000000000000000",
+    "replayProtection": "on-chain consumed 32-byte Solana message digest",
+    "burnEvidence": "BridgeBurned event with sequence, sender, 32-byte Solana recipient and base-unit amount"
   },
-  "bridge": {
-    "provider": null,
-    "protocol": null,
-    "manager": null,
-    "canonicalLockContract": null,
-    "wrappedMintController": null
+  "ratio": {
+    "canonicalBaseUnitsPerWrappedBaseUnit": "1"
   },
-  "policy": {
-    "canonicalSupplyFixed": true,
-    "canonicalMaxBaseUnits": "18446000000000000000",
-    "wrappedMintingRequiresLockedPWRC": true,
-    "wrappedBurnRequiredBeforeCanonicalRelease": true,
-    "wrappedSupplyMustNotExceedLockedCanonical": true,
-    "decimalsMustMatch": true,
-    "genesisWrappedSupply": "0",
-    "decimalConversionRequired": false,
-    "canonicalBaseUnitsPerWrappedBaseUnit": "1",
-    "wrappedSupplyComparison": "wPWRC_circulating + pending_Solana_to_Sui + pending_Sui_to_Solana <= PWRC_locked",
-    "metadataKeptSeparate": true,
-    "canonicalDecimals": 9,
-    "wrappedDecimals": 9,
-    "pendingAccounting": {
-      "pendingSolanaToSui": "nonnegative canonical PWRC locked and finalized on Solana but not yet minted on Sui",
-      "pendingSuiToSolana": "nonnegative wPWRC burned and finalized on Sui but canonical PWRC not yet released on Solana",
-      "conservationEquation": "PWRC_locked = wPWRC_circulating + pending_Solana_to_Sui + pending_Sui_to_Solana"
-    },
-    "solanaTransferFeeAware": true,
-    "solanaToSuiAmountSemantics": "wPWRC_minted = gross_PWRC_transfer - Token2022_transfer_fee",
-    "suiToSolanaAmountSemantics": "gross_PWRC_release = wPWRC_burned; destination receives gross minus Token2022 transfer fee"
+  "serviceFee": {
+    "separateFromBacking": true
   },
-  "status": "template-only"
+  "mainnet": {
+    "solanaProgramId": null,
+    "suiPackageId": null,
+    "bridgeControllerId": null,
+    "verified": false,
+    "metadataCapabilityId": null,
+    "primaryRpcVerified": false,
+    "secondaryRpcVerified": false
+  }
 }

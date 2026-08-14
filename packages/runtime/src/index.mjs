@@ -1,15 +1,33 @@
-export * from "./addresses.mjs";
-export * from "./atomic-json.mjs";
-export * from "./canonical-json.mjs";
-export * from "./crypto.mjs";
-export * from "./network.mjs";
-export * from "./paths.mjs";
-export * from "./redact.mjs";
-export * from "./time.mjs";
-export * from "./validation.mjs";
-export * from "./config.mjs";
-export * from "./constants.mjs";
-export * from "./env.mjs";
-export * from "./errors.mjs";
-export * from "./logger.mjs";
-export * from "./process.mjs";
+export function optionalTrimmed(value) {
+  const out = value?.trim();
+  return out ? out : null;
+}
+
+export function parseBoolean(value, fallback = false) {
+  if (value == null || value === "") return fallback;
+  if (value === "true" || value === "1") return true;
+  if (value === "false" || value === "0") return false;
+  throw new Error("POWERCHAIN_BOOLEAN_INVALID");
+}
+
+export function safeJson(value) {
+  return JSON.stringify(value, (_key, item) =>
+    typeof item === "bigint" ? item.toString() : item
+  );
+}
+
+export function createLogger(component) {
+  if (!component) throw new Error("POWERCHAIN_LOG_COMPONENT_REQUIRED");
+  return {
+    info(message, fields = {}) {
+      process.stderr.write(
+        `${safeJson({timestamp:new Date().toISOString(),level:"info",component,message,...fields})}\n`
+      );
+    },
+    error(message, fields = {}) {
+      process.stderr.write(
+        `${safeJson({timestamp:new Date().toISOString(),level:"error",component,message,...fields})}\n`
+      );
+    }
+  };
+}

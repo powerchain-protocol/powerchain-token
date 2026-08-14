@@ -1,31 +1,15 @@
 {
   "version": "1.0.0",
-  "solana": {
-    "systemProgram": "11111111111111111111111111111111",
-    "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
-    "token2022Program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
-    "associatedTokenProgram": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+  "pwrcLock": {
+    "localnetProgramId": "7JAV3PsxkHh5oKAFDMKqVpKaV2P2P5Vj3Qv15hH8wPwr",
+    "devnetProgramId": null,
+    "mainnetProgramId": null
   },
-  "metaplex": {
-    "tokenMetadataProgram": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
-  },
-  "powerchain": {
-    "pwrcFees": {
-      "developmentProgramId": "9Ty7dY7pLmMAdH9nJHD4FSZxkRCAGbce12fs7AJV4pW7",
-      "devnetProgramId": null,
-      "mainnetProgramId": null,
-      "status": "local-development-id-only-not-deployed",
-      "feeBasisPoints": 250,
-      "decimals": 9,
-      "idempotency": "receipt-pda-v1",
-      "feeCollectorOwner": "FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy",
-      "feeVault": null,
-      "feeVaultDerivation": "Token-2022 ATA",
-      "mainnetStatus": "not-deployed-or-not-verified",
-      "mainnetRequirement": "Must be a separately deployed, executable, verified PowerChain SBF program. The Solana System Program is never a valid PowerChain deployment.",
-      "forbiddenDeploymentProgramIds": [
-        "11111111111111111111111111111111"
-      ]
-    }
+  "pwrcToken": {
+    "sourceProgramId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+    "localnetProgramId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+    "devnetProgramId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+    "mainnetProgramId": null,
+    "role": "verification-only"
   }
 }

@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "apps": {
+    "api": {
+      "path": "apps/api",
+      "port": 8787
+    },
+    "client": {
+      "path": "apps/client",
+      "port": 3000
+    },
+    "docs": {
+      "path": "apps/docs",
+      "port": 3002
+    }
+  },
+  "runtime": {
+    "autoPorts": true,
+    "apiBeforeClient": true,
+    "startupTimeoutMs": 8000,
+    "shutdownTimeoutMs": 5000
+  },
+  "security": {
+    "serverOwnedWrites": true,
+    "blindMonetaryWriteRetry": false,
+    "mainnetFailClosed": true
+  }
+}

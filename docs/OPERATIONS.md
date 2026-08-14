@@ -1,37 +1,89 @@
-# PowerChain `1.0.0` Operations
+# PowerChain Operations
 
-PowerChain distinguishes read/service operations from monetary settlement.
+**Version:** `1.0.0`
 
-## Read/service operations
-
-Authentication, signed messages, health/status, metadata, discovery, price observations, quote previews, simulations, proofs and attestations may omit a token amount. Read-only provider calls may use bounded retry and timeout handlers.
-
-## Monetary operations
-
-Transfers, bridge settlement, swaps, fee settlement, x402 payment and checkout settlement require a strictly positive amount. A zero-value monetary settlement is rejected.
-
-## Write handling
-
-Production writes follow the same safety sequence:
-
-1. validate configuration, addresses, amount and chain identity;
-2. validate Token-2022 fee expectations when PWRC moves;
-3. simulate when supported;
-4. submit once;
-5. confirm finality;
-6. reconcile ambiguous outcomes using the returned signature or durable source reference;
-7. only retry after idempotency/replay state proves a retry is safe.
-
-`packages/protocol/src/handlers/write-handler.ts` intentionally has no blind-retry loop.
-
-## Replay and idempotency
-
-Bridge replay and relayer idempotency keys use domain-separated SHA-256 values. Persistent implementations must implement atomic `reserve()` / insert-if-absent semantics; a `has()` followed by a separate insert is not sufficient for production concurrency.
-
-## Cache and build cleanup
+## Daily source checks
 
 ```bash
-pnpm clean:cache
+pnpm canonical:check
+pnpm config:check
+pnpm fees:check
+pnpm stack:check
+pnpm production:check
 ```
 
-removes generated caches such as `.next`, `.turbo`, `.cache`, `coverage`, `dist` and selected Rust incremental data without touching source, deployment evidence or IDL baselines.
+## Devnet
+
+```bash
+pnpm devnet:preflight
+pnpm devnet:status
+```
+
+A Devnet deployment is not considered qualified until both Solana and Sui
+evidence records exist and Sui has been checked through the independent
+verification path.
+
+## Mainnet candidate
+
+```bash
+pnpm mainnet:build:verifiable
+pnpm mainnet:build-manifest
+pnpm mainnet:preflight
+pnpm mainnet:verify:evidence
+pnpm mainnet:verify:authorization
+pnpm mainnet:status
+```
+
+`SOURCE_READY`, `BUILD_READY`, and `EVIDENCE_READY` are not deployment
+authorization.
+
+## Ambiguous writes
+
+RPC timeouts or lost responses after a monetary submission do not imply that
+the transaction failed. Persist the operation ID and reconcile against finalized
+Solana or checkpointed Sui observations before allowing another write.
+
+
+## Quote integrity
+
+Fee quotes expose `issuedAt`, `expiresAt` and a deterministic
+`quoteFingerprint`. Transaction preparation must reject an expired quote and
+must not silently substitute fee recipients or monetary fields after the
+fingerprint was presented to the user.
+
+The API validates base-unit amounts against the `u64` range, restricts
+operations to the supported allowlist, validates the configured Solana
+service-fee recipient, and applies a bounded in-memory rate limiter.
+
+## Evidence binding
+
+Mainnet evidence hashes are compared against the actual release files.
+Authorization hashes are then compared against the exact evidence and build
+manifest files. This creates a direct chain:
+
+```text
+source/toolchain/lockfiles
+→ build manifest
+→ deployment evidence
+→ release authorization
+```
+
+## Coinbase CDP Solana analytics
+
+Configure the server-side Bearer credential:
+
+```env
+CDP_SQL_API_BEARER_TOKEN=
+CDP_SQL_API_TIMEOUT_MS=10000
+CDP_SQL_API_CACHE_MAX_AGE_MS=15000
+```
+
+Validate integration policy and query templates:
+
+```bash
+pnpm cdp:policy:check
+pnpm cdp:check
+```
+
+Do not use CDP SQL query results as the sole source for bridge settlement or
+Mainnet deployment evidence.

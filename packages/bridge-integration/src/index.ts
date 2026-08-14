@@ -1,4 +1,4 @@
-export * from "./config.js";
-export * from "./finality.js";
-export * from "./reconcile.js";
-export * from "./mainnet.js";
+export {
+  quoteSolanaToSuiBridge,
+  assertBridgeConservation,
+} from "../../protocol/src/bridge.js";

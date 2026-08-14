@@ -1,1 +1,0 @@
-import "../mainnet/status.mjs";

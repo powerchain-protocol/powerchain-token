@@ -1,59 +1,42 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <title>PowerChain Platform</title>
-  <link rel="stylesheet" href="/styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PowerChain Token</title>
+  <style>
+    :root{font-family:Inter,system-ui,sans-serif;color:#111;background:#f6f7f6}
+    body{margin:0}.wrap{max-width:920px;margin:0 auto;padding:40px 20px}
+    .card{background:#fff;border:1px solid #e4e7e4;border-radius:18px;padding:24px;margin:16px 0}
+    button{background:#174d36;color:white;border:0;border-radius:12px;padding:12px 18px;font-weight:700}
+    input,select{padding:11px;border:1px solid #d6dad6;border-radius:10px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    code{word-break:break-all}.muted{color:#68716a}.fee{display:flex;justify-content:space-between;border-top:1px solid #eee;padding:10px 0}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-  <main class="shell">
-    <header>
-      <div>
-        <p class="eyebrow">PowerChain · 1.0.0</p>
-        <h1>PWRC Platform Status</h1>
-        <p class="muted">Canonical Solana Token-2022 asset with Sui wPWRC bridge representation.</p>
-      </div>
-      <span id="health" class="badge">Loading…</span>
-    </header>
-
-    <section class="grid">
-      <article class="card">
-        <h2>Token</h2>
-        <dl id="token"></dl>
-      </article>
-
-      <article class="card">
-        <h2>Mainnet readiness</h2>
-        <dl id="readiness"></dl>
-      </article>
-    </section>
-
-    <section class="card">
-      <h2>Bridge quote</h2>
-      <form id="quote-form">
-        <label>
-          Direction
-          <select id="direction">
-            <option value="solana-to-sui">Solana → Sui</option>
-            <option value="sui-to-solana">Sui → Solana</option>
-          </select>
-        </label>
-        <label>
-          Amount (base units)
-          <input id="amount" inputmode="numeric" value="1000000000" pattern="[0-9]+" required>
-        </label>
-        <button type="submit">Get server quote</button>
-      </form>
-      <pre id="quote">No quote yet.</pre>
-    </section>
-
-    <section class="card">
-      <h2>Execution capability</h2>
-      <p id="capability" class="muted">Loading…</p>
-    </section>
-  </main>
-  <script type="module" src="/app.js"></script>
+<div class="wrap">
+  <h1>PowerChain Token</h1>
+  <p class="muted">PWRC Token-2022 • version 1.0.0</p>
+  <div class="card">
+    <div><strong>Canonical mint</strong></div>
+    <code>PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc</code>
+  </div>
+  <div class="card">
+    <h2>Fee quote</h2>
+    <div class="grid">
+      <input id="amount" value="1000" inputmode="decimal" aria-label="PWRC amount"/>
+      <select id="operation" aria-label="Operation">
+        <option value="bridge-solana-to-sui">Solana → Sui bridge</option>
+        <option value="bridge-sui-to-solana">Sui → Solana bridge</option>
+        <option value="wallet-transfer">Wallet transfer</option>
+      </select>
+    </div>
+    <p><button id="quote">Calculate fees</button></p>
+    <div id="result"></div>
+  </div>
+</div>
+<script src="/app.js"></script>
 </body>
 </html>

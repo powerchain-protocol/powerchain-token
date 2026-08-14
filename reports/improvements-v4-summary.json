@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "repository": "powerchain-protocol/powerchain-token",
+  "improvements": {
+    "verifiedBuildManifestGate": true,
+    "releaseAuthorizationConsumption": true,
+    "consumedReleaseState": true,
+    "consumptionReceiptHashBinding": true,
+    "suiControllerTypeVerification": true,
+    "dualRpcSuiDigestComparison": true,
+    "bridgeTraceRegression": true,
+    "mainnetStateMachineRegression": true
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 14,
+      "passed": 14,
+      "failed": 0,
+      "failures": []
+    },
+    "javascriptSyntaxFiles": 41,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 24,
+    "fullstackSmoke": "PASS",
+    "feeQuoteSmoke": "PASS",
+    "tools": {
+      "cargo": null,
+      "anchor": null,
+      "solana": null,
+      "solana-keygen": null,
+      "sui": null,
+      "docker": null
+    },
+    "cargoBuildRun": false,
+    "anchorBuildRun": false,
+    "suiMoveBuildRun": false
+  },
+  "devnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "buildArtifactsReady": false,
+    "deploymentEvidenceVerified": false,
+    "qualified": false,
+    "blockers": [
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "devnet-deployment-evidence:not-verified"
+    ]
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "buildManifestVerified": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "authorizationConsumed": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "reports/mainnet-build-manifest.json",
+      "reports/mainnet-build-manifest.json:not-verified",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json:not-verified",
+      "config/mainnet/release-consumption.json:not-verified"
+    ]
+  },
+  "sourceTreeSha256": "ec2bdd220b1d828e31d06cdb8193e70e32263f8ffac1ceb6bdb085cf36e11966"
+}

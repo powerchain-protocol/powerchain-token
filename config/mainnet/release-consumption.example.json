@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "release": "powerchain-token-1.0.0",
+  "authorizationSha256": null,
+  "evidenceSha256": null,
+  "buildManifestSha256": null,
+  "consumedAt": null,
+  "consumedBy": null,
+  "confirmation": "PWRC-1.0.0-CONSUME-AUTHORIZATION"
+}

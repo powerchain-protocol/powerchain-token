@@ -1,39 +1,12 @@
 {
   "name": "@powerchain/sdk",
   "version": "1.0.0",
-  "private": true,
   "type": "module",
-  "sideEffects": false,
-  "engines": {
-    "node": ">=22.22.3 <23 || >=24.18.1 <25 || >=26.5.1 <27",
-    "pnpm": "10.21.0"
-  },
   "dependencies": {
-    "@coral-xyz/anchor": "0.32.1",
-    "@mysten/sui": "2.23.1",
-    "@solana/spl-token": "0.4.15",
-    "@solana/web3.js": "1.98.4",
-    "axios": "1.19.0",
-    "bs58": "6.0.0",
-    "tweetnacl": "1.0.3"
+    "@powerchain/protocol": "workspace:*",
+    "@solana/web3.js": "1.98.4"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./client": "./src/client.ts",
-    "./bridge": "./src/bridge.ts",
-    "./metadata": "./src/metadata.ts",
-    "./programs": "./src/programs.ts",
-    "./transactions": "./src/transactions.ts",
-    "./signed-message": "./src/signed-message.ts",
-    "./sui": "./src/sui/index.ts",
-    "./burn": "./src/burn/index.ts",
-    "./market": "./src/market/index.ts",
-    "./cctp": "./src/cctp/client.ts",
-    "./x402": "./src/x402/client.ts"
-  },
-  "scripts": {
-    "check": "tsc -p tsconfig.json --noEmit",
-    "build": "tsc -p tsconfig.json",
-    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
+    ".": "./src/index.ts"
   }
 }
