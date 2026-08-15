@@ -52,6 +52,23 @@ const publicDir =
     "apps/client/public",
   );
 
+function shouldProxyToApi(
+  pathname,
+) {
+  return (
+    pathname.startsWith(
+      "/api/",
+    ) ||
+    pathname ===
+      "/swagger" ||
+    pathname ===
+      "/swagger/" ||
+    pathname.startsWith(
+      "/swagger/",
+    )
+  );
+}
+
 const server =
   http.createServer(
     async (
@@ -92,10 +109,38 @@ const server =
       }
 
       if (
-        url.pathname.startsWith(
-          "/api/",
+        shouldProxyToApi(
+          url.pathname,
         )
       ) {
+        if (
+          req.method !==
+            "GET" &&
+          req.method !==
+            "HEAD"
+        ) {
+          res.writeHead(
+            405,
+            {
+              "content-type":
+                "application/json; charset=utf-8",
+              "cache-control":
+                "no-store",
+              "allow":
+                "GET, HEAD",
+              "x-content-type-options":
+                "nosniff",
+            },
+          );
+          res.end(
+            JSON.stringify({
+              error:
+                "PWRC_CLIENT_PROXY_METHOD_NOT_ALLOWED",
+            }),
+          );
+          return;
+        }
+
         try {
           const target =
             new URL(
@@ -108,12 +153,47 @@ const server =
             await fetch(
               target,
               {
+                method:
+                  req.method,
+                headers: {
+                  accept:
+                    req.headers.accept ??
+                    "*/*",
+                },
+                redirect:
+                  "manual",
                 signal:
                   AbortSignal.timeout(
                     10_000,
                   ),
               },
             );
+
+          if (
+            response.status >=
+              300 &&
+            response.status <
+              400
+          ) {
+            res.writeHead(
+              502,
+              {
+                "content-type":
+                  "application/json; charset=utf-8",
+                "cache-control":
+                  "no-store",
+                "x-content-type-options":
+                  "nosniff",
+              },
+            );
+            res.end(
+              JSON.stringify({
+                error:
+                  "PWRC_CLIENT_API_PROXY_REDIRECT_REJECTED",
+              }),
+            );
+            return;
+          }
 
           const headers =
             Object.fromEntries(
@@ -123,16 +203,26 @@ const server =
           delete headers[
             "content-length"
           ];
+          delete headers[
+            "set-cookie"
+          ];
 
           res.writeHead(
             response.status,
             headers,
           );
-          res.end(
-            Buffer.from(
-              await response.arrayBuffer(),
-            ),
-          );
+          if (
+            req.method ===
+              "HEAD"
+          ) {
+            res.end();
+          } else {
+            res.end(
+              Buffer.from(
+                await response.arrayBuffer(),
+              ),
+            );
+          }
         } catch {
           res.writeHead(
             502,
@@ -149,6 +239,31 @@ const server =
           );
         }
 
+        return;
+      }
+
+      if (
+        req.method !==
+          "GET" &&
+        req.method !==
+          "HEAD"
+      ) {
+        res.writeHead(
+          405,
+          {
+            "content-type":
+              "text/plain; charset=utf-8",
+            "cache-control":
+              "no-store",
+            "allow":
+              "GET, HEAD",
+            "x-content-type-options":
+              "nosniff",
+          },
+        );
+        res.end(
+          "Method not allowed",
+        );
         return;
       }
 
@@ -217,12 +332,36 @@ const server =
         {
           "content-type":
             type,
+          "cache-control":
+            resolved.endsWith(
+              ".html",
+            )
+              ? "no-cache"
+              : "public, max-age=300, stale-while-revalidate=60",
           "x-content-type-options":
             "nosniff",
           "referrer-policy":
             "no-referrer",
+          "x-frame-options":
+            "DENY",
+          "permissions-policy":
+            "camera=(), microphone=(), geolocation=()",
+          "content-security-policy":
+            resolved.endsWith(
+              ".html",
+            )
+              ? "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; object-src 'none'"
+              : "default-src 'none'",
         },
       );
+
+      if (
+        req.method ===
+          "HEAD"
+      ) {
+        res.end();
+        return;
+      }
 
       const stream =
         fs.createReadStream(

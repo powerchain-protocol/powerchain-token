@@ -249,3 +249,35 @@ The safe example is deliberately `configured: false`, so checking out the
 source tree can never create a false positive for authority readiness. Native
 token attestation capture records the reviewed policy SHA-256 and verification
 requires an exact commitment match.
+
+
+## API traffic-control trust boundary
+
+The public API uses a bounded **process-local token bucket** instead of a
+fixed-window limiter. This smooths boundary bursts and returns refill-derived
+`Retry-After` values.
+
+Client identity is fail-closed by default: rate limiting uses the direct socket
+peer and ignores `X-Forwarded-For`. A reverse proxy may be trusted only by
+listing its exact IP address in:
+
+```text
+PWRC_TRUSTED_PROXY_ADDRESSES=
+PWRC_TRUSTED_PROXY_HOPS=1
+```
+
+Forwarded chains are syntax checked and bounded. An invalid chain falls back to
+the trusted socket peer rather than accepting an arbitrary forwarded value.
+
+Rate settings:
+
+```text
+PWRC_API_RATE_LIMIT=120
+PWRC_API_RATE_LIMIT_BURST=120
+PWRC_EXPENSIVE_API_RATE_LIMIT=20
+PWRC_EXPENSIVE_API_RATE_LIMIT_BURST=20
+```
+
+The limiter remains **per process**. Multiple API replicas do not share state;
+a distributed gateway/backend is still required when a deployment needs a
+global cross-instance quota.

@@ -17,7 +17,10 @@
     "./helius": "./src/helius-client.ts",
     "./native-token-transactions": "./src/native-token-transactions.ts",
     "./idempotency-registry": "./src/idempotency-registry.ts",
-    "./token": "./src/token.ts"
+    "./token": "./src/token.ts",
+    "./utility": "./src/utility.ts",
+    "./native-transfer-preflight": "./src/native-transfer-preflight.ts",
+    "./native-transfer-review-bundle": "./src/native-transfer-review-bundle.ts"
   },
   "description": "PowerChain protocol SDK.",
   "sideEffects": false,

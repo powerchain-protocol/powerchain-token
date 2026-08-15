@@ -78,6 +78,62 @@ export function nativeTransferRuntimePolicy() {
       unexpectedInstructionDetection:
         true,
     },
+    preflight: {
+      sdk:
+        "@powerchain/sdk/native-transfer-preflight",
+      domain:
+        "POWERCHAIN_NATIVE_PWRC_TRANSFER_PREFLIGHT_V1",
+      sourceAtaValidation:
+        true,
+      destinationAtaValidation:
+        true,
+      tokenBalanceValidation:
+        true,
+      payerSolValidation:
+        true,
+      networkFeeEstimate:
+        true,
+      ataRentEstimate:
+        true,
+      simulationSupported:
+        true,
+      reportCommitmentSha256:
+        true,
+      observedSlotBound:
+        true,
+      observedAtBound:
+        true,
+      maxReportAgeSeconds:
+        120,
+      signingIncluded:
+        false,
+      submissionIncluded:
+        false,
+    },
+    reviewBundle: {
+      sdk:
+        "@powerchain/sdk/native-transfer-review-bundle",
+      domain:
+        "POWERCHAIN_NATIVE_PWRC_TRANSFER_REVIEW_BUNDLE_V1",
+      tokenPolicyBound:
+        true,
+      transferIntentBound:
+        true,
+      feeEpochEvidenceBound:
+        true,
+      feeAuthorityPolicyCommitmentBound:
+        true,
+      preflightReportBound:
+        true,
+      unsignedMessageBound:
+        true,
+      signingIncluded:
+        false,
+      submissionIncluded:
+        false,
+      authorizationIncluded:
+        false,
+    },
     transactionSubmission: {
       sdkIncluded:
         false,
@@ -137,6 +193,26 @@ export function utilityRuntimePolicy(
         true,
       privateKeyRequired:
         false,
+      legacyCommitmentAvailable:
+        true,
+      walletSignableEnvelopeAvailable:
+        true,
+      walletSignatureIncluded:
+        false,
+      walletSigningDomain:
+        "POWERCHAIN_PWRC_UTILITY_WALLET_AUTHORIZATION_V1",
+      networkBound:
+        true,
+      serviceBound:
+        true,
+      recipientBound:
+        true,
+      nonceBound:
+        true,
+      tokenPolicyBound:
+        true,
+      maxAuthorizationLifetimeSeconds:
+        900,
     },
     computeSecurity: {
       requestRateLimit:

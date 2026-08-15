@@ -9,7 +9,9 @@ const source =
   );
 
 for (const invariant of [
-  "function stableJsonEtag",
+  "function cacheableRepresentation",
+  "function stableJsonEntity",
+  "function ifNoneMatchMatches",
   "function jsonCached",
   '"if-none-match"',
   "stale-while-revalidate",
@@ -45,6 +47,10 @@ console.log(
       version:
         "1.0.0",
       etag:
+        true,
+      strongEtagExactBody:
+        true,
+      requestIdHeaderOnly:
         true,
       conditionalGet:
         true,

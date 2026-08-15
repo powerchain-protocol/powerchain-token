@@ -12,6 +12,16 @@ const transactions =
     "packages/sdk/src/native-token-transactions.ts",
     "utf8",
   );
+const verifiedIntent =
+  fs.readFileSync(
+    "packages/protocol/src/native-verified-transfer-intent.ts",
+    "utf8",
+  );
+const reviewBundle =
+  fs.readFileSync(
+    "packages/sdk/src/native-transfer-review-bundle.ts",
+    "utf8",
+  );
 const idempotency =
   fs.readFileSync(
     "packages/sdk/src/idempotency-registry.ts",
@@ -32,6 +42,35 @@ for (const invariant of [
   if (!intent.includes(invariant)) {
     failures.push(
       `transaction-integrity:intent:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "POWERCHAIN_NATIVE_PWRC_VERIFIED_TRANSFER_INTENT_V1",
+  "baseIntentSha256",
+  "feeEvidenceSha256",
+  "feeAuthorityPolicySha256",
+  "verifiedIntentSha256",
+]) {
+  if (!verifiedIntent.includes(invariant)) {
+    failures.push(
+      `transaction-integrity:verified-intent:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "POWERCHAIN_NATIVE_PWRC_TRANSFER_REVIEW_BUNDLE_V1",
+  "verifiedIntentSha256",
+  "preflightReportSha256",
+  "unsignedMessageSha256",
+  "bundleSha256",
+  "authorizationIncluded:",
+]) {
+  if (!reviewBundle.includes(invariant)) {
+    failures.push(
+      `transaction-integrity:review-bundle:${invariant}`,
     );
   }
 }
@@ -83,6 +122,10 @@ console.log(JSON.stringify({
   blockhashLifetimeBound:
     true,
   liveFeeEpochBound:
+    true,
+  verifiedTransferIntentBound:
+    true,
+  evidenceReviewBundleBound:
     true,
   canonicalTokenPolicyBound:
     true,

@@ -157,6 +157,26 @@ export function createConfiguredHeliusClient(
     );
   }
 
+  const maxResponseBytes =
+    Number(
+      env.HELIUS_MAX_RESPONSE_BYTES ??
+      "2000000",
+    );
+
+  if (
+    !Number.isSafeInteger(
+      maxResponseBytes,
+    ) ||
+    maxResponseBytes <
+      1024 ||
+    maxResponseBytes >
+      10_000_000
+  ) {
+    throw new Error(
+      "PWRC_HELIUS_RESPONSE_SIZE_LIMIT_INVALID",
+    );
+  }
+
   const maxAttempts =
     Number(
       env.HELIUS_READ_RETRY_ATTEMPTS ??
@@ -186,6 +206,7 @@ export function createConfiguredHeliusClient(
       ),
     network,
     timeoutMs,
+    maxResponseBytes,
     retryPolicy: {
       maxAttempts,
       baseDelayMs,

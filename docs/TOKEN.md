@@ -2,6 +2,50 @@
 
 PowerChain uses one canonical token release identity: **PWRC 1.0.0**.
 
+## Canonical token description
+
+The professional PWRC description used across metadata, API responses, asset
+information and public documentation is committed separately from the monetary
+token policy. This allows editorial description updates without silently
+changing supply, fees, authority policy or the canonical token-policy SHA.
+
+### Metadata description
+
+> PowerChain (PWRC) is the native fixed-supply Token-2022 utility token of the PowerChain ecosystem. PWRC is designed for digital payments, settlement, cross-chain services, application utilities, protocol operations, and renewable-energy-related digital infrastructure. The token is built around transparent fixed-supply policy, deterministic transaction handling, and wallet-owned execution. PWRC does not represent equity, debt, dividends, ownership of energy assets, carbon credits, or a claim on company revenue.
+
+### Short description
+
+> PowerChain (PWRC) is the native fixed-supply Token-2022 utility token for payments, settlement, cross-chain services, applications, protocol operations, and renewable-energy-related digital infrastructure.
+
+Description domain and commitment:
+
+```text
+POWERCHAIN_PWRC_TOKEN_DESCRIPTION_V1
+786cf50005186f88da572a666add55ad43a682bb7ac6d8cd433fd01e55e614e5
+```
+
+The canonical utility scope includes digital payments, settlement, cross-chain
+services, application utilities, protocol operations, and
+**renewable-energy-related digital infrastructure**. This wording does not claim
+that PWRC itself is an energy asset, renewable-energy certificate, carbon credit,
+equity, debt, dividend instrument, or revenue claim.
+
+Sources and API:
+
+```text
+config/token-description.json
+metadata/metadata.json
+metadata/wpwrc.json
+GET /api/v1/token/description
+```
+
+Validation:
+
+```bash
+pnpm token:description:check
+pnpm token:description:test:source
+```
+
 ## Canonical native asset
 
 ```text
@@ -294,3 +338,171 @@ values are optional during verification, but if supplied they must match the
 reviewed artifact exactly.
 
 Mainnet status remains fail-closed until this reviewed artifact verifies.
+
+
+## Wallet-signable utility authorization
+
+The legacy deterministic utility commitment remains available for compatibility.
+For user-authorized utility/payment workflows, the protocol also exposes a
+wallet-signable envelope:
+
+```text
+POWERCHAIN_PWRC_UTILITY_WALLET_AUTHORIZATION_V1
+```
+
+The envelope binds:
+
+- Solana network;
+- canonical PWRC mint;
+- canonical token-policy SHA-256;
+- service ID;
+- recipient;
+- nonce;
+- request ID and idempotency key;
+- wallet;
+- workload and exact BigInt spend parameters;
+- issued/expiry timestamps.
+
+The maximum authorization lifetime is 15 minutes. The protocol produces a
+deterministic `walletMessage`, `walletMessageSha256` and authorization
+commitment, but **does not create or include a wallet signature**. Signature
+collection/verification remains wallet/application-owned.
+
+SDK entry point:
+
+```ts
+import {
+  createPwrcUtilityWalletAuthorization,
+  verifyPwrcUtilityWalletAuthorization,
+} from "@powerchain/sdk/utility";
+```
+
+
+## Native transfer preflight
+
+The SDK exposes a read-only preflight helper before wallet signing:
+
+```ts
+import {
+  preflightNativePwrcTransfer,
+} from "@powerchain/sdk/native-transfer-preflight";
+```
+
+Preflight validates and reports:
+
+- canonical PWRC Token-2022 source ATA existence;
+- source account owner, mint and frozen state;
+- source PWRC balance sufficiency;
+- destination ATA existence and compatibility;
+- whether idempotent destination ATA creation is required;
+- recent blockhash and last valid block height;
+- Solana network fee estimate;
+- destination ATA rent estimate when creation is required;
+- payer SOL balance sufficiency;
+- optional `simulateTransaction` result and compute units consumed.
+
+The report is bound to the canonical PWRC token-policy SHA and includes the
+unsigned transaction base64 for wallet/application review.
+
+Preflight does **not** sign or submit a transaction:
+
+```text
+signingIncluded     false
+submissionIncluded  false
+publicWrites        false
+```
+
+Simulation is diagnostic only and does not replace wallet review, blockhash
+freshness checks or final transaction confirmation.
+
+
+### Preflight report integrity
+
+A preflight report is an observation snapshot, not an authorization. Reports now
+bind the RPC observation context and can be independently checked before UI or
+wallet review:
+
+```text
+domain          POWERCHAIN_NATIVE_PWRC_TRANSFER_PREFLIGHT_V1
+observedAt      canonical ISO timestamp
+observedSlot    observed Solana slot when available
+reportSha256    canonical SHA-256 of the complete report payload
+max report age  120 seconds by default
+```
+
+Use:
+
+```ts
+verifyNativePwrcTransferPreflightReport(report);
+```
+
+The verifier checks the canonical PWRC mint/token-policy identity, report
+commitment, observation timestamp/freshness, slot encoding, and the invariant
+that signing, submission and public writes remain disabled.
+
+`reportSha256` detects report mutation; it is **not a signature** and does not
+authorize a transfer. A fresh blockhash and wallet review are still required at
+signing time.
+
+
+## Verified transfer intent and review bundle
+
+The original transfer-intent format remains unchanged for compatibility:
+
+```text
+POWERCHAIN_NATIVE_PWRC_TRANSFER_INTENT_V1
+```
+
+Production review can add a second, evidence-bound intent:
+
+```text
+POWERCHAIN_NATIVE_PWRC_VERIFIED_TRANSFER_INTENT_V1
+```
+
+The verified intent commits:
+
+- the original transfer-intent SHA-256;
+- canonical PWRC token-policy SHA-256;
+- live transfer-fee evidence SHA-256;
+- observed Solana epoch and slot;
+- reviewed transfer-fee authority-policy SHA-256.
+
+This prevents a transfer intent from being reviewed with unrelated or stale
+fee-policy evidence without changing the original intent format.
+
+Before wallet review, the SDK can then build:
+
+```text
+POWERCHAIN_NATIVE_PWRC_TRANSFER_REVIEW_BUNDLE_V1
+```
+
+The review bundle binds the complete evidence chain:
+
+```text
+token policy
+  → base transfer intent
+  → verified transfer intent
+  → fee-epoch evidence
+  → reviewed fee-authority policy commitment
+  → preflight report
+  → exact unsigned transaction message
+```
+
+SDK entry points:
+
+```ts
+createVerifiedNativePwrcTransferIntentForTransaction(...)
+createNativePwrcTransferReviewBundle(...)
+verifyNativePwrcTransferReviewBundle(...)
+```
+
+The bundle contains deterministic SHA-256 commitments for each component and a
+final `bundleSha256`. It is explicitly **not** a signature, payment
+authorization, or transaction submission:
+
+```text
+signingIncluded        false
+submissionIncluded     false
+authorizationIncluded  false
+publicWrites           false
+```

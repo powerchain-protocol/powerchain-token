@@ -134,6 +134,60 @@ const tokenPolicyBinding =
     "utf8",
   );
 
+const clientUi =
+  fs.readFileSync(
+    "scripts/production/check-client-ui.mjs",
+    "utf8",
+  );
+
+const rateLimitHardening =
+  fs.readFileSync(
+    "scripts/production/check-rate-limit-hardening.mjs",
+    "utf8",
+  );
+
+const clientUiUx =
+  fs.readFileSync(
+    "scripts/production/check-client-uiux.mjs",
+    "utf8",
+  );
+
+const nativeTransferReviewBundle =
+  fs.readFileSync(
+    "scripts/production/check-native-transfer-review-bundle.mjs",
+    "utf8",
+  );
+
+const nativeTransferPreflight =
+  fs.readFileSync(
+    "scripts/production/check-native-transfer-preflight.mjs",
+    "utf8",
+  );
+
+const tokenDescription =
+  fs.readFileSync(
+    "scripts/production/check-token-description.mjs",
+    "utf8",
+  );
+
+const powerChainTokenApi =
+  fs.readFileSync(
+    "scripts/production/check-powerchain-token-api.mjs",
+    "utf8",
+  );
+
+const heliusClientSafety =
+  fs.readFileSync(
+    "scripts/production/check-helius-client-safety.mjs",
+    "utf8",
+  );
+
+const utilityWalletAuthorization =
+  fs.readFileSync(
+    "scripts/production/check-utility-wallet-authorization.mjs",
+    "utf8",
+  );
+
 const tokenFeeAuthorityPolicy =
   fs.readFileSync(
     "scripts/production/check-token-fee-authority-policy.mjs",
@@ -448,6 +502,140 @@ for (const invariant of [
   if (!tokenPolicyBinding.includes(invariant)) {
     failures.push(
       `full-program:token-policy-binding:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "bounded-token-bucket",
+  "processLocal",
+  "distributed",
+  "trustedProxyDefault",
+  "explicitTrustedProxyAddresses",
+  "forwardedHopBound",
+]) {
+  if (!rateLimitHardening.includes(invariant)) {
+    failures.push(
+      `full-program:rate-limit-hardening:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "responsive",
+  "lightDarkTheme",
+  "mobileNavigation",
+  "assetRegistryUi",
+  "exactBigIntQuoteFormatting",
+  "swaggerProxy",
+  "cspCompatible",
+  "accessibility",
+]) {
+  if (!clientUi.includes(invariant)) {
+    failures.push(
+      `full-program:client-ui:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "responsive",
+  "lightDarkTheme",
+  "reducedMotion",
+  "accessibleFocus",
+  "mobileQuickActions",
+  "dynamicSafetyPolicy",
+  "walletConnectionRequired",
+]) {
+  if (!clientUiUx.includes(invariant)) {
+    failures.push(
+      `full-program:client-uiux:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "verifiedIntentDomain",
+  "reviewBundleDomain",
+  "feeEpochEvidenceBound",
+  "feeAuthorityPolicyCommitmentBound",
+  "preflightReportBound",
+  "unsignedMessageBound",
+  "authorizationIncluded",
+]) {
+  if (!nativeTransferReviewBundle.includes(invariant)) {
+    failures.push(
+      `full-program:native-transfer-review-bundle:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "sourceAccountValidation",
+  "destinationAccountValidation",
+  "payerSolValidation",
+  "optionalSimulation",
+  "reportCommitmentSha256",
+  "observationSlotBound",
+  "observationTimeBound",
+  "submissionIncluded",
+]) {
+  if (!nativeTransferPreflight.includes(invariant)) {
+    failures.push(
+      `full-program:native-transfer-preflight:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "descriptionSha256",
+  "renewableEnergyRelated",
+  "metadataParity",
+  "assetParity",
+  "tokenPolicyUnchanged",
+]) {
+  if (!tokenDescription.includes(invariant)) {
+    failures.push(
+      `full-program:token-description:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "tokenApiBase",
+  "assetApiBase",
+  "canonicalAssets",
+  "policyBound",
+]) {
+  if (!powerChainTokenApi.includes(invariant)) {
+    failures.push(
+      `full-program:powerchain-token-api:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "responseBodyBound",
+  "callerAbortSignal",
+  "timeoutDistinctFromCancellation",
+  "monotonicRpcRequestIds",
+]) {
+  if (!heliusClientSafety.includes(invariant)) {
+    failures.push(
+      `full-program:helius-client-safety:${invariant}`,
+    );
+  }
+}
+
+for (const invariant of [
+  "walletSignableEnvelope",
+  "signatureIncluded",
+  "nonceBound",
+  "tokenPolicyBound",
+]) {
+  if (!utilityWalletAuthorization.includes(invariant)) {
+    failures.push(
+      `full-program:utility-wallet-authorization:${invariant}`,
     );
   }
 }

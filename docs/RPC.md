@@ -99,3 +99,25 @@ PWRC_NATIVE_VERIFY_MAX_INTRA_SLOT_SKEW=128
 Verification rejects slot regression or a span above the configured bound.
 Independent provider observations are issued concurrently, but any configured
 observer failure remains fail-closed.
+
+
+### Helius response-size and cancellation safety
+
+The Helius read client bounds successful JSON-RPC/DAS response bodies before
+JSON parsing. The default limit is:
+
+```text
+HELIUS_MAX_RESPONSE_BYTES=2000000
+```
+
+Accepted configuration is 1 KiB through 10 MB. Responses whose declared
+`Content-Length` exceeds the bound fail immediately, and bodies without a
+trusted length are checked again after reading.
+
+SDK read calls accept an optional `AbortSignal`. Caller cancellation is reported
+as `PWRC_HELIUS_CANCELLED`; the client's own deadline remains
+`PWRC_HELIUS_TIMEOUT`. Cancellation is not retried.
+
+JSON-RPC request IDs are monotonically increasing within each client instance
+instead of using a static ID. This improves request/response diagnostics without
+exposing credentials or enabling writes.

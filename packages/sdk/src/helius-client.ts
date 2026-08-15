@@ -64,12 +64,19 @@ export interface HeliusRetryPolicy {
     number;
 }
 
+export interface HeliusRequestOptions {
+  signal?:
+    AbortSignal;
+}
+
 export interface HeliusClientConfig {
   apiKey:
     string;
   network:
     HeliusNetwork;
   timeoutMs?:
+    number;
+  maxResponseBytes?:
     number;
   retryPolicy?:
     Partial<
@@ -304,6 +311,27 @@ export function createHeliusClient(
     config.timeoutMs ??
     10_000;
 
+  const maxResponseBytes =
+    config.maxResponseBytes ??
+    2_000_000;
+
+  if (
+    !Number.isSafeInteger(
+      maxResponseBytes,
+    ) ||
+    maxResponseBytes <
+      1_024 ||
+    maxResponseBytes >
+      10_000_000
+  ) {
+    throw new Error(
+      "PWRC_HELIUS_RESPONSE_SIZE_LIMIT_INVALID",
+    );
+  }
+
+  let rpcRequestId =
+    0;
+
   if (
     !Number.isSafeInteger(
       timeoutMs,
@@ -400,9 +428,20 @@ export function createHeliusClient(
       string,
     params:
       unknown,
+    options:
+      HeliusRequestOptions =
+      {},
   ) {
     let lastError =
       "PWRC_HELIUS_REQUEST_FAILED";
+
+    if (
+      options.signal?.aborted
+    ) {
+      throw new Error(
+        "PWRC_HELIUS_CANCELLED",
+      );
+    }
 
     for (
       let attempt =
@@ -416,10 +455,26 @@ export function createHeliusClient(
 
       const controller =
         new AbortController();
+      let timeoutFired =
+        false;
+      const abortFromCaller =
+        () =>
+          controller.abort();
+      options.signal?.addEventListener(
+        "abort",
+        abortFromCaller,
+        {
+          once:
+            true,
+        },
+      );
       const timer =
         setTimeout(
-          () =>
-            controller.abort(),
+          () => {
+            timeoutFired =
+              true;
+            controller.abort();
+          },
           timeoutMs,
         );
 
@@ -439,7 +494,7 @@ export function createHeliusClient(
                   jsonrpc:
                     "2.0",
                   id:
-                    "powerchain",
+                    ++rpcRequestId,
                   method,
                   params,
                 }),
@@ -525,12 +580,60 @@ export function createHeliusClient(
           );
         }
 
+        const contentLength =
+          Number(
+            response.headers
+              .get(
+                "content-length",
+              ) ??
+            "0",
+          );
+
+        if (
+          Number.isFinite(
+            contentLength,
+          ) &&
+          contentLength >
+            maxResponseBytes
+        ) {
+          throw new Error(
+            "PWRC_HELIUS_RESPONSE_TOO_LARGE",
+          );
+        }
+
+        let responseText:
+          string;
+
+        try {
+          responseText =
+            await response.text();
+        } catch {
+          throw new Error(
+            "PWRC_HELIUS_RESPONSE_INVALID",
+          );
+        }
+
+        if (
+          new TextEncoder()
+            .encode(
+              responseText,
+            )
+            .byteLength >
+            maxResponseBytes
+        ) {
+          throw new Error(
+            "PWRC_HELIUS_RESPONSE_TOO_LARGE",
+          );
+        }
+
         let payload:
           any;
 
         try {
           payload =
-            await response.json();
+            JSON.parse(
+              responseText,
+            );
         } catch {
           throw new Error(
             "PWRC_HELIUS_RESPONSE_INVALID",
@@ -551,10 +654,18 @@ export function createHeliusClient(
 
         return payload.result;
       } catch (error) {
-        lastError =
-          sanitizeErrorMessage(
-            error,
-          );
+        if (
+          options.signal?.aborted &&
+          !timeoutFired
+        ) {
+          lastError =
+            "PWRC_HELIUS_CANCELLED";
+        } else {
+          lastError =
+            sanitizeErrorMessage(
+              error,
+            );
+        }
 
         if (
           attempt <
@@ -582,6 +693,10 @@ export function createHeliusClient(
         clearTimeout(
           timer,
         );
+        options.signal?.removeEventListener(
+          "abort",
+          abortFromCaller,
+        );
       }
     }
 
@@ -607,6 +722,7 @@ export function createHeliusClient(
         retryPolicy: {
           ...retryPolicy,
         },
+        maxResponseBytes,
         secretsExposed:
           false,
       };
@@ -618,6 +734,9 @@ export function createHeliusClient(
       params:
         unknown[] =
         [],
+      options:
+        HeliusRequestOptions =
+        {},
     ) {
       if (
         !READ_RPC_METHODS.has(
@@ -633,6 +752,7 @@ export function createHeliusClient(
         rpcUrl,
         method,
         params,
+        options,
       );
     },
 
@@ -640,6 +760,9 @@ export function createHeliusClient(
 async priorityFeeEstimate(
   input:
     HeliusPriorityFeeEstimateInput,
+  options:
+    HeliusRequestOptions =
+    {},
 ): Promise<number> {
   const transaction =
     input.transactionBase64
@@ -707,6 +830,7 @@ async priorityFeeEstimate(
           },
         },
       ],
+      options,
     );
 
   const estimate =
@@ -738,6 +862,9 @@ async priorityFeeEstimate(
           string,
           unknown
         >,
+      options:
+        HeliusRequestOptions =
+        {},
     ) {
       if (
         !DAS_METHODS.has(
@@ -753,6 +880,7 @@ async priorityFeeEstimate(
         apiUrl,
         method,
         params,
+        options,
       );
     },
   };

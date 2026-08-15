@@ -30,7 +30,8 @@
     "./helpers": "./src/helpers.ts",
     "./native-transfer-fee-evidence": "./src/native-transfer-fee-evidence.ts",
     "./token-amount": "./src/token-amount.ts",
-    "./token-policy": "./src/token-policy.ts"
+    "./token-policy": "./src/token-policy.ts",
+    "./native-verified-transfer-intent": "./src/native-verified-transfer-intent.ts"
   },
   "description": "Canonical PowerChain PWRC protocol policy and cross-chain invariants.",
   "sideEffects": false,

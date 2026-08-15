@@ -1,23 +1,63 @@
+import {
+  canonicalTokenPolicy,
+} from "./token-policy.mjs";
+import {
+  canonicalTokenDescription,
+} from "./token-description.mjs";
+
 export function publicMetadataState() {
+  const policy =
+    canonicalTokenPolicy();
+  const native =
+    policy.native;
+  const description =
+    canonicalTokenDescription();
+
   return {
-    version: "1.0.0",
+    version:
+      "1.0.0",
+    name:
+      description.name,
+    symbol:
+      description.symbol,
+    description:
+      description.description,
+    shortDescription:
+      description.shortDescription,
+    categories:
+      [...description.categories],
+    useCases:
+      [...description.useCases],
+    disclaimer:
+      description.disclaimer,
+    descriptionSha256:
+      description.descriptionSha256,
+    renewableEnergyRelated:
+      true,
     mint:
-      "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+      native.mint,
     tokenProgram:
-      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      native.tokenProgram,
     tokenMetadataProgram:
-      "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+      native.metadata
+        .metaplexProgram,
     uri:
-      "https://token.powerchain.energy/metadata/metadata.json",
+      native.metadata.uri,
     image:
-      "https://token.powerchain.energy/assets/tokens/pwrc-logo.png",
+      native.metadata.image,
     token2022: {
       metadataPointer:
         true,
+      metadataPointerTarget:
+        native.metadata.pointer,
       tokenMetadata:
         true,
     },
+    tokenPolicySha256:
+      policy.policySha256,
     canonicalMetadataWriteExposed:
+      false,
+    publicWrites:
       false,
   };
 }

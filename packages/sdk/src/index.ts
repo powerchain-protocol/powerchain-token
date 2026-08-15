@@ -11,3 +11,6 @@ export * from "./helius-client.js";
 export * from "./native-token-transactions.js";
 export * from "./idempotency-registry.js";
 export * from "./token.js";
+export * from "./utility.js";
+export * from "./native-transfer-preflight.js";
+export * from "./native-transfer-review-bundle.js";

@@ -2,27 +2,34 @@
   "name": "PowerChain",
   "version": "1.0.0",
   "canonical": true,
-  "documentationUpdate": {
-    "rootReadmeRewritten": true,
-    "changelogConsolidated": true,
-    "programReadmesUpdated": true,
-    "contractsReadmeUpdated": true,
-    "openApiReadmeUpdated": true,
-    "documentationGateAdded": true,
-    "productionDocumentationGate": true,
-    "criticalDocumentationManifestBindings": true
+  "descriptionPolicy": {
+    "domain": "POWERCHAIN_PWRC_TOKEN_DESCRIPTION_V1",
+    "descriptionSha256": "786cf50005186f88da572a666add55ad43a682bb7ac6d8cd433fd01e55e614e5",
+    "renewableEnergyRelated": true,
+    "metadataParity": true,
+    "assetApiParity": true,
+    "tokenDescriptionRoute": "/api/v1/token/description",
+    "tokenPolicyUnchanged": true
   },
   "validation": {
     "productionChecks": {
       "ok": true,
-      "checks": 81,
-      "passed": 81,
-      "failed": 0
+      "checks": 92,
+      "passed": 92,
+      "failed": 0,
+      "failures": []
     },
-    "documentationCheck": true,
-    "manifestBindings": 138,
+    "tokenDescriptionSourceTestsPassed": 5,
+    "manifestBindings": 198,
     "generatorDuplicates": 0,
-    "verifierDuplicates": 0
+    "verifierDuplicates": 0,
+    "javascriptSyntaxFiles": 185,
+    "shellSyntaxFiles": 8,
+    "dependencyInstallRun": false,
+    "dependencyAwareTypecheckRun": false,
+    "cargoBuildRun": false,
+    "anchorBuildRun": false,
+    "suiMoveBuildRun": false
   },
   "mainnetStatus": {
     "ok": true,
@@ -55,5 +62,5 @@
       "token-transfer-fee-authorities:not-configured"
     ]
   },
-  "sourceTreeSha256": "7c5e91da66b1d18931f3bcb6893272451530925bd933072c6953d06fd21fa4b5"
+  "sourceTreeSha256": "84aa0eb9541febd9a04a7d8a85cbd98f5b5529ab52e8f279f2a52c22dbdfa78a"
 }

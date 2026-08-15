@@ -1,3 +1,7 @@
+import {
+  canonicalTokenPolicy,
+} from "./token-policy.mjs";
+
 export function publicPlatformState(
   env = process.env,
 ) {
@@ -6,24 +10,57 @@ export function publicPlatformState(
     apiVersion: "v1",
     product: "PowerChain Token",
     canonicalAsset: {
-      name: "PowerChain",
-      symbol: "PWRC",
-      chain: "solana",
-      network: "mainnet-beta",
+      name:
+        canonicalTokenPolicy()
+          .native.name,
+      symbol:
+        canonicalTokenPolicy()
+          .native.symbol,
+      chain:
+        canonicalTokenPolicy()
+          .native.chain,
+      network:
+        canonicalTokenPolicy()
+          .native.network,
       mint:
-        "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+        canonicalTokenPolicy()
+          .native.mint,
       tokenProgram:
-        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        canonicalTokenPolicy()
+          .native.tokenProgram,
       metadataProgram:
-        "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
-      decimals: 9,
+        canonicalTokenPolicy()
+          .native.metadata
+          .metaplexProgram,
+      decimals:
+        canonicalTokenPolicy()
+          .native.decimals,
+      tokenPolicySha256:
+        canonicalTokenPolicy()
+          .policySha256,
     },
     wrappedAsset: {
-      name: "Wrapped PowerChain",
-      symbol: "wPWRC",
-      chain: "sui",
-      decimals: 9,
-      genesisSupplyBaseUnits: "0",
+      name:
+        canonicalTokenPolicy()
+          .wrapped.name,
+      symbol:
+        canonicalTokenPolicy()
+          .wrapped.symbol,
+      chain:
+        canonicalTokenPolicy()
+          .wrapped.chain,
+      network:
+        canonicalTokenPolicy()
+          .wrapped.network,
+      decimals:
+        canonicalTokenPolicy()
+          .wrapped.decimals,
+      genesisSupplyBaseUnits:
+        canonicalTokenPolicy()
+          .wrapped.genesisSupplyBaseUnits,
+      tokenPolicySha256:
+        canonicalTokenPolicy()
+          .policySha256,
     },
     features: {
       feeQuotes: true,
@@ -63,13 +100,33 @@ export function publicFeePolicy(
       "250",
     );
 
+  const tokenPolicy =
+    canonicalTokenPolicy();
+  const native =
+    tokenPolicy.native;
+
   return {
     version: "1.0.0",
+    tokenPolicySha256:
+      tokenPolicy.policySha256,
     nativeToken2022Fee: {
-      basisPoints: 250,
-      maximumFeeTokens: "1000000",
+      basisPoints:
+        Number(
+          native.transferFee.basisPoints,
+        ),
+      maximumFeeTokens:
+        (
+          BigInt(
+            native.transferFee.maximumFeeBaseUnits,
+          ) /
+          1_000_000_000n
+        ).toString(),
       maximumFeeBaseUnits:
-        "1000000000000000",
+        native.transferFee.maximumFeeBaseUnits,
+      feeCapStartsAtGrossBaseUnits:
+        native.transferFee.capStartsAtGrossBaseUnits,
+      rounding:
+        native.transferFee.rounding,
     },
     serviceFee: {
       enabled:

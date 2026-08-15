@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   createPwrcUtilityAuthorization,
+  createPwrcUtilityWalletAuthorization,
+  verifyPwrcUtilityWalletAuthorization,
 } from "../packages/protocol/src/utility.js";
 import {
   evaluateComputeAdmission,
@@ -234,6 +236,127 @@ test(
           },
         ),
       /PWRC_COMPUTE_WORK_UNITS_INVALID/,
+    );
+  },
+);
+
+
+test(
+  "wallet-signable utility authorization binds network, service, recipient, nonce and token policy",
+  () => {
+    const authorization =
+      createPwrcUtilityWalletAuthorization({
+        network:
+          "mainnet-beta",
+        serviceId:
+          "service-ai-001",
+        recipient:
+          "FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy",
+        nonce:
+          "nonce-12345678",
+        requestId:
+          "request-12345678",
+        idempotencyKey:
+          "idem-12345678",
+        wallet:
+          "11111111111111111111111111111111",
+        workload:
+          "ai-inference",
+        units:
+          10n,
+        unitPriceBaseUnits:
+          100n,
+        maxSpendBaseUnits:
+          2_000n,
+        issuedAt:
+          "2026-08-15T00:00:00.000Z",
+        expiresAt:
+          "2026-08-15T00:05:00.000Z",
+      });
+
+    assert.equal(
+      authorization.network,
+      "mainnet-beta",
+    );
+    assert.equal(
+      authorization.signatureIncluded,
+      false,
+    );
+    assert.match(
+      authorization.walletMessageSha256,
+      /^[a-f0-9]{64}$/,
+    );
+    assert.match(
+      authorization.authorizationSha256,
+      /^[a-f0-9]{64}$/,
+    );
+
+    const verified =
+      verifyPwrcUtilityWalletAuthorization(
+        authorization,
+        "2026-08-15T00:01:00.000Z",
+      );
+
+    assert.equal(
+      verified.authorizationSha256,
+      authorization.authorizationSha256,
+    );
+  },
+);
+
+test(
+  "wallet-signable utility authorization rejects tampering and expiry",
+  () => {
+    const authorization =
+      createPwrcUtilityWalletAuthorization({
+        network:
+          "devnet",
+        serviceId:
+          "service-ai-001",
+        recipient:
+          "FeeszhrKKEsvxr1kg8LDtPx6BLcEbYHiAThYaxajNhqy",
+        nonce:
+          "nonce-12345678",
+        requestId:
+          "request-12345678",
+        idempotencyKey:
+          "idem-12345678",
+        wallet:
+          "11111111111111111111111111111111",
+        workload:
+          "api-compute",
+        units:
+          1n,
+        unitPriceBaseUnits:
+          10n,
+        maxSpendBaseUnits:
+          10n,
+        issuedAt:
+          "2026-08-15T00:00:00.000Z",
+        expiresAt:
+          "2026-08-15T00:05:00.000Z",
+      });
+
+    assert.throws(
+      () =>
+        verifyPwrcUtilityWalletAuthorization(
+          {
+            ...authorization,
+            serviceId:
+              "service-ai-002",
+          },
+          "2026-08-15T00:01:00.000Z",
+        ),
+      /PWRC_UTILITY_WALLET_AUTH_MESSAGE_MISMATCH|PWRC_UTILITY_WALLET_AUTH_COMMITMENT_MISMATCH/,
+    );
+
+    assert.throws(
+      () =>
+        verifyPwrcUtilityWalletAuthorization(
+          authorization,
+          "2026-08-15T00:05:00.000Z",
+        ),
+      /PWRC_UTILITY_WALLET_AUTH_EXPIRED/,
     );
   },
 );

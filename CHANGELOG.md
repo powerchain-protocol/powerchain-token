@@ -10,6 +10,17 @@ iterations are implementation history, not separate product versions.
 
 ### Canonical token identity
 
+- Added a committed professional token-description policy under
+  `POWERCHAIN_PWRC_TOKEN_DESCRIPTION_V1` (`786cf50005186f88da572a666add55ad43a682bb7ac6d8cd433fd01e55e614e5`), including digital payments,
+  settlement, cross-chain services, application utilities, protocol operations,
+  and renewable-energy-related digital infrastructure. The wording explicitly
+  avoids claims of energy-asset ownership, carbon-credit ownership, equity, debt,
+  dividends or company-revenue rights.
+- Propagated the canonical description to PWRC/wPWRC metadata, Token and Assets
+  API responses, SDK types, public UI copy and the new
+  `GET /api/v1/token/description` endpoint without changing the monetary token
+  policy commitment.
+
 - Established **PowerChain (PWRC)** as the canonical Solana `mainnet-beta`
   Token-2022 asset.
 - Canonical mint:
@@ -66,6 +77,10 @@ iterations are implementation history, not separate product versions.
 
 ### Native Token-2022 verification
 
+- Hardened the Helius read client with bounded response bodies, caller-owned
+  `AbortSignal` cancellation, cancellation-vs-timeout error separation and
+  monotonic per-client JSON-RPC request IDs while preserving read-only behavior.
+
 - Added exact native mint verification for mint, Token-2022 ownership, decimals,
   supply, authorities, extension set, fee configuration and metadata identity.
 - Added independent multi-RPC observation/consensus and provider-family checks.
@@ -79,6 +94,25 @@ iterations are implementation history, not separate product versions.
 - Added attestation freshness and process-local single-flight/cache protection.
 
 ### Transaction and quote integrity
+
+- Added a backward-compatible verified transfer-intent layer under
+  `POWERCHAIN_NATIVE_PWRC_VERIFIED_TRANSFER_INTENT_V1`, binding the original
+  intent SHA to fee-epoch evidence, observed epoch/slot and reviewed
+  fee-authority policy commitment.
+- Added `POWERCHAIN_NATIVE_PWRC_TRANSFER_REVIEW_BUNDLE_V1`, a deterministic
+  wallet-review bundle binding token policy, verified intent, fee evidence,
+  authority-policy commitment, preflight report and exact unsigned message.
+  The bundle is explicitly non-authorizing, unsigned and non-submitting.
+
+- Bound native transfer preflight reports to observation time/slot and added a
+  canonical `reportSha256` plus freshness/tamper verification. Simulation/RPC
+  diagnostics are normalized before entering the committed report; the report
+  remains non-authorizing and contains no signature/submission capability.
+
+- Added read-only native PWRC transfer preflight with Token-2022 ATA
+  owner/mint/frozen-state checks, balance sufficiency, destination ATA
+  compatibility, recent blockhash, network-fee and ATA-rent estimates, payer SOL
+  checks and optional transaction simulation. Preflight never signs or submits.
 
 - Added Token-2022 `TransferCheckedWithFee` unsigned transaction planning.
 - Added deterministic transfer intents binding canonical mint, participants,
@@ -115,6 +149,23 @@ iterations are implementation history, not separate product versions.
 
 ### Token policy API and SDK
 
+- Corrected cacheable API entity semantics: request-scoped `requestId` values
+  now remain in `x-request-id` headers instead of stable JSON representations,
+  strong ETags are calculated from the exact serialized entity body, and
+  conditional GET/HEAD supports lists, wildcard and weak validators with
+  documented `304 Not Modified` responses.
+
+- Expanded the canonical `PowerChain Token API` namespace with token-scoped
+  metadata and fee routes, trailing-slash support, and discovery links.
+- Added `/api/v1/assets` and `/api/v1/assets/{symbol}` for the policy-bound PWRC
+  and wPWRC registry, with closed OpenAPI schemas and stable 400/404 behavior.
+- Refactored public metadata/native-fee identity to derive from canonical token
+  policy rather than duplicate constants.
+- Added typed SDK `tokenMetadata()`, `tokenFees()`, `assets()` and `asset()`
+  methods.
+- Upgraded the built-in `/swagger` explorer with search, tag filtering, route
+  counts and direct Token/Assets navigation while keeping it dependency-free.
+
 - Added `config/token-policy.json` as the canonical PWRC/wPWRC policy source.
 - Added `GET /api/v1/token/policy` with a closed OpenAPI schema.
 - Legacy `GET /api/v1/token/native-policy` now derives from the canonical policy
@@ -142,6 +193,19 @@ iterations are implementation history, not separate product versions.
   authorization is invented by the repository.
 
 ### Security and runtime hardening
+
+- Replaced the API server's fixed-window traffic limiter with a bounded
+  process-local token bucket, added explicit burst capacities, refill-derived
+  retry timing and rate-limit policy headers.
+- Added fail-closed trusted-proxy handling: forwarded client IPs are ignored by
+  default and accepted only when the immediate proxy has an explicitly listed
+  address and the forwarded chain passes bounded IP validation. No distributed
+  rate-limit claim is made.
+
+- Added a wallet-signable utility authorization envelope binding network,
+  canonical PWRC mint/token-policy SHA, service, recipient, nonce,
+  idempotency, workload, exact spend limits and 15-minute expiry; the
+  envelope remains unsigned and wallet/application-owned.
 
 - Canonical JSON commitment helpers reject unsupported/non-deterministic values.
 - Added exact 32-byte Base58 Solana identity validation.
@@ -174,7 +238,41 @@ iterations are implementation history, not separate product versions.
 - `pnpm-lock.yaml`, `Cargo.lock`, and `Move.lock` are generated only by real
   toolchains; no lockfile is fabricated.
 
+
+### Client UI/UX
+
+- Rebuilt the public token console around a responsive token/asset/fee workflow
+  with stronger hierarchy, mobile navigation, persistent light/dark theme,
+  release/API status, polished loading/error/retry states and accessibility.
+- Upgraded PWRC asset presentation and the fee calculator with quick amounts,
+  inline validation, exact BigInt formatting, policy/fingerprint display and
+  clearer read-only/no-wallet messaging.
+- Fixed `/swagger` navigation through the client server, restricted client proxy
+  and static surfaces to GET/HEAD, rejected upstream redirects and stripped
+  upstream `Set-Cookie`.
+- Added `client:ui:check` and dependency-free source tests, including CSP
+  compatibility and large-integer formatting guards.
+
 ### Documentation and release hygiene
+
+- Refined the Token Console UI/UX with clearer visual hierarchy, responsive
+  transaction-safety workflow, live transfer-policy status, improved light/dark
+  theme controls, system-theme synchronization, mobile safe-area quick actions,
+  endpoint discovery chips, refresh timestamps and online/offline feedback.
+- Added accessible focus/live-region behavior and retained reduced-motion
+  handling. The interface remains read-only and exposes no wallet signing or
+  transaction-submission action.
+
+- Rebuilt the lightweight client UI with a professional responsive token
+  dashboard, PWRC/wPWRC asset cards, API-backed token metrics, improved fee
+  quote states, persistent light/dark theming, mobile behavior and accessible
+  copy/error/loading feedback.
+- Upgraded the technical docs runtime with responsive navigation and persistent
+  theming.
+- Upgraded the built-in Swagger explorer with a structured API overview,
+  responsive filters, persistent theme, route-copy controls and clearer empty
+  and failure states.
+- Added client browser security headers and a dedicated UI/UX production gate.
 
 - Consolidated the root README around canonical `1.0.0` identity and current
   source/release state.

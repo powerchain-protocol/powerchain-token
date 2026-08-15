@@ -101,6 +101,9 @@ for (const invariant of [
   "idempotencyKey",
   "maxSpendBaseUnits",
   "PWRC_UTILITY_MAX_SPEND_EXCEEDED",
+  "POWERCHAIN_PWRC_UTILITY_WALLET_AUTHORIZATION_V1",
+  "createPwrcUtilityWalletAuthorization",
+  "verifyPwrcUtilityWalletAuthorization",
 ]) {
   if (!utility.includes(invariant)) {
     failures.push(

@@ -34,6 +34,10 @@ import {
   type NativePwrcTransferFeeEpochEvidence,
 } from "@powerchain/protocol/native-transfer-fee-evidence";
 import {
+  createNativePwrcVerifiedTransferIntent,
+  type NativePwrcVerifiedTransferIntent,
+} from "@powerchain/protocol/native-verified-transfer-intent";
+import {
   assertNativePwrcTransferIntentFresh,
   createNativePwrcTransferIntent,
   verifyNativePwrcTransferIntent,
@@ -561,6 +565,30 @@ export function createNativePwrcTransferIntentForTransaction(
     payer:
       input.payer ??
       input.owner,
+  });
+}
+
+
+export interface CreateVerifiedNativePwrcTransferIntentForTransactionInput {
+  intent:
+    NativePwrcTransferIntent;
+  feeEvidence:
+    NativePwrcTransferFeeEpochEvidence;
+  feeAuthorityPolicySha256:
+    string;
+}
+
+export function createVerifiedNativePwrcTransferIntentForTransaction(
+  input:
+    CreateVerifiedNativePwrcTransferIntentForTransactionInput,
+): NativePwrcVerifiedTransferIntent {
+  return createNativePwrcVerifiedTransferIntent({
+    intent:
+      input.intent,
+    feeEvidence:
+      input.feeEvidence,
+    feeAuthorityPolicySha256:
+      input.feeAuthorityPolicySha256,
   });
 }
 

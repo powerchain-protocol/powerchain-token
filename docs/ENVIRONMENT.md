@@ -243,3 +243,44 @@ HELIUS_HEALTH_CACHE_MS=15000
 
 TTL for successful Helius health results. Allowed range is `0..60000` ms.
 `0` disables result caching while in-flight coalescing remains available.
+
+
+### Helius response-size and cancellation safety
+
+The Helius read client bounds successful JSON-RPC/DAS response bodies before
+JSON parsing. The default limit is:
+
+```text
+HELIUS_MAX_RESPONSE_BYTES=2000000
+```
+
+Accepted configuration is 1 KiB through 10 MB. Responses whose declared
+`Content-Length` exceeds the bound fail immediately, and bodies without a
+trusted length are checked again after reading.
+
+SDK read calls accept an optional `AbortSignal`. Caller cancellation is reported
+as `PWRC_HELIUS_CANCELLED`; the client's own deadline remains
+`PWRC_HELIUS_TIMEOUT`. Cancellation is not retried.
+
+JSON-RPC request IDs are monotonically increasing within each client instance
+instead of using a static ID. This improves request/response diagnostics without
+exposing credentials or enabling writes.
+
+
+## API rate-limit and trusted-proxy variables
+
+```text
+PWRC_API_RATE_LIMIT=120
+PWRC_API_RATE_LIMIT_BURST=120
+PWRC_EXPENSIVE_API_RATE_LIMIT=20
+PWRC_EXPENSIVE_API_RATE_LIMIT_BURST=20
+PWRC_TRUSTED_PROXY_ADDRESSES=
+PWRC_TRUSTED_PROXY_HOPS=1
+```
+
+`*_RATE_LIMIT` is the token refill rate per minute and `*_BURST` is the maximum
+bucket capacity. The implementation is process-local.
+
+`X-Forwarded-For` is ignored unless the immediate socket peer appears in
+`PWRC_TRUSTED_PROXY_ADDRESSES`. Do not populate that variable with client
+addresses or broad/unreviewed proxy ranges.

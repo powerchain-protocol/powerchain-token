@@ -1,7 +1,7 @@
 {
   "name": "PowerChain",
   "symbol": "PWRC",
-  "description": "PowerChain (PWRC) is the fixed-supply native Token-2022 utility token of the PowerChain network and application ecosystem.",
+  "description": "PowerChain (PWRC) is the native fixed-supply Token-2022 utility token of the PowerChain ecosystem. PWRC is designed for digital payments, settlement, cross-chain services, application utilities, protocol operations, and renewable-energy-related digital infrastructure. The token is built around transparent fixed-supply policy, deterministic transaction handling, and wallet-owned execution. PWRC does not represent equity, debt, dividends, ownership of energy assets, carbon credits, or a claim on company revenue.",
   "image": "https://token.powerchain.energy/assets/tokens/pwrc-logo.png",
   "external_url": "https://powerchain.energy",
   "properties": {
@@ -25,6 +25,25 @@
       "TransferFeeConfig",
       "MetadataPointer",
       "TokenMetadata"
-    ]
+    ],
+    "categories": [
+      "utility-token",
+      "payments",
+      "cross-chain",
+      "renewable-energy",
+      "digital-infrastructure"
+    ],
+    "use_cases": [
+      "digital-payments",
+      "settlement",
+      "cross-chain-services",
+      "application-utilities",
+      "protocol-operations",
+      "renewable-energy-related-digital-infrastructure"
+    ],
+    "description_policy": {
+      "domain": "POWERCHAIN_PWRC_TOKEN_DESCRIPTION_V1",
+      "sha256": "786cf50005186f88da572a666add55ad43a682bb7ac6d8cd433fd01e55e614e5"
+    }
   }
 }

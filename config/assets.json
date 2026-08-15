@@ -19,7 +19,9 @@
         "TransferFeeConfig",
         "MetadataPointer",
         "TokenMetadata"
-      ]
+      ],
+      "description": "PowerChain (PWRC) is the native fixed-supply Token-2022 utility token for payments, settlement, cross-chain services, applications, protocol operations, and renewable-energy-related digital infrastructure.",
+      "descriptionPolicySha256": "786cf50005186f88da572a666add55ad43a682bb7ac6d8cd433fd01e55e614e5"
     },
     "wPWRC": {
       "name": "Wrapped PowerChain",
@@ -38,7 +40,9 @@
       "wrapped": true,
       "canonicalSupplyOrigin": "solana:PWRC",
       "maxWrappedSupplyBaseUnits": "18446000000000000000",
-      "supplyModel": "mint-on-verified-lock-burn-before-release"
+      "supplyModel": "mint-on-verified-lock-burn-before-release",
+      "description": "Wrapped PowerChain (wPWRC) is the Sui representation of canonical PWRC, designed for 1:1 base-unit cross-chain accounting and access to PowerChain utility use cases, including payments, applications, protocol operations, and renewable-energy-related digital infrastructure.",
+      "descriptionPolicySha256": "786cf50005186f88da572a666add55ad43a682bb7ac6d8cd433fd01e55e614e5"
     }
   },
   "tokenPolicy": {

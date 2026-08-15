@@ -1,5 +1,8 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
+import {
+  canonicalTokenDescription,
+} from "./token-description.mjs";
 
 function canonicalJson(
   value,
@@ -268,6 +271,8 @@ export function canonicalTokenSnapshot() {
 export function canonicalTokenProfile() {
   const native =
     policy.native;
+  const description =
+    canonicalTokenDescription();
 
   return {
     version:
@@ -276,6 +281,12 @@ export function canonicalTokenProfile() {
       native.name,
     symbol:
       native.symbol,
+    description:
+      description.shortDescription,
+    descriptionSha256:
+      description.descriptionSha256,
+    renewableEnergyRelated:
+      true,
     mint:
       native.mint,
     tokenProgram:

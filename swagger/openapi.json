@@ -4,7 +4,7 @@
     "title": "PowerChain Token API",
     "version": "1.0.0",
     "summary": "PWRC token, fee, bridge, release-status and Solana indexed-data API.",
-    "description": "PowerChain Token 1.0.0 API. Public surface is read-only plus deterministic quote endpoints. No bridge mint/release, deployment, release authorization or other monetary write endpoint is exposed.",
+    "description": "Canonical read-only PowerChain PWRC/wPWRC API. Token identity, policy, metadata, fees, assets, bridge quotes, verification, release status and indexed data. No wallet signing, transaction submission, minting or administrative write operations are exposed.",
     "license": {
       "name": "Apache-2.0"
     }
@@ -25,6 +25,10 @@
     },
     {
       "name": "Token"
+    },
+    {
+      "name": "Assets",
+      "description": "Canonical PowerChain asset registry"
     },
     {
       "name": "Network"
@@ -186,6 +190,53 @@
                   "$ref": "#/components/schemas/TokenResponse"
                 }
               }
+            },
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. The cached representation is still current.",
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
@@ -230,7 +281,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Compatibility/public fee-policy route. Token-scoped alias: `/api/v1/token/fees`."
       }
     },
     "/api/v1/fees/quote": {
@@ -838,9 +890,57 @@
                   "$ref": "#/components/schemas/MetadataResponse"
                 }
               }
+            },
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. The cached representation is still current.",
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
-        }
+        },
+        "description": "Compatibility alias for `/api/v1/token/metadata`."
       }
     },
     "/api/v1/bridge/quote/sui-to-solana": {
@@ -1492,8 +1592,7 @@
                     "metadata",
                     "verifier",
                     "publicWrites",
-                    "policySha256",
-                    "requestId"
+                    "policySha256"
                   ],
                   "properties": {
                     "version": {
@@ -1669,11 +1768,6 @@
                     "publicWrites": {
                       "const": false
                     },
-                    "requestId": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 128
-                    },
                     "metaplexProgramId": {
                       "const": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
                     },
@@ -1682,6 +1776,53 @@
                       "pattern": "^[a-f0-9]{64}$"
                     }
                   }
+                }
+              }
+            },
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. The cached representation is still current.",
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2224,7 +2365,167 @@
         "operationId": "getPwrcUtilityPolicy",
         "responses": {
           "200": {
-            "description": "PWRC utility and compute-security policy"
+            "description": "PWRC utility and compute-security policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "version",
+                    "asset",
+                    "workloads",
+                    "configured",
+                    "failClosed",
+                    "missing",
+                    "authorization",
+                    "computeSecurity",
+                    "publicWrites",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "asset": {
+                      "const": "PWRC"
+                    },
+                    "workloads": {
+                      "type": "array",
+                      "items": {
+                        "enum": [
+                          "ai-inference",
+                          "ai-agent",
+                          "embedding",
+                          "storage",
+                          "api-compute"
+                        ]
+                      }
+                    },
+                    "configured": {
+                      "type": "boolean"
+                    },
+                    "failClosed": {
+                      "type": "boolean"
+                    },
+                    "missing": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "authorization": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "deterministicSha256",
+                        "idempotencyRequired",
+                        "expiryRequired",
+                        "maxSpendBound",
+                        "privateKeyRequired",
+                        "legacyCommitmentAvailable",
+                        "walletSignableEnvelopeAvailable",
+                        "walletSignatureIncluded",
+                        "walletSigningDomain",
+                        "networkBound",
+                        "serviceBound",
+                        "recipientBound",
+                        "nonceBound",
+                        "tokenPolicyBound",
+                        "maxAuthorizationLifetimeSeconds"
+                      ],
+                      "properties": {
+                        "deterministicSha256": {
+                          "const": true
+                        },
+                        "idempotencyRequired": {
+                          "const": true
+                        },
+                        "expiryRequired": {
+                          "const": true
+                        },
+                        "maxSpendBound": {
+                          "const": true
+                        },
+                        "privateKeyRequired": {
+                          "const": false
+                        },
+                        "legacyCommitmentAvailable": {
+                          "const": true
+                        },
+                        "walletSignableEnvelopeAvailable": {
+                          "const": true
+                        },
+                        "walletSignatureIncluded": {
+                          "const": false
+                        },
+                        "walletSigningDomain": {
+                          "const": "POWERCHAIN_PWRC_UTILITY_WALLET_AUTHORIZATION_V1"
+                        },
+                        "networkBound": {
+                          "const": true
+                        },
+                        "serviceBound": {
+                          "const": true
+                        },
+                        "recipientBound": {
+                          "const": true
+                        },
+                        "nonceBound": {
+                          "const": true
+                        },
+                        "tokenPolicyBound": {
+                          "const": true
+                        },
+                        "maxAuthorizationLifetimeSeconds": {
+                          "const": 900
+                        }
+                      }
+                    },
+                    "computeSecurity": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "requestRateLimit",
+                        "concurrencyLimit",
+                        "payloadLimit",
+                        "workBudgetLimit",
+                        "duplicateRequestRejection",
+                        "boundedIdempotencyRegistry"
+                      ],
+                      "properties": {
+                        "requestRateLimit": {
+                          "const": true
+                        },
+                        "concurrencyLimit": {
+                          "const": true
+                        },
+                        "payloadLimit": {
+                          "const": true
+                        },
+                        "workBudgetLimit": {
+                          "const": true
+                        },
+                        "duplicateRequestRejection": {
+                          "const": true
+                        },
+                        "boundedIdempotencyRegistry": {
+                          "const": true
+                        }
+                      }
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2251,8 +2552,7 @@
                     "wrapped",
                     "policyDomain",
                     "policySha256",
-                    "publicWrites",
-                    "requestId"
+                    "publicWrites"
                   ],
                   "properties": {
                     "version": {
@@ -2475,16 +2775,413 @@
                     },
                     "publicWrites": {
                       "const": false
-                    },
-                    "requestId": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 128
                     }
                   }
                 }
               }
+            },
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
+          },
+          "304": {
+            "description": "Not Modified. The cached representation is still current.",
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/token/metadata": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Canonical PWRC metadata from the token policy",
+        "operationId": "getTokenMetadata",
+        "responses": {
+          "200": {
+            "description": "Canonical PWRC metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetadataResponse"
+                }
+              }
+            },
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. The cached representation is still current.",
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/token/fees": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Canonical PWRC native and service-fee policy",
+        "operationId": "getTokenFees",
+        "responses": {
+          "200": {
+            "description": "Canonical PWRC fee policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeePolicyResponse"
+                }
+              }
+            },
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. The cached representation is still current.",
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/assets": {
+      "get": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "List canonical PowerChain assets",
+        "operationId": "listAssets",
+        "responses": {
+          "200": {
+            "description": "Canonical PowerChain asset registry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetListResponse"
+                }
+              }
+            },
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. The cached representation is still current.",
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/assets/{symbol}": {
+      "get": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Read a canonical PowerChain asset by symbol",
+        "operationId": "getAssetBySymbol",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "description": "Canonical PowerChain asset symbol. Matching is case-insensitive.",
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 16,
+              "examples": [
+                "PWRC",
+                "wPWRC"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Canonical asset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetResponse"
+                }
+              }
+            },
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid asset symbol",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Asset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. The cached representation is still current.",
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier. Request-scoped metadata is carried in this header rather than the cacheable representation body.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/token/description": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Canonical PWRC professional description and utility scope",
+        "operationId": "getTokenDescription",
+        "responses": {
+          "200": {
+            "description": "Canonical PowerChain token description",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenDescriptionResponse"
+                }
+              }
+            },
+            "headers": {
+              "x-request-id": {
+                "description": "Per-request correlation identifier.",
+                "schema": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              },
+              "ETag": {
+                "description": "Strong SHA-256 ETag of the exact cacheable JSON representation body.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Public cache policy for the stable representation.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified. The cached representation is still current."
           }
         }
       }
@@ -2671,10 +3368,19 @@
           "genesisSupplyBaseUnits",
           "nativeTransferFeeBps",
           "nativeTransferFeeCapTokens",
-          "requestId",
           "nativeTransferFeeCapBaseUnits",
           "feeCapStartsAtGrossBaseUnits",
-          "policySha256"
+          "policySha256",
+          "apiVersion",
+          "product",
+          "resource",
+          "canonical",
+          "tokenPolicySha256",
+          "endpoints",
+          "publicWrites",
+          "description",
+          "descriptionSha256",
+          "renewableEnergyRelated"
         ],
         "properties": {
           "version": {
@@ -2707,9 +3413,6 @@
           "nativeTransferFeeCapTokens": {
             "const": "1000000"
           },
-          "requestId": {
-            "type": "string"
-          },
           "metadataProgram": {
             "const": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
           },
@@ -2721,6 +3424,90 @@
           },
           "policySha256": {
             "const": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
+          },
+          "apiVersion": {
+            "const": "v1"
+          },
+          "product": {
+            "const": "PowerChain Token API"
+          },
+          "resource": {
+            "const": "PWRC"
+          },
+          "canonical": {
+            "const": true
+          },
+          "tokenPolicySha256": {
+            "const": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
+          },
+          "endpoints": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "profile",
+              "policy",
+              "metadata",
+              "fees",
+              "transferPolicy",
+              "utilityPolicy",
+              "nativePolicy",
+              "nativeVerification",
+              "nativeAttestation",
+              "assets",
+              "openapi",
+              "description"
+            ],
+            "properties": {
+              "profile": {
+                "const": "/api/v1/token"
+              },
+              "policy": {
+                "const": "/api/v1/token/policy"
+              },
+              "metadata": {
+                "const": "/api/v1/token/metadata"
+              },
+              "fees": {
+                "const": "/api/v1/token/fees"
+              },
+              "transferPolicy": {
+                "const": "/api/v1/token/transfer-policy"
+              },
+              "utilityPolicy": {
+                "const": "/api/v1/token/utility-policy"
+              },
+              "nativePolicy": {
+                "const": "/api/v1/token/native-policy"
+              },
+              "nativeVerification": {
+                "const": "/api/v1/token/native-verification"
+              },
+              "nativeAttestation": {
+                "const": "/api/v1/token/native-attestation"
+              },
+              "assets": {
+                "const": "/api/v1/assets"
+              },
+              "openapi": {
+                "const": "/api/v1/openapi.json"
+              },
+              "description": {
+                "const": "/api/v1/token/description"
+              }
+            }
+          },
+          "publicWrites": {
+            "const": false
+          },
+          "description": {
+            "type": "string",
+            "minLength": 60
+          },
+          "descriptionSha256": {
+            "const": "786cf50005186f88da572a666add55ad43a682bb7ac6d8cd433fd01e55e614e5"
+          },
+          "renewableEnergyRelated": {
+            "const": true
           }
         },
         "additionalProperties": false
@@ -2759,7 +3546,7 @@
           "nativeToken2022Fee",
           "serviceFee",
           "networkFee",
-          "requestId"
+          "tokenPolicySha256"
         ],
         "properties": {
           "version": {
@@ -2774,10 +3561,11 @@
           "networkFee": {
             "type": "object"
           },
-          "requestId": {
-            "type": "string"
+          "tokenPolicySha256": {
+            "const": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "FeeQuoteResponse": {
         "type": "object",
@@ -3164,7 +3952,17 @@
           "image",
           "token2022",
           "canonicalMetadataWriteExposed",
-          "requestId"
+          "tokenPolicySha256",
+          "publicWrites",
+          "name",
+          "symbol",
+          "description",
+          "shortDescription",
+          "categories",
+          "useCases",
+          "disclaimer",
+          "descriptionSha256",
+          "renewableEnergyRelated"
         ],
         "properties": {
           "version": {
@@ -3186,16 +3984,589 @@
             "const": "https://token.powerchain.energy/assets/tokens/pwrc-logo.png"
           },
           "token2022": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "metadataPointer",
+              "metadataPointerTarget",
+              "tokenMetadata"
+            ],
+            "properties": {
+              "metadataPointer": {
+                "const": true
+              },
+              "metadataPointerTarget": {
+                "const": "self"
+              },
+              "tokenMetadata": {
+                "const": true
+              }
+            }
           },
           "canonicalMetadataWriteExposed": {
             "const": false
           },
+          "tokenPolicySha256": {
+            "const": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
+          },
+          "publicWrites": {
+            "const": false
+          },
+          "name": {
+            "const": "PowerChain"
+          },
+          "symbol": {
+            "const": "PWRC"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 100
+          },
+          "shortDescription": {
+            "type": "string",
+            "minLength": 60
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "useCases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "disclaimer": {
+            "type": "string",
+            "minLength": 60
+          },
+          "descriptionSha256": {
+            "const": "786cf50005186f88da572a666add55ad43a682bb7ac6d8cd433fd01e55e614e5"
+          },
+          "renewableEnergyRelated": {
+            "const": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Asset": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "name",
+          "symbol",
+          "chain",
+          "network",
+          "standard",
+          "decimals",
+          "canonical",
+          "wrapped",
+          "canonicalAsset",
+          "canonicalSupplyOrigin",
+          "mint",
+          "tokenProgram",
+          "fixedSupply",
+          "supplyBaseUnits",
+          "genesisSupplyBaseUnits",
+          "maxWrappedSupplyBaseUnits",
+          "canonicalBaseUnitsPerWrappedBaseUnit",
+          "supplyModel",
+          "extensions",
+          "metadata",
+          "image",
+          "imageSha256",
+          "localAssetPath",
+          "tokenPolicySha256",
+          "publicWrites",
+          "description",
+          "descriptionPolicySha256"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "const": "1.0.0"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "symbol": {
+            "enum": [
+              "PWRC",
+              "wPWRC"
+            ]
+          },
+          "chain": {
+            "enum": [
+              "solana",
+              "sui"
+            ]
+          },
+          "network": {
+            "enum": [
+              "mainnet-beta",
+              "mainnet"
+            ]
+          },
+          "standard": {
+            "enum": [
+              "Token-2022",
+              "Sui Coin"
+            ]
+          },
+          "decimals": {
+            "const": 9
+          },
+          "canonical": {
+            "type": "boolean"
+          },
+          "wrapped": {
+            "type": "boolean"
+          },
+          "canonicalAsset": {
+            "const": "PWRC"
+          },
+          "canonicalSupplyOrigin": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mint": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tokenProgram": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fixedSupply": {
+            "type": "boolean"
+          },
+          "supplyBaseUnits": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "genesisSupplyBaseUnits": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "maxWrappedSupplyBaseUnits": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "canonicalBaseUnitsPerWrappedBaseUnit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "supplyModel": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "extensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "metadata": {
+            "type": "string",
+            "format": "uri"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri"
+          },
+          "imageSha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "localAssetPath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tokenPolicySha256": {
+            "const": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
+          },
+          "publicWrites": {
+            "const": false
+          },
           "requestId": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "descriptionPolicySha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      },
+      "AssetResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "name",
+          "symbol",
+          "chain",
+          "network",
+          "standard",
+          "decimals",
+          "canonical",
+          "wrapped",
+          "canonicalAsset",
+          "canonicalSupplyOrigin",
+          "mint",
+          "tokenProgram",
+          "fixedSupply",
+          "supplyBaseUnits",
+          "genesisSupplyBaseUnits",
+          "maxWrappedSupplyBaseUnits",
+          "canonicalBaseUnitsPerWrappedBaseUnit",
+          "supplyModel",
+          "extensions",
+          "metadata",
+          "image",
+          "imageSha256",
+          "localAssetPath",
+          "tokenPolicySha256",
+          "publicWrites",
+          "description",
+          "descriptionPolicySha256"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "const": "1.0.0"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "symbol": {
+            "enum": [
+              "PWRC",
+              "wPWRC"
+            ]
+          },
+          "chain": {
+            "enum": [
+              "solana",
+              "sui"
+            ]
+          },
+          "network": {
+            "enum": [
+              "mainnet-beta",
+              "mainnet"
+            ]
+          },
+          "standard": {
+            "enum": [
+              "Token-2022",
+              "Sui Coin"
+            ]
+          },
+          "decimals": {
+            "const": 9
+          },
+          "canonical": {
+            "type": "boolean"
+          },
+          "wrapped": {
+            "type": "boolean"
+          },
+          "canonicalAsset": {
+            "const": "PWRC"
+          },
+          "canonicalSupplyOrigin": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mint": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tokenProgram": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fixedSupply": {
+            "type": "boolean"
+          },
+          "supplyBaseUnits": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "genesisSupplyBaseUnits": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "maxWrappedSupplyBaseUnits": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "canonicalBaseUnitsPerWrappedBaseUnit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "supplyModel": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "extensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "metadata": {
+            "type": "string",
+            "format": "uri"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri"
+          },
+          "imageSha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "localAssetPath": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tokenPolicySha256": {
+            "const": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
+          },
+          "publicWrites": {
+            "const": false
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "descriptionPolicySha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      },
+      "AssetListResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "canonical",
+          "tokenPolicyDomain",
+          "tokenPolicySha256",
+          "count",
+          "canonicalSymbol",
+          "assets",
+          "publicWrites"
+        ],
+        "properties": {
+          "version": {
+            "const": "1.0.0"
+          },
+          "canonical": {
+            "const": true
+          },
+          "tokenPolicyDomain": {
+            "const": "POWERCHAIN_PWRC_TOKEN_POLICY_V1"
+          },
+          "tokenPolicySha256": {
+            "const": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
+          },
+          "count": {
+            "const": 2
+          },
+          "canonicalSymbol": {
+            "const": "PWRC"
+          },
+          "assets": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            }
+          },
+          "publicWrites": {
+            "const": false
+          }
+        }
+      },
+      "TokenDescriptionResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "canonical",
+          "name",
+          "symbol",
+          "description",
+          "shortDescription",
+          "compactDescription",
+          "wrappedDescription",
+          "categories",
+          "useCases",
+          "disclaimer",
+          "domain",
+          "descriptionSha256",
+          "publicWrites"
+        ],
+        "properties": {
+          "version": {
+            "const": "1.0.0"
+          },
+          "canonical": {
+            "const": true
+          },
+          "name": {
+            "const": "PowerChain"
+          },
+          "symbol": {
+            "const": "PWRC"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 100,
+            "examples": [
+              "PowerChain (PWRC) is the native fixed-supply Token-2022 utility token of the PowerChain ecosystem. PWRC is designed for digital payments, settlement, cross-chain services, application utilities, protocol operations, and renewable-energy-related digital infrastructure. The token is built around transparent fixed-supply policy, deterministic transaction handling, and wallet-owned execution. PWRC does not represent equity, debt, dividends, ownership of energy assets, carbon credits, or a claim on company revenue."
+            ]
+          },
+          "shortDescription": {
+            "type": "string",
+            "minLength": 60,
+            "examples": [
+              "PowerChain (PWRC) is the native fixed-supply Token-2022 utility token for payments, settlement, cross-chain services, applications, protocol operations, and renewable-energy-related digital infrastructure."
+            ]
+          },
+          "compactDescription": {
+            "type": "string",
+            "minLength": 40
+          },
+          "wrappedDescription": {
+            "type": "string",
+            "minLength": 60
+          },
+          "categories": {
+            "type": "array",
+            "minItems": 5,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "useCases": {
+            "type": "array",
+            "minItems": 6,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "disclaimer": {
+            "type": "string",
+            "minLength": 60
+          },
+          "domain": {
+            "const": "POWERCHAIN_PWRC_TOKEN_DESCRIPTION_V1"
+          },
+          "descriptionSha256": {
+            "const": "786cf50005186f88da572a666add55ad43a682bb7ac6d8cd433fd01e55e614e5"
+          },
+          "publicWrites": {
+            "const": false
           }
         }
       }
     }
+  },
+  "x-powerchain": {
+    "release": "1.0.0",
+    "canonicalToken": "PWRC",
+    "tokenPolicyDomain": "POWERCHAIN_PWRC_TOKEN_POLICY_V1",
+    "tokenPolicySha256": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4",
+    "publicWrites": false
   }
 }

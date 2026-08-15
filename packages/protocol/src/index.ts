@@ -30,3 +30,4 @@ export * from "./native-token-policy.js";
 export * from "./native-transfer-fee-evidence.js";
 export * from "./token-amount.js";
 export * from "./token-policy.js";
+export * from "./native-verified-transfer-intent.js";

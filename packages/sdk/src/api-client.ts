@@ -78,6 +78,103 @@ export interface PowerChainFeeQuote {
   requestId: string;
 }
 
+
+export interface PowerChainAsset {
+  id:
+    string;
+  version:
+    "1.0.0";
+  name:
+    string;
+  symbol:
+    "PWRC" |
+    "wPWRC";
+  description:
+    string |
+    null;
+  descriptionPolicySha256:
+    string |
+    null;
+  chain:
+    "solana" |
+    "sui";
+  network:
+    "mainnet-beta" |
+    "mainnet";
+  standard:
+    "Token-2022" |
+    "Sui Coin";
+  decimals:
+    9;
+  canonical:
+    boolean;
+  wrapped:
+    boolean;
+  canonicalAsset:
+    "PWRC";
+  canonicalSupplyOrigin:
+    string |
+    null;
+  mint:
+    string |
+    null;
+  tokenProgram:
+    string |
+    null;
+  fixedSupply:
+    boolean;
+  supplyBaseUnits:
+    string |
+    null;
+  genesisSupplyBaseUnits:
+    string |
+    null;
+  maxWrappedSupplyBaseUnits:
+    string |
+    null;
+  canonicalBaseUnitsPerWrappedBaseUnit:
+    string |
+    null;
+  supplyModel:
+    string |
+    null;
+  extensions:
+    readonly string[];
+  metadata:
+    string;
+  image:
+    string;
+  imageSha256:
+    string |
+    null;
+  localAssetPath:
+    string |
+    null;
+  tokenPolicySha256:
+    "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4";
+  publicWrites:
+    false;
+}
+
+export interface PowerChainAssetRegistry {
+  version:
+    "1.0.0";
+  canonical:
+    true;
+  tokenPolicyDomain:
+    "POWERCHAIN_PWRC_TOKEN_POLICY_V1";
+  tokenPolicySha256:
+    "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4";
+  count:
+    2;
+  canonicalSymbol:
+    "PWRC";
+  assets:
+    readonly PowerChainAsset[];
+  publicWrites:
+    false;
+}
+
 export function createPowerChainApiClient(
   options:
     PowerChainApiClientOptions =
@@ -167,17 +264,54 @@ export function createPowerChainApiClient(
 
     token() {
       return get<{
-        version: "1.0.0";
-        name: "PowerChain";
-        symbol: "PWRC";
-        mint: string;
-        tokenProgram: string;
-        decimals: 9;
-        genesisSupplyTokens: string;
-        genesisSupplyBaseUnits: string;
-        nativeTransferFeeBps: 250;
-        nativeTransferFeeCapTokens: "1000000";
-        requestId: string;
+        version:
+          "1.0.0";
+        apiVersion:
+          "v1";
+        product:
+          "PowerChain Token API";
+        resource:
+          "PWRC";
+        description:
+          string;
+        descriptionSha256:
+          string;
+        renewableEnergyRelated:
+          true;
+        canonical:
+          true;
+        tokenPolicySha256:
+          "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4";
+        name:
+          "PowerChain";
+        symbol:
+          "PWRC";
+        mint:
+          string;
+        tokenProgram:
+          string;
+        metadataProgram:
+          string;
+        decimals:
+          9;
+        genesisSupplyTokens:
+          "18446000000";
+        genesisSupplyBaseUnits:
+          "18446000000000000000";
+        nativeTransferFeeBps:
+          250;
+        nativeTransferFeeCapTokens:
+          "1000000";
+        nativeTransferFeeCapBaseUnits:
+          "1000000000000000";
+        feeCapStartsAtGrossBaseUnits:
+          "40000000000000000";
+        policySha256:
+          "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4";
+        endpoints:
+          Record<string, string>;
+        publicWrites:
+          false;
       }>("/api/v1/token");
     },
 
@@ -270,9 +404,125 @@ tokenPolicy() {
       "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4";
     publicWrites:
       false;
-    requestId:
-      string;
   }>("/api/v1/token/policy");
+},
+
+
+tokenDescription() {
+  return get<{
+    version:
+      "1.0.0";
+    canonical:
+      true;
+    name:
+      "PowerChain";
+    symbol:
+      "PWRC";
+    description:
+      string;
+    shortDescription:
+      string;
+    compactDescription:
+      string;
+    wrappedDescription:
+      string;
+    categories:
+      readonly string[];
+    useCases:
+      readonly string[];
+    disclaimer:
+      string;
+    domain:
+      "POWERCHAIN_PWRC_TOKEN_DESCRIPTION_V1";
+    descriptionSha256:
+      string;
+    publicWrites:
+      false;
+  }>("/api/v1/token/description");
+},
+
+tokenMetadata() {
+  return get<{
+    version:
+      "1.0.0";
+    mint:
+      string;
+    tokenProgram:
+      string;
+    tokenMetadataProgram:
+      string;
+    uri:
+      string;
+    image:
+      string;
+    token2022:
+      {
+        metadataPointer:
+          true;
+        metadataPointerTarget:
+          "self";
+        tokenMetadata:
+          true;
+      };
+    tokenPolicySha256:
+      "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4";
+    canonicalMetadataWriteExposed:
+      false;
+    publicWrites:
+      false;
+  }>("/api/v1/token/metadata");
+},
+
+tokenFees() {
+  return get<{
+    version:
+      "1.0.0";
+    tokenPolicySha256:
+      "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4";
+    nativeToken2022Fee:
+      Record<string, unknown>;
+    serviceFee:
+      Record<string, unknown>;
+    networkFee:
+      Record<string, unknown>;
+  }>("/api/v1/token/fees");
+},
+
+assets() {
+  return get<
+    PowerChainAssetRegistry
+  >(
+    "/api/v1/assets",
+  );
+},
+
+asset(
+  symbol:
+    "PWRC" |
+    "wPWRC" |
+    string,
+) {
+  const normalized =
+    symbol.trim();
+
+  if (
+    !/^[a-zA-Z0-9]{2,16}$/.test(
+      normalized,
+    )
+  ) {
+    throw new Error(
+      "PWRC_ASSET_SYMBOL_INVALID",
+    );
+  }
+
+  return get<
+    PowerChainAsset & {
+      requestId:
+        string;
+    }
+  >(
+    `/api/v1/assets/${encodeURIComponent(normalized)}`,
+  );
 },
 
     network() {

@@ -1,7 +1,7 @@
 {
   "name": "Wrapped PowerChain",
   "symbol": "wPWRC",
-  "description": "Wrapped PowerChain (wPWRC) is the Sui representation of canonical PowerChain (PWRC), designed for 1:1 base-unit bridge accounting with zero wrapped genesis supply.",
+  "description": "Wrapped PowerChain (wPWRC) is the Sui representation of canonical PWRC, designed for 1:1 base-unit cross-chain accounting and access to PowerChain utility use cases, including payments, applications, protocol operations, and renewable-energy-related digital infrastructure.",
   "image": "https://token.powerchain.energy/assets/tokens/wpwrc.png",
   "external_url": "https://powerchain.energy",
   "properties": {
@@ -23,6 +23,17 @@
     "genesis_supply_base_units": "0",
     "max_wrapped_supply_base_units": "18446000000000000000",
     "canonical_mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
-    "supply_model": "mint-on-verified-lock-burn-before-release"
+    "supply_model": "mint-on-verified-lock-burn-before-release",
+    "categories": [
+      "utility-token",
+      "payments",
+      "cross-chain",
+      "renewable-energy",
+      "digital-infrastructure"
+    ],
+    "description_policy": {
+      "domain": "POWERCHAIN_PWRC_TOKEN_DESCRIPTION_V1",
+      "sha256": "786cf50005186f88da572a666add55ad43a682bb7ac6d8cd433fd01e55e614e5"
+    }
   }
 }

@@ -44,6 +44,11 @@ import {
   publicFeePolicy,
   publicPlatformState,
 } from "../../apps/api/lib/public-platform.mjs";
+import {
+  powerChainTokenApiIndex,
+  publicAssetBySymbol,
+  publicAssetRegistry,
+} from "../../apps/api/lib/assets.mjs";
 
 const failures = [];
 
@@ -190,6 +195,36 @@ if (
 
 
 
+
+const tokenApi =
+  powerChainTokenApiIndex();
+const assetRegistry =
+  publicAssetRegistry();
+const canonicalAsset =
+  publicAssetBySymbol(
+    "PWRC",
+  );
+const wrappedAsset =
+  publicAssetBySymbol(
+    "wPWRC",
+  );
+
+if (
+  tokenApi.product !==
+    "PowerChain Token API" ||
+  tokenApi.publicWrites !==
+    false ||
+  assetRegistry.count !==
+    2 ||
+  canonicalAsset?.canonical !==
+    true ||
+  wrappedAsset?.wrapped !==
+    true
+) {
+  failures.push(
+    "powerchain-token-assets-api",
+  );
+}
 
 const nativePolicy =
   nativePwrcPolicy();
