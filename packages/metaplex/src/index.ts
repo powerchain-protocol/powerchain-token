@@ -115,3 +115,5 @@ export function assertCanonicalMetadataWriteDisabled(): never {
     "PWRC_CANONICAL_METADATA_WRITE_DISABLED",
   );
 }
+
+export * from "./compatibility.js";

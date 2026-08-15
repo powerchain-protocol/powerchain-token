@@ -1,4 +1,5 @@
 import "dotenv/config";
+process.env.WS_NO_UTF_8_VALIDATE ??= "1";
 import http from "node:http";
 import {
   installGracefulHttpShutdown,

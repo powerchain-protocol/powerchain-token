@@ -1,1 +1,0 @@
-{"version":3,"file":"circuit-breaker.d.ts","sourceRoot":"","sources":["../../../client/market/circuit-breaker.ts"],"names":[],"mappings":"AAAA,qBAAa,oBAAoB;IAGnB,QAAQ,CAAC,eAAe;IAFpC,OAAO,CAAC,QAAQ,CAAuB;gBAElB,eAAe,SAAK;IAEzC,IAAI,CAAC,GAAG,SAAgC,GAAG,IAAI;IAI/C,KAAK,IAAI,IAAI;IAIb,YAAY,CAAC,GAAG,SAAgC,GAAG,IAAI;IASvD,IAAI,MAAM,IAAI,OAAO,CAEpB;CACF"}

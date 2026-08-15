@@ -1,9 +1,21 @@
 import crypto from "node:crypto";
+import {
+  canonicalTokenEconomics,
+  canonicalTokenPolicy,
+} from "./token-policy.mjs";
 
 const BPS_DENOMINATOR = 10_000n;
-const NATIVE_FEE_BPS = 250n;
-const NATIVE_FEE_CAP = 1_000_000_000_000_000n;
-const U64_MAX = 18_446_744_073_709_551_615n;
+const TOKEN_ECONOMICS =
+  canonicalTokenEconomics();
+const TOKEN_POLICY_SHA256 =
+  canonicalTokenPolicy()
+    .policySha256;
+const NATIVE_FEE_BPS =
+  TOKEN_ECONOMICS.transferFeeBasisPoints;
+const NATIVE_FEE_CAP =
+  TOKEN_ECONOMICS.maximumTransferFeeBaseUnits;
+const FIXED_SUPPLY_BASE_UNITS =
+  TOKEN_ECONOMICS.fixedSupplyBaseUnits;
 
 const OPERATIONS = new Set([
   "bridge-solana-to-sui",
@@ -101,8 +113,13 @@ export function parseBaseUnits(raw) {
 
   const value = BigInt(raw);
 
-  if (value > U64_MAX) {
-    throw new Error("PWRC_AMOUNT_EXCEEDS_U64");
+  if (
+    value >
+      FIXED_SUPPLY_BASE_UNITS
+  ) {
+    throw new Error(
+      "PWRC_AMOUNT_EXCEEDS_SUPPLY",
+    );
   }
 
   return value;
@@ -137,12 +154,37 @@ export function nativeFee(gross) {
 }
 
 export function grossUp(net) {
+  if (
+    net < 0n ||
+    net >
+      FIXED_SUPPLY_BASE_UNITS
+  ) {
+    throw new Error(
+      "PWRC_NET_AMOUNT_INVALID",
+    );
+  }
+
   if (net === 0n) {
     return { gross: 0n, fee: 0n, net: 0n };
   }
 
+  const maximumReachableNet =
+    FIXED_SUPPLY_BASE_UNITS -
+    nativeFee(
+      FIXED_SUPPLY_BASE_UNITS,
+    );
+
+  if (
+    net > maximumReachableNet
+  ) {
+    throw new Error(
+      "PWRC_NET_AMOUNT_UNACHIEVABLE",
+    );
+  }
+
   let low = net;
-  let high = net + NATIVE_FEE_CAP + 1n;
+  let high =
+    FIXED_SUPPLY_BASE_UNITS;
 
   while (low < high) {
     const middle = (low + high) / 2n;
@@ -181,64 +223,207 @@ export function buildFeeQuote({
   ttlMs = 30_000,
   now = Date.now(),
 }) {
-  const principalFee = nativeFee(amount);
-  const serviceAllowed = SERVICE_OPERATIONS.has(operation);
-  const enabled = serviceEnabled && serviceAllowed;
+  const isSolanaSource =
+    operation ===
+      "bridge-solana-to-sui" ||
+    operation ===
+      "wallet-transfer" ||
+    operation ===
+      "quote-preview";
 
-  if (enabled && !serviceRecipient) {
-    throw new Error("PWRC_SERVICE_FEE_RECIPIENT_REQUIRED");
+  const isSuiSource =
+    operation ===
+      "bridge-sui-to-solana";
+
+  const principalSourceChain =
+    isSolanaSource
+      ? "solana"
+      : isSuiSource
+        ? "sui"
+        : null;
+
+  const principalSourceAsset =
+    principalSourceChain ===
+      "solana"
+      ? "PWRC"
+      : principalSourceChain ===
+          "sui"
+        ? "wPWRC"
+        : null;
+
+  const principalFee =
+    isSolanaSource
+      ? nativeFee(
+          amount,
+        )
+      : 0n;
+
+  const principalNet =
+    amount -
+    principalFee;
+
+  const destinationFee =
+    operation ===
+      "bridge-sui-to-solana"
+      ? nativeFee(
+          amount,
+        )
+      : 0n;
+
+  const destinationNet =
+    operation ===
+      "bridge-sui-to-solana"
+      ? amount -
+        destinationFee
+      : principalNet;
+
+  const serviceAllowed =
+    SERVICE_OPERATIONS.has(
+      operation,
+    );
+  const enabled =
+    serviceEnabled &&
+    serviceAllowed;
+
+  if (
+    enabled &&
+    !serviceRecipient
+  ) {
+    throw new Error(
+      "PWRC_SERVICE_FEE_RECIPIENT_REQUIRED",
+    );
   }
 
-  const serviceNet = enabled
-    ? ceilDiv(amount * BigInt(serviceBps), BPS_DENOMINATOR)
-    : 0n;
+  const serviceNet =
+    enabled
+      ? ceilDiv(
+          amount *
+            BigInt(
+              serviceBps,
+            ),
+          BPS_DENOMINATOR,
+        )
+      : 0n;
+
   const serviceSourceChain =
     enabled
-      ? operation === "bridge-solana-to-sui"
+      ? operation ===
+          "bridge-solana-to-sui"
         ? "solana"
         : "sui"
       : null;
+
   const serviceAsset =
-    serviceSourceChain === "solana"
+    serviceSourceChain ===
+      "solana"
       ? "PWRC"
-      : serviceSourceChain === "sui"
+      : serviceSourceChain ===
+          "sui"
         ? "wPWRC"
         : null;
+
   const service =
-    serviceSourceChain === "solana"
-      ? grossUp(serviceNet)
+    serviceSourceChain ===
+      "solana"
+      ? grossUp(
+          serviceNet,
+        )
       : {
-          gross: serviceNet,
-          fee: 0n,
-          net: serviceNet,
+          gross:
+            serviceNet,
+          fee:
+            0n,
+          net:
+            serviceNet,
         };
 
+  const totalSourceDebit =
+    amount +
+    service.gross;
+
+  if (
+    totalSourceDebit >
+      FIXED_SUPPLY_BASE_UNITS
+  ) {
+    throw new Error(
+      "PWRC_TOTAL_SOURCE_DEBIT_EXCEEDS_SUPPLY",
+    );
+  }
+
   const payload = {
-    version: "1.0.0",
+    version:
+      "1.0.0",
+    tokenPolicySha256:
+      TOKEN_POLICY_SHA256,
     operation,
-    principalGrossBaseUnits: amount.toString(),
-    nativeTransferFeeBaseUnits: principalFee.toString(),
-    principalNetBaseUnits: (amount - principalFee).toString(),
-    serviceFeeEnabled: enabled,
-    serviceFeeBasisPoints: enabled ? serviceBps : 0,
-    serviceFeeNetBaseUnits: serviceNet.toString(),
-    serviceFeeGrossTransferBaseUnits: service.gross.toString(),
-    serviceFeeTransferNativeFeeBaseUnits: service.fee.toString(),
-    serviceFeeRecipient: enabled ? serviceRecipient : null,
-    serviceFeeSourceChain: serviceSourceChain,
-    serviceFeeAsset: serviceAsset,
-    totalNativeTokenFeesBaseUnits: (principalFee + service.fee).toString(),
-    totalSourceDebitBaseUnits: (amount + service.gross).toString(),
-    totalWalletPwrcDebitBaseUnits: (amount + service.gross).toString(),
-    issuedAt: new Date(now).toISOString(),
-    expiresAt: new Date(now + ttlMs).toISOString(),
+    principalSourceChain,
+    principalSourceAsset,
+    principalGrossBaseUnits:
+      amount.toString(),
+    nativeTransferFeeBaseUnits:
+      principalFee.toString(),
+    principalNetBaseUnits:
+      principalNet.toString(),
+    destinationNativeTransferFeeBaseUnits:
+      destinationFee.toString(),
+    destinationNetBaseUnits:
+      destinationNet.toString(),
+    serviceFeeEnabled:
+      enabled,
+    serviceFeeBasisPoints:
+      enabled
+        ? serviceBps
+        : 0,
+    serviceFeeNetBaseUnits:
+      serviceNet.toString(),
+    serviceFeeGrossTransferBaseUnits:
+      service.gross.toString(),
+    serviceFeeTransferNativeFeeBaseUnits:
+      service.fee.toString(),
+    serviceFeeRecipient:
+      enabled
+        ? serviceRecipient
+        : null,
+    serviceFeeSourceChain:
+      serviceSourceChain,
+    serviceFeeAsset:
+      serviceAsset,
+    totalNativeTokenFeesBaseUnits:
+      (
+        principalFee +
+        destinationFee +
+        service.fee
+      ).toString(),
+    totalSourceDebitBaseUnits:
+      totalSourceDebit.toString(),
+    totalWalletPwrcDebitBaseUnits:
+      totalSourceDebit.toString(),
+    issuedAt:
+      new Date(
+        now,
+      ).toISOString(),
+    expiresAt:
+      new Date(
+        now + ttlMs,
+      ).toISOString(),
   };
 
-  const quoteFingerprint = crypto
-    .createHash("sha256")
-    .update("POWERCHAIN_FEE_QUOTE_V1\0")
-    .update(stableStringify(payload))
-    .digest("hex");
+  const quoteFingerprint =
+    crypto
+      .createHash(
+        "sha256",
+      )
+      .update(
+        "POWERCHAIN_FEE_QUOTE_V1\0",
+      )
+      .update(
+        stableStringify(
+          payload,
+        ),
+      )
+      .digest(
+        "hex",
+      );
 
   return {
     ...payload,

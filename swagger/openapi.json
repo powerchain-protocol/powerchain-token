@@ -842,6 +842,1652 @@
           }
         }
       }
+    },
+    "/api/v1/bridge/quote/sui-to-solana": {
+      "get": {
+        "tags": [
+          "Bridge"
+        ],
+        "summary": "Quote Sui wPWRC to Solana PWRC bridge amounts",
+        "operationId": "quoteSuiToSolanaBridge",
+        "parameters": [
+          {
+            "name": "amountBaseUnits",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*$",
+              "description": "Unsigned integer base units."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reverse bridge quote",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BridgeQuoteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid bridge quote request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bridge/lifecycle": {
+      "get": {
+        "tags": [
+          "Bridge"
+        ],
+        "summary": "Bridge settlement lifecycle and finality policy",
+        "operationId": "getBridgeLifecycle",
+        "responses": {
+          "200": {
+            "description": "Bridge settlement lifecycle",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "phases",
+                    "completionSequence",
+                    "rules",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "phases": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "completionSequence": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "rules": {
+                      "type": "object"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bridge/plan": {
+      "get": {
+        "tags": [
+          "Bridge"
+        ],
+        "summary": "Bridge execution-plan and retry policy",
+        "operationId": "getBridgePlan",
+        "responses": {
+          "200": {
+            "description": "Bridge execution policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "publicWrites",
+                    "blindRetry",
+                    "steps",
+                    "retryPolicy",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "blindRetry": {
+                      "const": false
+                    },
+                    "steps": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "retryPolicy": {
+                      "type": "object"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bridge/reconciliation": {
+      "get": {
+        "tags": [
+          "Bridge"
+        ],
+        "summary": "Bridge reconciliation and evidence policy",
+        "operationId": "getBridgeReconciliation",
+        "responses": {
+          "200": {
+            "description": "Bridge reconciliation policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "completionRequires",
+                    "evidence",
+                    "rules",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "completionRequires": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "evidence": {
+                      "type": "object"
+                    },
+                    "rules": {
+                      "type": "object"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bridge/recovery": {
+      "get": {
+        "tags": [
+          "Bridge"
+        ],
+        "summary": "Bridge failure recovery and retry policy",
+        "operationId": "getBridgeRecovery",
+        "responses": {
+          "200": {
+            "description": "Bridge recovery policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "automaticWriteRetry",
+                    "readRetry",
+                    "actions",
+                    "rules",
+                    "evidenceFreshness",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "automaticWriteRetry": {
+                      "const": false
+                    },
+                    "readRetry": {
+                      "const": true
+                    },
+                    "actions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "rules": {
+                      "type": "object"
+                    },
+                    "evidenceFreshness": {
+                      "type": "object"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bridge/audit-policy": {
+      "get": {
+        "tags": [
+          "Bridge"
+        ],
+        "summary": "Bridge audit, correlation and incident policy",
+        "operationId": "getBridgeAuditPolicy",
+        "responses": {
+          "200": {
+            "description": "Bridge audit policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "hashChain",
+                    "correlationIds",
+                    "publicWrites",
+                    "eventKinds",
+                    "severities",
+                    "sensitiveAttributesForbidden",
+                    "rules",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "hashChain": {
+                      "const": true
+                    },
+                    "correlationIds": {
+                      "const": true
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "eventKinds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "severities": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "sensitiveAttributesForbidden": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "rules": {
+                      "type": "object"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bridge/risk-policy": {
+      "get": {
+        "tags": [
+          "Bridge"
+        ],
+        "summary": "Bridge risk, exposure and circuit-breaker policy",
+        "operationId": "getBridgeRiskPolicy",
+        "responses": {
+          "200": {
+            "description": "Bridge risk policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "publicWrites",
+                    "levels",
+                    "rules",
+                    "thresholds",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "levels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "rules": {
+                      "type": "object"
+                    },
+                    "thresholds": {
+                      "type": "object"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bridge/governance-policy": {
+      "get": {
+        "tags": [
+          "Bridge"
+        ],
+        "summary": "Bridge privileged-action governance policy",
+        "operationId": "getBridgeGovernancePolicy",
+        "responses": {
+          "200": {
+            "description": "Bridge governance policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "publicWrites",
+                    "actions",
+                    "rules",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "actions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "rules": {
+                      "type": "object"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bridge/safety-policy": {
+      "get": {
+        "tags": [
+          "Bridge"
+        ],
+        "summary": "Bridge aggregate safety and progression policy",
+        "operationId": "getBridgeSafetyPolicy",
+        "responses": {
+          "200": {
+            "description": "Bridge safety policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "publicWrites",
+                    "decisions",
+                    "gates",
+                    "rules",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "decisions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "gates": {
+                      "type": "object"
+                    },
+                    "rules": {
+                      "type": "object"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bridge/policy-config": {
+      "get": {
+        "tags": [
+          "Bridge"
+        ],
+        "summary": "Bridge deployment policy configuration status",
+        "operationId": "getBridgePolicyConfig",
+        "responses": {
+          "200": {
+            "description": "Bridge policy configuration status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "version",
+                    "configured",
+                    "failClosed",
+                    "missing",
+                    "policy",
+                    "policySha256",
+                    "secretsExposed",
+                    "publicWrites",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "configured": {
+                      "type": "boolean"
+                    },
+                    "failClosed": {
+                      "type": "boolean"
+                    },
+                    "missing": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "maxItems": 32
+                    },
+                    "policy": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "additionalProperties": false,
+                      "required": [
+                        "version",
+                        "environment",
+                        "solanaNetwork",
+                        "suiNetwork",
+                        "maxPendingExposureBaseUnits",
+                        "maxPendingOperations",
+                        "maxEvidenceAgeMs",
+                        "governanceApprovalThreshold",
+                        "governanceProposalTtlMs",
+                        "policySha256"
+                      ],
+                      "properties": {
+                        "version": {
+                          "const": "1.0.0"
+                        },
+                        "environment": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 128
+                        },
+                        "solanaNetwork": {
+                          "type": "string",
+                          "enum": [
+                            "localnet",
+                            "devnet",
+                            "mainnet-beta"
+                          ]
+                        },
+                        "suiNetwork": {
+                          "type": "string",
+                          "enum": [
+                            "localnet",
+                            "devnet",
+                            "testnet",
+                            "mainnet"
+                          ]
+                        },
+                        "maxPendingExposureBaseUnits": {
+                          "type": "string",
+                          "pattern": "^[1-9][0-9]*$",
+                          "maxLength": 20
+                        },
+                        "maxPendingOperations": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "maxEvidenceAgeMs": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "governanceApprovalThreshold": {
+                          "type": "integer",
+                          "minimum": 2
+                        },
+                        "governanceProposalTtlMs": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "policySha256": {
+                          "type": "string",
+                          "pattern": "^[a-f0-9]{64}$"
+                        }
+                      }
+                    },
+                    "secretsExposed": {
+                      "const": false
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "policySha256": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "pattern": "^[a-f0-9]{64}$"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Configured bridge policy is invalid"
+          }
+        }
+      }
+    },
+    "/api/v1/token/native-policy": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Canonical native Solana PWRC Token-2022 policy",
+        "operationId": "getNativePwrcPolicy",
+        "responses": {
+          "200": {
+            "description": "Native PWRC token policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "version",
+                    "name",
+                    "symbol",
+                    "chain",
+                    "cluster",
+                    "standard",
+                    "mint",
+                    "tokenProgramId",
+                    "metaplexProgramId",
+                    "decimals",
+                    "fixedSupply",
+                    "fixedSupplyBaseUnits",
+                    "authorities",
+                    "extensions",
+                    "nativeTransferFee",
+                    "metadata",
+                    "verifier",
+                    "publicWrites",
+                    "policySha256",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "name": {
+                      "const": "PowerChain"
+                    },
+                    "symbol": {
+                      "const": "PWRC"
+                    },
+                    "chain": {
+                      "const": "solana"
+                    },
+                    "cluster": {
+                      "const": "mainnet-beta"
+                    },
+                    "standard": {
+                      "const": "Token-2022"
+                    },
+                    "mint": {
+                      "const": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc"
+                    },
+                    "tokenProgramId": {
+                      "const": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+                    },
+                    "decimals": {
+                      "const": 9
+                    },
+                    "fixedSupply": {
+                      "const": "18446000000"
+                    },
+                    "fixedSupplyBaseUnits": {
+                      "const": "18446000000000000000"
+                    },
+                    "authorities": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "mint",
+                        "freeze"
+                      ],
+                      "properties": {
+                        "mint": {
+                          "type": "null"
+                        },
+                        "freeze": {
+                          "type": "null"
+                        }
+                      }
+                    },
+                    "extensions": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "required",
+                        "forbidden"
+                      ],
+                      "properties": {
+                        "required": {
+                          "type": "array",
+                          "minItems": 3,
+                          "maxItems": 3,
+                          "uniqueItems": true,
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "TransferFeeConfig",
+                              "MetadataPointer",
+                              "TokenMetadata"
+                            ]
+                          }
+                        },
+                        "forbidden": {
+                          "type": "array",
+                          "minItems": 6,
+                          "maxItems": 6,
+                          "uniqueItems": true,
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "PermanentDelegate",
+                              "MintCloseAuthority",
+                              "DefaultAccountState",
+                              "InterestBearingConfig",
+                              "ScaledUiAmount",
+                              "PausableConfig"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "nativeTransferFee": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "basisPoints",
+                        "percent",
+                        "maximumFeePwrc",
+                        "maximumFeeBaseUnits",
+                        "capStartsAtPwrc",
+                        "capStartsAtBaseUnits",
+                        "rounding"
+                      ],
+                      "properties": {
+                        "basisPoints": {
+                          "const": 250
+                        },
+                        "percent": {
+                          "const": "2.5"
+                        },
+                        "maximumFeePwrc": {
+                          "const": "1000000"
+                        },
+                        "maximumFeeBaseUnits": {
+                          "const": "1000000000000000"
+                        },
+                        "capStartsAtPwrc": {
+                          "const": "40000000"
+                        },
+                        "capStartsAtBaseUnits": {
+                          "const": "40000000000000000"
+                        },
+                        "rounding": {
+                          "const": "ceil"
+                        }
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "pointer",
+                        "name",
+                        "symbol",
+                        "uri"
+                      ],
+                      "properties": {
+                        "pointer": {
+                          "const": "self"
+                        },
+                        "name": {
+                          "const": "PowerChain"
+                        },
+                        "symbol": {
+                          "const": "PWRC"
+                        },
+                        "uri": {
+                          "const": "https://token.powerchain.energy/metadata/metadata.json"
+                        }
+                      }
+                    },
+                    "verifier": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "programId",
+                        "verificationOnly",
+                        "mintInstruction"
+                      ],
+                      "properties": {
+                        "programId": {
+                          "const": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu"
+                        },
+                        "verificationOnly": {
+                          "const": true
+                        },
+                        "mintInstruction": {
+                          "const": false
+                        }
+                      }
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "metaplexProgramId": {
+                      "const": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+                    },
+                    "policySha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/helius": {
+      "get": {
+        "tags": [
+          "Integrations"
+        ],
+        "summary": "Sanitized Helius RPC, WebSocket and DAS integration status",
+        "operationId": "getHeliusIntegration",
+        "responses": {
+          "200": {
+            "description": "Helius integration status"
+          }
+        }
+      }
+    },
+    "/api/v1/data/solana/pwrc/helius/asset": {
+      "get": {
+        "tags": [
+          "Solana Data"
+        ],
+        "summary": "Read canonical PWRC asset data through Helius DAS",
+        "operationId": "getHeliusPwrcAsset",
+        "responses": {
+          "200": {
+            "description": "Helius DAS canonical PWRC asset response"
+          },
+          "503": {
+            "description": "Helius disabled, misconfigured, rate-limited, or unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/helius/health": {
+      "get": {
+        "tags": [
+          "Integrations"
+        ],
+        "summary": "Live Helius JSON-RPC health and network preflight",
+        "operationId": "getHeliusHealth",
+        "responses": {
+          "200": {
+            "description": "Helius live RPC health"
+          },
+          "503": {
+            "description": "Helius disabled, misconfigured, rate-limited, or unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/token/native-verification": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Native PWRC live verification configuration status",
+        "operationId": "getNativePwrcVerificationConfig",
+        "responses": {
+          "200": {
+            "description": "Native PWRC verification configuration state"
+          },
+          "503": {
+            "description": "Native PWRC verification configuration is invalid"
+          }
+        }
+      }
+    },
+    "/api/v1/token/native-attestation": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Live multi-provider native PWRC Token-2022 attestation",
+        "operationId": "getNativePwrcAttestation",
+        "responses": {
+          "200": {
+            "description": "Verified native PWRC consensus and network attestation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "version",
+                    "cluster",
+                    "verified",
+                    "mint",
+                    "nativePolicySha256",
+                    "expectedGenesisHash",
+                    "providerFamilies",
+                    "transferFeeAuthorityPolicy",
+                    "observerCount",
+                    "consensusSha256",
+                    "attestationSha256",
+                    "slotRange",
+                    "epochs",
+                    "epochSkew",
+                    "evaluationAt",
+                    "observationRanges",
+                    "publicWrites",
+                    "cache",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "cluster": {
+                      "const": "mainnet-beta"
+                    },
+                    "verified": {
+                      "const": true
+                    },
+                    "mint": {
+                      "const": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc"
+                    },
+                    "nativePolicySha256": {
+                      "const": "af5fc80addc709e247e3604a698fa2a3efecdd94e148458aceb45cc40ea90f33"
+                    },
+                    "expectedGenesisHash": {
+                      "type": "string",
+                      "minLength": 32,
+                      "maxLength": 44
+                    },
+                    "providerFamilies": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 8,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 253
+                      }
+                    },
+                    "transferFeeAuthorityPolicy": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "transferFeeConfigAuthority",
+                        "withdrawWithheldAuthority"
+                      ],
+                      "properties": {
+                        "transferFeeConfigAuthority": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 32,
+                          "maxLength": 44
+                        },
+                        "withdrawWithheldAuthority": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 32,
+                          "maxLength": 44
+                        }
+                      }
+                    },
+                    "observerCount": {
+                      "type": "integer",
+                      "minimum": 2,
+                      "maximum": 8
+                    },
+                    "consensusSha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "attestationSha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "slotRange": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "additionalProperties": false,
+                      "required": [
+                        "min",
+                        "max",
+                        "skew"
+                      ],
+                      "properties": {
+                        "min": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9][0-9]*)$"
+                        },
+                        "max": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9][0-9]*)$"
+                        },
+                        "skew": {
+                          "type": "string",
+                          "pattern": "^(0|[1-9][0-9]*)$"
+                        }
+                      }
+                    },
+                    "epochs": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 2,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "pattern": "^(0|[1-9][0-9]*)$"
+                      }
+                    },
+                    "epochSkew": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "pattern": "^(0|[1-9][0-9]*)$"
+                    },
+                    "evaluationAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "observationRanges": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 8,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "observer",
+                          "slotStart",
+                          "slotEnd",
+                          "slotSpan"
+                        ],
+                        "properties": {
+                          "observer": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 128
+                          },
+                          "slotStart": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$"
+                          },
+                          "slotEnd": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$"
+                          },
+                          "slotSpan": {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$"
+                          }
+                        }
+                      }
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "cache": {
+                      "type": "string",
+                      "enum": [
+                        "hit",
+                        "miss",
+                        "shared-flight"
+                      ]
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Verification unavailable, misconfigured, or failed closed"
+          }
+        }
+      }
+    },
+    "/api/v1/token/transfer-policy": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Native PWRC Token-2022 transfer, fee and signing policy",
+        "operationId": "getNativePwrcTransferPolicy",
+        "responses": {
+          "200": {
+            "description": "PWRC transfer runtime policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "version",
+                    "chain",
+                    "standard",
+                    "transferable",
+                    "dexTransferCompatible",
+                    "tradeability",
+                    "exchangeListingVerified",
+                    "liquidityConfigured",
+                    "transferInstruction",
+                    "associatedTokenAccounts",
+                    "nativeTransferFee",
+                    "transactionSafetyCeilings",
+                    "priorityFeeEstimation",
+                    "signing",
+                    "liveFeeEpochSafety",
+                    "transactionIntegrity",
+                    "transactionSubmission",
+                    "publicWrites",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "chain": {
+                      "const": "solana"
+                    },
+                    "standard": {
+                      "const": "Token-2022"
+                    },
+                    "transferable": {
+                      "const": true
+                    },
+                    "dexTransferCompatible": {
+                      "const": true
+                    },
+                    "tradeability": {
+                      "const": "integration-ready"
+                    },
+                    "exchangeListingVerified": {
+                      "const": false
+                    },
+                    "liquidityConfigured": {
+                      "const": false
+                    },
+                    "transferInstruction": {
+                      "const": "TransferCheckedWithFee"
+                    },
+                    "associatedTokenAccounts": {
+                      "const": "idempotent-create-supported"
+                    },
+                    "nativeTransferFee": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "basisPoints",
+                        "maximumFeePwrc",
+                        "rounding"
+                      ],
+                      "properties": {
+                        "basisPoints": {
+                          "const": 250
+                        },
+                        "maximumFeePwrc": {
+                          "const": "1000000"
+                        },
+                        "rounding": {
+                          "const": "ceil"
+                        }
+                      }
+                    },
+                    "transactionSafetyCeilings": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "computeUnitLimit",
+                        "priorityFeeMicroLamports",
+                        "priorityFeeLamports"
+                      ],
+                      "properties": {
+                        "computeUnitLimit": {
+                          "const": 400000
+                        },
+                        "priorityFeeMicroLamports": {
+                          "const": "1000000"
+                        },
+                        "priorityFeeLamports": {
+                          "const": "400000"
+                        }
+                      }
+                    },
+                    "priorityFeeEstimation": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "provider",
+                        "defaultLevel",
+                        "transactionEncoding"
+                      ],
+                      "properties": {
+                        "provider": {
+                          "const": "helius"
+                        },
+                        "defaultLevel": {
+                          "const": "Medium"
+                        },
+                        "transactionEncoding": {
+                          "const": "Base64"
+                        }
+                      }
+                    },
+                    "signing": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "walletOwned",
+                        "serverPrivateKeys"
+                      ],
+                      "properties": {
+                        "walletOwned": {
+                          "const": true
+                        },
+                        "serverPrivateKeys": {
+                          "const": false
+                        }
+                      }
+                    },
+                    "transactionIntegrity": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "deterministicIntent",
+                        "exactUnsignedMessageReview",
+                        "blockhashLifetimeBound",
+                        "unexpectedInstructionDetection"
+                      ],
+                      "properties": {
+                        "deterministicIntent": {
+                          "const": true
+                        },
+                        "exactUnsignedMessageReview": {
+                          "const": true
+                        },
+                        "blockhashLifetimeBound": {
+                          "const": true
+                        },
+                        "unexpectedInstructionDetection": {
+                          "const": true
+                        }
+                      }
+                    },
+                    "transactionSubmission": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "sdkIncluded",
+                        "walletOrApplicationOwned",
+                        "blindRetry"
+                      ],
+                      "properties": {
+                        "sdkIncluded": {
+                          "const": false
+                        },
+                        "walletOrApplicationOwned": {
+                          "const": true
+                        },
+                        "blindRetry": {
+                          "const": false
+                        }
+                      }
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "liveFeeEpochSafety": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "productionBuilder",
+                        "evidenceDomain",
+                        "epochBound",
+                        "finalizedSlotBound",
+                        "freshnessBound",
+                        "authorityPolicyCompatible",
+                        "legacyBuilderAvailable",
+                        "productionEvidenceRequired"
+                      ],
+                      "properties": {
+                        "productionBuilder": {
+                          "const": "buildVerifiedUnsignedNativePwrcTransferTransaction"
+                        },
+                        "evidenceDomain": {
+                          "const": "POWERCHAIN_NATIVE_PWRC_TRANSFER_FEE_EPOCH_V1"
+                        },
+                        "epochBound": {
+                          "const": true
+                        },
+                        "finalizedSlotBound": {
+                          "const": true
+                        },
+                        "freshnessBound": {
+                          "const": true
+                        },
+                        "authorityPolicyCompatible": {
+                          "const": true
+                        },
+                        "legacyBuilderAvailable": {
+                          "const": true
+                        },
+                        "productionEvidenceRequired": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/token/utility-policy": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "PWRC utility, AI compute and abuse-prevention policy",
+        "operationId": "getPwrcUtilityPolicy",
+        "responses": {
+          "200": {
+            "description": "PWRC utility and compute-security policy"
+          }
+        }
+      }
+    },
+    "/api/v1/token/policy": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Canonical PWRC and wPWRC economic and identity policy",
+        "operationId": "getCanonicalTokenPolicy",
+        "responses": {
+          "200": {
+            "description": "Canonical PWRC/wPWRC policy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "version",
+                    "canonical",
+                    "native",
+                    "wrapped",
+                    "policyDomain",
+                    "policySha256",
+                    "publicWrites",
+                    "requestId"
+                  ],
+                  "properties": {
+                    "version": {
+                      "const": "1.0.0"
+                    },
+                    "canonical": {
+                      "const": true
+                    },
+                    "native": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "chain",
+                        "network",
+                        "name",
+                        "symbol",
+                        "mint",
+                        "standard",
+                        "tokenProgram",
+                        "decimals",
+                        "fixedSupplyTokens",
+                        "fixedSupplyBaseUnits",
+                        "u64Max",
+                        "u64HeadroomBaseUnits",
+                        "extensions",
+                        "transferFee",
+                        "authorities",
+                        "metadata"
+                      ],
+                      "properties": {
+                        "chain": {
+                          "const": "solana"
+                        },
+                        "network": {
+                          "const": "mainnet-beta"
+                        },
+                        "name": {
+                          "const": "PowerChain"
+                        },
+                        "symbol": {
+                          "const": "PWRC"
+                        },
+                        "mint": {
+                          "const": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc"
+                        },
+                        "standard": {
+                          "const": "Token-2022"
+                        },
+                        "tokenProgram": {
+                          "const": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+                        },
+                        "decimals": {
+                          "const": 9
+                        },
+                        "fixedSupplyTokens": {
+                          "const": "18446000000"
+                        },
+                        "fixedSupplyBaseUnits": {
+                          "const": "18446000000000000000"
+                        },
+                        "u64Max": {
+                          "const": "18446744073709551615"
+                        },
+                        "u64HeadroomBaseUnits": {
+                          "const": "744073709551615"
+                        },
+                        "extensions": {
+                          "type": "array",
+                          "minItems": 3,
+                          "maxItems": 3,
+                          "uniqueItems": true,
+                          "items": {
+                            "enum": [
+                              "TransferFeeConfig",
+                              "MetadataPointer",
+                              "TokenMetadata"
+                            ]
+                          }
+                        },
+                        "transferFee": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "basisPoints",
+                            "maximumFeeBaseUnits",
+                            "capStartsAtGrossBaseUnits",
+                            "rounding"
+                          ],
+                          "properties": {
+                            "basisPoints": {
+                              "const": "250"
+                            },
+                            "maximumFeeBaseUnits": {
+                              "const": "1000000000000000"
+                            },
+                            "capStartsAtGrossBaseUnits": {
+                              "const": "40000000000000000"
+                            },
+                            "rounding": {
+                              "const": "ceil"
+                            }
+                          }
+                        },
+                        "authorities": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "mintAuthorityAfterGenesis",
+                            "freezeAuthority",
+                            "transferFeeAuthorities"
+                          ],
+                          "properties": {
+                            "mintAuthorityAfterGenesis": {
+                              "type": "null"
+                            },
+                            "freezeAuthority": {
+                              "type": "null"
+                            },
+                            "transferFeeAuthorities": {
+                              "const": "release-evidence-required"
+                            }
+                          }
+                        },
+                        "metadata": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "pointer",
+                            "uri",
+                            "image",
+                            "metaplexProgram"
+                          ],
+                          "properties": {
+                            "pointer": {
+                              "const": "self"
+                            },
+                            "uri": {
+                              "const": "https://token.powerchain.energy/metadata/metadata.json"
+                            },
+                            "image": {
+                              "const": "https://token.powerchain.energy/assets/tokens/pwrc-logo.png"
+                            },
+                            "metaplexProgram": {
+                              "const": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "wrapped": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "chain",
+                        "network",
+                        "name",
+                        "symbol",
+                        "standard",
+                        "decimals",
+                        "genesisSupplyBaseUnits",
+                        "maxWrappedSupplyBaseUnits",
+                        "canonicalBaseUnitsPerWrappedBaseUnit",
+                        "supplyModel",
+                        "metadata"
+                      ],
+                      "properties": {
+                        "chain": {
+                          "const": "sui"
+                        },
+                        "network": {
+                          "const": "mainnet"
+                        },
+                        "name": {
+                          "const": "Wrapped PowerChain"
+                        },
+                        "symbol": {
+                          "const": "wPWRC"
+                        },
+                        "standard": {
+                          "const": "Sui Coin"
+                        },
+                        "decimals": {
+                          "const": 9
+                        },
+                        "genesisSupplyBaseUnits": {
+                          "const": "0"
+                        },
+                        "maxWrappedSupplyBaseUnits": {
+                          "const": "18446000000000000000"
+                        },
+                        "canonicalBaseUnitsPerWrappedBaseUnit": {
+                          "const": "1"
+                        },
+                        "supplyModel": {
+                          "const": "mint-on-verified-lock-burn-before-release"
+                        },
+                        "metadata": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "uri",
+                            "image"
+                          ],
+                          "properties": {
+                            "uri": {
+                              "const": "https://token.powerchain.energy/metadata/wpwrc.json"
+                            },
+                            "image": {
+                              "const": "https://token.powerchain.energy/assets/tokens/wpwrc.png"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "policyDomain": {
+                      "const": "POWERCHAIN_PWRC_TOKEN_POLICY_V1"
+                    },
+                    "policySha256": {
+                      "const": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
+                    },
+                    "publicWrites": {
+                      "const": false
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1025,7 +2671,10 @@
           "genesisSupplyBaseUnits",
           "nativeTransferFeeBps",
           "nativeTransferFeeCapTokens",
-          "requestId"
+          "requestId",
+          "nativeTransferFeeCapBaseUnits",
+          "feeCapStartsAtGrossBaseUnits",
+          "policySha256"
         ],
         "properties": {
           "version": {
@@ -1063,8 +2712,18 @@
           },
           "metadataProgram": {
             "const": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+          },
+          "nativeTransferFeeCapBaseUnits": {
+            "const": "1000000000000000"
+          },
+          "feeCapStartsAtGrossBaseUnits": {
+            "const": "40000000000000000"
+          },
+          "policySha256": {
+            "const": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "NetworkResponse": {
         "type": "object",
@@ -1124,6 +2783,7 @@
         "type": "object",
         "required": [
           "version",
+          "tokenPolicySha256",
           "operation",
           "principalGrossBaseUnits",
           "nativeTransferFeeBaseUnits",
@@ -1134,7 +2794,11 @@
           "requestId",
           "serviceFeeSourceChain",
           "serviceFeeAsset",
-          "totalSourceDebitBaseUnits"
+          "totalSourceDebitBaseUnits",
+          "principalSourceChain",
+          "principalSourceAsset",
+          "destinationNativeTransferFeeBaseUnits",
+          "destinationNetBaseUnits"
         ],
         "properties": {
           "version": {
@@ -1218,6 +2882,39 @@
           },
           "totalSourceDebitBaseUnits": {
             "type": "string"
+          },
+          "principalSourceChain": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "solana",
+              "sui",
+              null
+            ]
+          },
+          "principalSourceAsset": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "PWRC",
+              "wPWRC",
+              null
+            ]
+          },
+          "destinationNativeTransferFeeBaseUnits": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "destinationNetBaseUnits": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "tokenPolicySha256": {
+            "const": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
           }
         }
       },
@@ -1278,7 +2975,11 @@
             "const": "1.0.0"
           },
           "direction": {
-            "const": "solana-to-sui"
+            "type": "string",
+            "enum": [
+              "solana-to-sui",
+              "sui-to-solana"
+            ]
           },
           "canonical": {
             "type": "object"

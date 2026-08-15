@@ -13,6 +13,10 @@ import {
 import {
   PWRC_CANONICAL_MINT,
 } from "@powerchain/protocol/constants";
+import {
+  nativePwrcTransferPreview,
+  verifyNativePwrcMintObservation,
+} from "@powerchain/protocol/native-token";
 
 export interface PowerChainSolanaClientConfig {
   cluster: SolanaCluster;
@@ -88,5 +92,62 @@ export function createPowerChainSolanaClients(
       ),
     primary,
     secondary,
+    verifyNativePwrcMintObservation,
+    nativePwrcTransferPreview,
+  };
+}
+
+
+export function createPowerChainSolanaReadConnections(
+  input:
+    PowerChainSolanaClientConfig,
+) {
+  const env =
+    input.env ??
+    process.env;
+  const commitment =
+    input.commitment ??
+    "finalized";
+  const rpcUrl =
+    resolveRpc(
+      input.cluster,
+      env,
+    );
+  const wsEndpoint =
+    resolveWebSocket(
+      input.cluster,
+      env,
+    );
+  const secondaryRpcUrl =
+    resolveSecondaryRpc(
+      input.cluster,
+      env,
+    );
+
+  return {
+    cluster:
+      input.cluster,
+    canonicalMint:
+      new PublicKey(
+        PWRC_CANONICAL_MINT,
+      ),
+    primary:
+      new Connection(
+        rpcUrl,
+        {
+          commitment,
+          wsEndpoint,
+        },
+      ),
+    secondary:
+      secondaryRpcUrl
+        ? new Connection(
+            secondaryRpcUrl,
+            commitment,
+          )
+        : null,
+    secondaryConfigured:
+      secondaryRpcUrl !==
+      null,
   };
 }

@@ -56,7 +56,7 @@ expectThrow(
     parseBaseUnits(
       "18446744073709551616",
     ),
-  "PWRC_AMOUNT_EXCEEDS_U64",
+  "PWRC_AMOUNT_EXCEEDS_SUPPLY",
 );
 
 expectThrow(
@@ -118,6 +118,8 @@ const quote =
 if (
   quote.serviceFeeNetBaseUnits !==
     "25000000000" ||
+  quote.tokenPolicySha256 !==
+    "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4" ||
   !/^[a-f0-9]{64}$/.test(
     quote.quoteFingerprint,
   ) ||
@@ -158,6 +160,35 @@ if (
 ) {
   failures.push(
     "fee-quote-not-deterministic",
+  );
+}
+
+let totalDebitBounded =
+  false;
+
+try {
+  buildFeeQuote({
+    amount:
+      18_446_000_000_000_000_000n,
+    operation:
+      "bridge-solana-to-sui",
+    serviceEnabled:
+      true,
+    serviceBps:
+      250,
+    serviceRecipient:
+      "11111111111111111111111111111111",
+  });
+} catch (error) {
+  totalDebitBounded =
+    error instanceof Error &&
+    error.message ===
+      "PWRC_TOTAL_SOURCE_DEBIT_EXCEEDS_SUPPLY";
+}
+
+if (!totalDebitBounded) {
+  failures.push(
+    "total-source-debit-supply-bound",
   );
 }
 

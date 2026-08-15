@@ -33,6 +33,11 @@ export function publicPlatformState(
           env.CDP_SQL_API_BEARER_TOKEN?.trim() ||
           env.CDP_SQL_API_TOKEN?.trim(),
         ),
+      helius:
+        env.HELIUS_ENABLED === "true" &&
+        Boolean(
+          env.HELIUS_API_KEY?.trim(),
+        ),
       cdpUserWallet:
         env.POWERCHAIN_CDP_USER_WALLET_ENABLED === "true",
       bridgeWritesExposed: false,

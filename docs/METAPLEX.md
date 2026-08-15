@@ -101,3 +101,25 @@ GET /api/v1/metadata
 
 The response exposes only canonical public identities and indicates that
 canonical metadata mutation is not exposed by the API.
+
+
+## Token-2022 fungible compatibility
+
+PWRC is modeled as a Metaplex Token Metadata fungible token while its mint is
+owned by Token-2022. Compatibility checks bind:
+
+```text
+canonical PWRC mint
+Metaplex Token Metadata program
+Token-2022 program
+name = PowerChain
+symbol = PWRC
+canonical metadata URI
+canonical image URI
+token standard = Fungible
+```
+
+The canonical repository metadata payload is `metadata/metadata.json`.
+
+PowerChain keeps metadata mutation disabled in the general SDK. Any future
+on-chain metadata update requires explicit governance/deployment evidence.

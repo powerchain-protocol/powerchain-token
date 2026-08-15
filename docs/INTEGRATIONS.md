@@ -50,3 +50,15 @@ The Move `BridgeController`:
 
 Actual cross-chain finality is verified off-chain/on the destination chain;
 neither chain may trust a self-reported browser event.
+
+## Helius
+
+`@powerchain/sdk/helius` provides a server-oriented, read-only Helius client for
+standard Solana JSON-RPC and DAS methods. Mainnet and Devnet endpoint selection
+is deterministic and credentials are not exposed through public API responses.
+
+The native PWRC verification stack can combine Helius with an independent
+secondary RPC to detect provider disagreement.
+
+See `docs/HELIUS.md`.
+

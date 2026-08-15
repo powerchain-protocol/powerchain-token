@@ -9,6 +9,12 @@ import {
   normalizeRpcUrl,
   normalizeWebSocketUrl,
 } from "./urls.js";
+import {
+  buildHeliusRpcUrl,
+  buildHeliusWebSocketUrl,
+  heliusNetworkForCluster,
+  resolveHeliusApiKey,
+} from "./helius.js";
 
 export type SolanaCluster =
   | "localnet"
@@ -146,6 +152,24 @@ export function resolveRpc(
     env["NODE_ENV"] ===
       "production";
 
+  if (
+    cluster !== "localnet" &&
+    env["HELIUS_ENABLED"] === "true"
+  ) {
+    const network =
+      heliusNetworkForCluster(
+        cluster,
+      );
+
+    return buildHeliusRpcUrl(
+      network,
+      resolveHeliusApiKey(
+        network,
+        env,
+      ),
+    );
+  }
+
   const candidate =
     cluster === "mainnet-beta"
       ? env["PWRC_MAINNET_RPC_URL"]
@@ -213,11 +237,10 @@ export function resolveSecondaryRpc(
       env,
     );
 
-  if (secondary === primary) {
-    throw new Error(
-      "PWRC_SECONDARY_RPC_MUST_DIFFER",
-    );
-  }
+  assertIndependentRpcProviders(
+    primary,
+    secondary,
+  );
 
   return secondary;
 }
@@ -227,6 +250,24 @@ export function resolveWebSocket(
   env: NodeJS.ProcessEnv =
     process.env,
 ): string {
+  if (
+    cluster !== "localnet" &&
+    env["HELIUS_ENABLED"] === "true"
+  ) {
+    const network =
+      heliusNetworkForCluster(
+        cluster,
+      );
+
+    return buildHeliusWebSocketUrl(
+      network,
+      resolveHeliusApiKey(
+        network,
+        env,
+      ),
+    );
+  }
+
   const value =
     env["PWRC_WS_URL"]
       ?.trim();
@@ -253,4 +294,264 @@ export function resolveWebSocket(
   return SOLANA_PUBLIC_WS[
     cluster
   ];
+}
+
+
+
+const BASE58_ALPHABET =
+  "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
+function decodedBase58Length(
+  value:
+    string,
+): number {
+  if (
+    !/^[1-9A-HJ-NP-Za-km-z]+$/.test(
+      value,
+    )
+  ) {
+    return -1;
+  }
+
+  const bytes = [
+    0,
+  ];
+
+  for (
+    const character of
+      value
+  ) {
+    const digit =
+      BASE58_ALPHABET.indexOf(
+        character,
+      );
+
+    if (
+      digit <
+        0
+    ) {
+      return -1;
+    }
+
+    let carry =
+      digit;
+
+    for (
+      let index =
+        0;
+      index <
+        bytes.length;
+      index +=
+        1
+    ) {
+      const current =
+        bytes[index] *
+          58 +
+        carry;
+      bytes[index] =
+        current &
+        0xff;
+      carry =
+        current >>
+        8;
+    }
+
+    while (
+      carry >
+        0
+    ) {
+      bytes.push(
+        carry &
+          0xff,
+      );
+      carry >>=
+        8;
+    }
+  }
+
+  let leadingZeroes =
+    0;
+
+  while (
+    leadingZeroes <
+      value.length &&
+    value[
+      leadingZeroes
+    ] ===
+      "1"
+  ) {
+    leadingZeroes +=
+      1;
+  }
+
+  const significantLength =
+    bytes.length ===
+      1 &&
+    bytes[0] ===
+      0
+      ? 0
+      : bytes.length;
+
+  return (
+    leadingZeroes +
+    significantLength
+  );
+}
+
+function assertGenesisHashValue(
+  value:
+    string,
+): string {
+  const normalized =
+    value.trim();
+
+  if (
+    normalized.length <
+      32 ||
+    normalized.length >
+      44 ||
+    decodedBase58Length(
+      normalized,
+    ) !==
+      32
+  ) {
+    throw new Error(
+      "PWRC_SOLANA_GENESIS_HASH_INVALID",
+    );
+  }
+
+  return normalized;
+}
+
+export function resolveExpectedSolanaGenesisHash(
+  cluster:
+    SolanaCluster,
+  env:
+    NodeJS.ProcessEnv =
+      process.env,
+): string {
+  if (
+    cluster ===
+      "localnet"
+  ) {
+    const local =
+      env[
+        "PWRC_SOLANA_LOCALNET_GENESIS_HASH"
+      ]?.trim();
+
+    if (!local) {
+      throw new Error(
+        "PWRC_SOLANA_LOCALNET_GENESIS_HASH_REQUIRED",
+      );
+    }
+
+    return assertGenesisHashValue(
+      local,
+    );
+  }
+
+  const key =
+    cluster ===
+      "mainnet-beta"
+      ? "PWRC_SOLANA_MAINNET_GENESIS_HASH"
+      : "PWRC_SOLANA_DEVNET_GENESIS_HASH";
+
+  const value =
+    env[
+      key
+    ]?.trim();
+
+  if (!value) {
+    throw new Error(
+      `PWRC_SOLANA_GENESIS_HASH_REQUIRED:${cluster}`,
+    );
+  }
+
+  return assertGenesisHashValue(
+    value,
+  );
+}
+
+export function solanaRpcProviderFamily(
+  value:
+    string,
+): string {
+  const url =
+    new URL(
+      value,
+    );
+  const hostname =
+    url.hostname
+      .toLowerCase();
+
+  if (
+    hostname ===
+      "mainnet.helius-rpc.com" ||
+    hostname ===
+      "devnet.helius-rpc.com" ||
+    hostname.endsWith(
+      ".helius-rpc.com",
+    )
+  ) {
+    return "helius";
+  }
+
+  if (
+    hostname ===
+      "api.mainnet-beta.solana.com" ||
+    hostname ===
+      "api.devnet.solana.com" ||
+    hostname.endsWith(
+      ".solana.com",
+    )
+  ) {
+    return "solana-public";
+  }
+
+  return hostname;
+}
+
+export function assertIndependentRpcProviders(
+  primary:
+    string,
+  secondary:
+    string,
+): void {
+  const primaryUrl =
+    new URL(
+      primary,
+    );
+  const secondaryUrl =
+    new URL(
+      secondary,
+    );
+
+  if (
+    primaryUrl.origin ===
+      secondaryUrl.origin &&
+    primaryUrl.pathname ===
+      secondaryUrl.pathname
+  ) {
+    throw new Error(
+      "PWRC_SECONDARY_RPC_MUST_DIFFER",
+    );
+  }
+
+  const primaryFamily =
+    solanaRpcProviderFamily(
+      primary,
+    );
+  const secondaryFamily =
+    solanaRpcProviderFamily(
+      secondary,
+    );
+
+  if (
+    primaryFamily ===
+      secondaryFamily
+  ) {
+    throw new Error(
+      `PWRC_SECONDARY_RPC_PROVIDER_MUST_DIFFER:${primaryFamily}`,
+    );
+  }
 }

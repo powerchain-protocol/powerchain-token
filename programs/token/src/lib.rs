@@ -15,6 +15,9 @@ const PWRC_CANONICAL_MINT: Pubkey =
 const PWRC_DECIMALS: u8 = 9;
 const PWRC_GENESIS_BASE_UNITS: u64 =
     18_446_000_000_000_000_000;
+const PWRC_TRANSFER_FEE_BPS: u16 = 250;
+const PWRC_MAX_TRANSFER_FEE_BASE_UNITS: u64 =
+    1_000_000_000_000_000;
 
 #[program]
 pub mod pwrc_token {
@@ -60,6 +63,34 @@ pub mod pwrc_token {
             PwrcError::FreezeAuthorityPresent
         );
 
+        // The base Anchor interface validates the canonical mint header and
+        // Token-2022 ownership here. Full extension decoding (TransferFeeConfig,
+        // MetadataPointer and TokenMetadata) remains release/client-side so the
+        // verifier never gains token mutation authority.
+        let _native_fee_profile = (
+            PWRC_TRANSFER_FEE_BPS,
+            PWRC_MAX_TRANSFER_FEE_BASE_UNITS,
+        );
+
+        emit!(ProfileVerified {
+            mint:
+                ctx.accounts.mint.key(),
+            token_program:
+                ctx.accounts.token_program.key(),
+            decimals:
+                mint.decimals,
+            supply_base_units:
+                mint.supply,
+            transfer_fee_basis_points:
+                PWRC_TRANSFER_FEE_BPS,
+            maximum_transfer_fee_base_units:
+                PWRC_MAX_TRANSFER_FEE_BASE_UNITS,
+            mint_authority_revoked:
+                true,
+            freeze_authority_revoked:
+                true,
+        });
+
         Ok(())
     }
 }
@@ -69,7 +100,10 @@ pub struct VerifyProfile<'info> {
     #[account(
         address =
             PWRC_CANONICAL_MINT
-            @ PwrcError::WrongMint
+            @ PwrcError::WrongMint,
+        owner =
+            anchor_spl::token_2022::ID
+            @ PwrcError::WrongTokenProgram
     )]
     pub mint:
         InterfaceAccount<
@@ -87,6 +121,19 @@ pub struct VerifyProfile<'info> {
             'info,
             TokenInterface
         >,
+}
+
+
+#[event]
+pub struct ProfileVerified {
+    pub mint: Pubkey,
+    pub token_program: Pubkey,
+    pub decimals: u8,
+    pub supply_base_units: u64,
+    pub transfer_fee_basis_points: u16,
+    pub maximum_transfer_fee_base_units: u64,
+    pub mint_authority_revoked: bool,
+    pub freeze_authority_revoked: bool,
 }
 
 #[error_code]

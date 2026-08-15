@@ -3,6 +3,10 @@ import {
   PWRC_CANONICAL_MINT,
   PWRC_METADATA_IMAGE_URI,
   PWRC_METADATA_URI,
+  WPWRC_METADATA_IMAGE_URI,
+  WPWRC_METADATA_URI,
+  WPWRC_NAME,
+  WPWRC_SYMBOL,
 } from "./constants.js";
 
 export const PWRC_METADATA = {
@@ -64,5 +68,52 @@ export function assertCanonicalPwrcMetadata(): void {
     PWRC_METADATA.image,
     "token.powerchain.energy",
     "PWRC_METADATA_IMAGE_URI_INVALID",
+  );
+}
+
+
+export const WPWRC_METADATA = {
+  version:
+    "1.0.0",
+  name:
+    WPWRC_NAME,
+  symbol:
+    WPWRC_SYMBOL,
+  chain:
+    "sui",
+  canonicalAsset:
+    "PWRC",
+  uri:
+    WPWRC_METADATA_URI,
+  image:
+    WPWRC_METADATA_IMAGE_URI,
+} as const;
+
+export function assertCanonicalWpwrcMetadata(): void {
+  if (
+    WPWRC_METADATA.name !==
+      "Wrapped PowerChain" ||
+    WPWRC_METADATA.symbol !==
+      "wPWRC" ||
+    WPWRC_METADATA.chain !==
+      "sui" ||
+    WPWRC_METADATA.canonicalAsset !==
+      "PWRC"
+  ) {
+    throw new Error(
+      "WPWRC_METADATA_IDENTITY_CHANGED",
+    );
+  }
+
+  assertHttpsUrl(
+    WPWRC_METADATA.uri,
+    "token.powerchain.energy",
+    "WPWRC_METADATA_URI_INVALID",
+  );
+
+  assertHttpsUrl(
+    WPWRC_METADATA.image,
+    "token.powerchain.energy",
+    "WPWRC_METADATA_IMAGE_URI_INVALID",
   );
 }

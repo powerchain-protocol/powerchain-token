@@ -4,80 +4,82 @@ const failures = [];
 
 for (const file of [
   "packages/cdp-user-wallet/package.json",
+  "packages/cdp-user-wallet/tsconfig.json",
   "packages/cdp-user-wallet/src/index.ts",
   "packages/cdp-user-wallet/src/react.tsx",
   "config/cdp-user-wallet.json",
 ]) {
   if (!fs.existsSync(file)) {
-    failures.push(
-      `cdp-user-wallet:missing:${file}`,
-    );
+    failures.push(`cdp-user-wallet:missing:${file}`);
   }
 }
 
-const pkg =
-  JSON.parse(
-    fs.readFileSync(
-      "packages/cdp-user-wallet/package.json",
-      "utf8",
-    ),
-  );
-const config =
-  JSON.parse(
-    fs.readFileSync(
-      "config/cdp-user-wallet.json",
-      "utf8",
-    ),
-  );
-const tsconfig =
-  JSON.parse(
-    fs.readFileSync(
-      "tsconfig.json",
-      "utf8",
-    ),
-  );
-const react =
+const pkg = JSON.parse(
   fs.readFileSync(
-    "packages/cdp-user-wallet/src/react.tsx",
+    "packages/cdp-user-wallet/package.json",
     "utf8",
-  );
-const example =
+  ),
+);
+const config = JSON.parse(
   fs.readFileSync(
-    ".env.example",
+    "config/cdp-user-wallet.json",
     "utf8",
-  );
+  ),
+);
+const cdpTs = JSON.parse(
+  fs.readFileSync(
+    "packages/cdp-user-wallet/tsconfig.json",
+    "utf8",
+  ),
+);
+const baseTs = JSON.parse(
+  fs.readFileSync(
+    "config/typescript/base.json",
+    "utf8",
+  ),
+);
+const react = fs.readFileSync(
+  "packages/cdp-user-wallet/src/react.tsx",
+  "utf8",
+);
+const example = fs.readFileSync(
+  ".env.example",
+  "utf8",
+);
 
 for (const dependency of [
-  "@coinbase/cdp-react",
   "@coinbase/cdp-core",
   "@coinbase/cdp-hooks",
 ]) {
   if (
     pkg.dependencies?.[dependency] !==
-      "0.0.119"
+      "0.0.120"
   ) {
     failures.push(
       `cdp-user-wallet:dependency-version:${dependency}`,
-    );
-    continue;
-  }
-  if (!pkg.dependencies?.[dependency]) {
-    failures.push(
-      `cdp-user-wallet:dependency:${dependency}`,
     );
   }
 }
 
 if (
-  ![
-    "Node16",
-    "NodeNext",
-    "node16",
-    "nodenext",
-  ].includes(
-    tsconfig.compilerOptions
-      ?.moduleResolution,
-  )
+  pkg.dependencies?.[
+    "@coinbase/cdp-react"
+  ]
+) {
+  failures.push(
+    "cdp-user-wallet:cdp-react-provider-dependency-not-required",
+  );
+}
+
+if (
+  cdpTs.extends !==
+    "../../config/typescript/base.json" ||
+  baseTs.compilerOptions
+    ?.moduleResolution !==
+    "NodeNext" ||
+  baseTs.compilerOptions
+    ?.module !==
+    "NodeNext"
 ) {
   failures.push(
     "cdp-user-wallet:module-resolution",
@@ -85,11 +87,13 @@ if (
 }
 
 for (const invariant of [
-  "CDPReactProvider",
+  "CDPHooksProvider",
   "solana",
   "createOnLogin",
   "useSolanaAddress",
-  "AuthButton",
+  "useIsSignedIn",
+  "useSignInWithEmail",
+  "useVerifyEmailOTP",
   "disableAnalytics",
 ]) {
   if (!react.includes(invariant)) {
@@ -99,14 +103,23 @@ for (const invariant of [
   }
 }
 
+for (const forbidden of [
+  "CDPReactProvider",
+  "@coinbase/cdp-react",
+]) {
+  if (react.includes(forbidden)) {
+    failures.push(
+      `cdp-user-wallet:forbidden-provider:${forbidden}`,
+    );
+  }
+}
+
 if (
   config.defaultEnabled !== false ||
-  config.solana
-    ?.createOnLogin !== true ||
-  config.ethereum
-    ?.createOnLogin !== false ||
-  config.analytics
-    ?.disabledByDefault !== true
+  config.solana?.createOnLogin !== true ||
+  config.ethereum?.createOnLogin !== false ||
+  config.analytics?.disabledByDefault !== true ||
+  config.uiMode !== "custom-hooks"
 ) {
   failures.push(
     "cdp-user-wallet:config-policy",
@@ -125,39 +138,15 @@ for (const required of [
   }
 }
 
-for (const forbidden of [
-  "CDP_SQL_API_BEARER_TOKEN",
-  "CDP_SQL_API_TOKEN",
-  "CDP_API_KEY_SECRET",
-]) {
-  if (
-    react.includes(
-      forbidden,
-    )
-  ) {
-    failures.push(
-      `cdp-user-wallet:browser-secret:${forbidden}`,
-    );
-  }
-}
-
-console.log(
-  JSON.stringify(
-    {
-      ok:
-        failures.length === 0,
-      version:
-        "1.0.0",
-      optional:
-        true,
-      solanaCreateOnLogin:
-        true,
-      failures,
-    },
-    null,
-    2,
-  ),
-);
+console.log(JSON.stringify({
+  ok: failures.length === 0,
+  version: "1.0.0",
+  optional: true,
+  provider: "CDPHooksProvider",
+  solanaCreateOnLogin: true,
+  customAuthHooks: true,
+  failures,
+}, null, 2));
 
 if (failures.length) {
   process.exit(1);

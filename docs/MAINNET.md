@@ -123,3 +123,45 @@ releaseAuthorized      true
 authorizationConsumed  true
 releaseState           CONSUMED
 ```
+
+
+## Native PWRC attestation evidence
+
+A Mainnet release requires an independently verified live native-PWRC
+attestation at:
+
+```text
+config/mainnet/native-token-attestation.json
+```
+
+This file is generated release evidence and is not committed by default.
+
+Required workflow:
+
+```bash
+# 1. Run the API with reviewed Mainnet RPC/genesis/authority configuration.
+# 2. Save GET /api/v1/token/native-attestation as:
+reports/live-native-token-attestation.json
+
+# 3. Bind the live result to the current source tree:
+pnpm mainnet:native-attestation:capture
+
+# 4. Verify it:
+pnpm mainnet:native-attestation:verify
+
+# 5. Re-check release state:
+pnpm mainnet:status
+```
+
+The verifier requires the canonical mint and native-policy commitment, at least
+two independent provider families including Helius, exact reviewed Mainnet
+genesis identity, matching Token-2022 transfer-fee authority policy, consistent
+slot/epoch evidence, current source-tree hash, and a fresh evaluation timestamp.
+
+Default freshness:
+
+```env
+PWRC_MAINNET_NATIVE_ATTESTATION_MAX_AGE_MS=3600000
+```
+
+A stale or source-mismatched attestation blocks Mainnet readiness.

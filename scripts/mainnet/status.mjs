@@ -54,6 +54,18 @@ const evidenceReady =
     "scripts/mainnet/verify-evidence.mjs",
   );
 
+const nativeTokenAttestationReady =
+  verify(
+    "config/mainnet/native-token-attestation.json",
+    "scripts/mainnet/verify-native-token-attestation.mjs",
+  );
+
+const feeAuthorityPolicyReady =
+  verify(
+    "config/mainnet/token-fee-authorities.json",
+    "scripts/mainnet/verify-token-fee-authorities.mjs",
+  );
+
 const authorizationReady =
   verify(
     "config/mainnet/release-authorization.json",
@@ -70,17 +82,25 @@ const buildReady =
   missing.length === 0 &&
   buildManifestReady;
 
+const feeAuthoritiesConfigured =
+  feeAuthorityPolicyReady;
+
+const releaseEvidenceReady =
+  evidenceReady &&
+  nativeTokenAttestationReady &&
+  feeAuthorityPolicyReady;
+
 const releaseState =
   consumptionReady &&
   authorizationReady &&
-  evidenceReady &&
+  releaseEvidenceReady &&
   buildReady
     ? "CONSUMED"
     : authorizationReady &&
-      evidenceReady &&
+      releaseEvidenceReady &&
       buildReady
       ? "AUTHORIZED"
-      : evidenceReady &&
+      : releaseEvidenceReady &&
         buildReady
         ? "EVIDENCE_READY"
         : buildReady
@@ -106,6 +126,22 @@ if (!evidenceReady) {
 }
 
 if (
+  !nativeTokenAttestationReady
+) {
+  blockers.push(
+    "config/mainnet/native-token-attestation.json:not-verified",
+  );
+}
+
+if (
+  !feeAuthorityPolicyReady
+) {
+  blockers.push(
+    "config/mainnet/token-fee-authorities.json:not-verified",
+  );
+}
+
+if (
   !authorizationReady
 ) {
   blockers.push(
@@ -121,6 +157,14 @@ if (
   );
 }
 
+if (
+  !feeAuthoritiesConfigured
+) {
+  blockers.push(
+    "token-transfer-fee-authorities:not-configured",
+  );
+}
+
 const result = {
   ok:
     true,
@@ -133,16 +177,23 @@ const result = {
     buildManifestReady,
   deploymentEvidenceReady:
     evidenceReady,
+  nativeTokenAttestationReady,
+  releaseEvidenceReady,
   releaseAuthorized:
     authorizationReady,
   authorizationConsumed:
     consumptionReady,
+  feeAuthoritiesConfigured,
+  feeAuthorityPolicyReady,
   releaseState,
   readyForMainnet:
     buildReady &&
     evidenceReady &&
+    nativeTokenAttestationReady &&
     authorizationReady &&
-    consumptionReady,
+    consumptionReady &&
+    feeAuthoritiesConfigured,
+    feeAuthorityPolicyReady,
   blockers:
     [...new Set(blockers)],
 };

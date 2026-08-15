@@ -33,6 +33,13 @@ const moveToml =
     "contracts/wpwrc/Move.toml",
     "utf8",
   );
+const metadata =
+  JSON.parse(
+    fs.readFileSync(
+      "metadata/wpwrc.json",
+      "utf8",
+    ),
+  );
 
 if (
   !moveToml.includes(
@@ -41,6 +48,29 @@ if (
 ) {
   failures.push(
     "wpwrc:source-placeholder",
+  );
+}
+
+if (
+  metadata.name !==
+    "Wrapped PowerChain" ||
+  metadata.symbol !==
+    "wPWRC" ||
+  metadata.image !==
+    "https://token.powerchain.energy/assets/tokens/wpwrc.png"
+) {
+  failures.push(
+    "wpwrc:metadata",
+  );
+}
+
+if (
+  !fs.existsSync(
+    "assets/tokens/wpwrc.png",
+  )
+) {
+  failures.push(
+    "wpwrc:asset-icon",
   );
 }
 

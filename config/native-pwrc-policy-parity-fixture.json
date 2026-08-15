@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "expectedPolicySha256": "af5fc80addc709e247e3604a698fa2a3efecdd94e148458aceb45cc40ea90f33",
+  "policy": {
+    "version": "1.0.0",
+    "name": "PowerChain",
+    "symbol": "PWRC",
+    "chain": "solana",
+    "cluster": "mainnet-beta",
+    "standard": "Token-2022",
+    "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+    "tokenProgramId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "metaplexProgramId": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+    "decimals": 9,
+    "fixedSupply": "18446000000",
+    "fixedSupplyBaseUnits": "18446000000000000000",
+    "authorities": {
+      "mint": null,
+      "freeze": null
+    },
+    "extensions": {
+      "required": [
+        "TransferFeeConfig",
+        "MetadataPointer",
+        "TokenMetadata"
+      ],
+      "forbidden": [
+        "PermanentDelegate",
+        "MintCloseAuthority",
+        "DefaultAccountState",
+        "InterestBearingConfig",
+        "ScaledUiAmount",
+        "PausableConfig"
+      ]
+    },
+    "nativeTransferFee": {
+      "basisPoints": 250,
+      "percent": "2.5",
+      "maximumFeePwrc": "1000000",
+      "maximumFeeBaseUnits": "1000000000000000",
+      "capStartsAtPwrc": "40000000",
+      "capStartsAtBaseUnits": "40000000000000000",
+      "rounding": "ceil"
+    },
+    "metadata": {
+      "pointer": "self",
+      "name": "PowerChain",
+      "symbol": "PWRC",
+      "uri": "https://token.powerchain.energy/metadata/metadata.json"
+    },
+    "verifier": {
+      "programId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+      "verificationOnly": true,
+      "mintInstruction": false
+    },
+    "publicWrites": false
+  }
+}

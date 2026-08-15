@@ -1,1 +1,0 @@
-{"version":3,"file":"quarterly-burn.d.ts","sourceRoot":"","sources":["../../../client/sui/quarterly-burn.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,0BAA0B,CAAC;AAEvD,wBAAgB,2CAA2C,CAAC,KAAK,EAAE;IACjE,SAAS,EAAE,MAAM,CAAC;IAClB,kBAAkB,EAAE,MAAM,CAAC;IAC3B,SAAS,EAAE,MAAM,CAAC;IAClB,kCAAkC,EAAE,MAAM,CAAC;IAC3C,yBAAyB,EAAE,UAAU,CAAC;CACvC,GAAG,WAAW,CAwBd"}

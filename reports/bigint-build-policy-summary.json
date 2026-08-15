@@ -1,0 +1,24 @@
+{
+  "version": "1.0.0",
+  "pnpmBuildPolicy": {
+    "approved": [
+      "bufferutil@4.1.0",
+      "esbuild@0.25.12",
+      "utf-8-validate@6.0.6"
+    ],
+    "ignored": [
+      "bigint-buffer"
+    ],
+    "bigintBufferInstallScriptAllowed": false,
+    "warningSuppressed": true
+  },
+  "productionChecks": {
+    "ok": true,
+    "version": "1.0.0",
+    "checks": 40,
+    "passed": 40,
+    "failed": 0,
+    "failures": []
+  },
+  "sourceTreeSha256": "ec135713dc2256adad2a60704830b70c23496dfd8ed99a133066b23dccc326d4"
+}

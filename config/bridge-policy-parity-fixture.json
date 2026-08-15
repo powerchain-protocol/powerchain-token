@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "input": {
+    "environment": "production",
+    "solanaNetwork": "mainnet-beta",
+    "suiNetwork": "mainnet",
+    "maxPendingExposureBaseUnits": "1000000000",
+    "maxPendingOperations": 10,
+    "maxEvidenceAgeMs": 60000,
+    "governanceApprovalThreshold": 2,
+    "governanceProposalTtlMs": 300000
+  },
+  "expectedPolicySha256": "79ab47f08b454a061ac43b5ca021081dda0e5573ec1818535a04f7cfb4b89459"
+}

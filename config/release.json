@@ -1,0 +1,32 @@
+{
+  "name": "PowerChain",
+  "symbol": "PWRC",
+  "version": "1.0.0",
+  "canonical": true,
+  "releaseChannel": "stable",
+  "artifact": "powerchain-token-1.0.0.zip",
+  "iterationLabelsAreReleaseVersions": false,
+  "canonicalToken": {
+    "chain": "solana",
+    "network": "mainnet-beta",
+    "symbol": "PWRC",
+    "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc"
+  },
+  "wrappedToken": {
+    "chain": "sui",
+    "network": "mainnet",
+    "symbol": "wPWRC",
+    "name": "Wrapped PowerChain",
+    "genesisSupplyBaseUnits": "0",
+    "metadata": "https://token.powerchain.energy/metadata/wpwrc.json",
+    "image": "https://token.powerchain.energy/assets/tokens/wpwrc.png",
+    "imageSha256": "54c4c3783133636cd0aa798be3aa0a7ed786289b6bae0ac3e1f61e712d8a58b4"
+  },
+  "toolchain": {
+    "node": "26.5.1",
+    "nvm": "0.40.6",
+    "npm": "11.17.0",
+    "pnpm": "11.18.0",
+    "typescript": "7.0.2"
+  }
+}

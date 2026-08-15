@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "cluster": "mainnet-beta",
+  "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+  "configured": false,
+  "transferFeeConfigAuthority": null,
+  "withdrawWithheldAuthority": null,
+  "reviewedAt": null,
+  "reviewReference": null,
+  "policySha256": "970dda51c1dc40ac6da4557cf643143925dd839cb355fc88f121687d3fd70963"
+}

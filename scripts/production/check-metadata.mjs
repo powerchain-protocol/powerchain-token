@@ -21,6 +21,20 @@ const metadata =
     "packages/protocol/src/metadata.ts",
     "utf8",
   );
+const wpwrc =
+  JSON.parse(
+    fs.readFileSync(
+      "metadata/wpwrc.json",
+      "utf8",
+    ),
+  );
+const pwrcJson =
+  JSON.parse(
+    fs.readFileSync(
+      "metadata/metadata.json",
+      "utf8",
+    ),
+  );
 
 const expected = {
   mint:
@@ -81,11 +95,92 @@ for (const [
   }
 }
 
+
+for (const [label, actual, wanted] of [
+  [
+    "pwrc.properties.mint",
+    pwrcJson.properties?.mint,
+    expected.mint,
+  ],
+  [
+    "pwrc.properties.standard",
+    pwrcJson.properties?.standard,
+    "Token-2022",
+  ],
+  [
+    "pwrc.properties.decimals",
+    pwrcJson.properties?.decimals,
+    9,
+  ],
+  [
+    "pwrc.properties.supply",
+    pwrcJson.properties?.supply_base_units,
+    "18446000000000000000",
+  ],
+  [
+    "wpwrc.properties.canonical_mint",
+    wpwrc.properties?.canonical_mint,
+    expected.mint,
+  ],
+  [
+    "wpwrc.properties.genesis_supply",
+    wpwrc.properties?.genesis_supply_base_units,
+    "0",
+  ],
+]) {
+  if (actual !== wanted) {
+    failures.push(
+      `metadata:${label}:expected=${wanted}:actual=${String(actual)}`,
+    );
+  }
+}
+
+for (const [
+  label,
+  actual,
+  wanted,
+] of [
+  [
+    "wpwrc.name",
+    wpwrc.name,
+    "Wrapped PowerChain",
+  ],
+  [
+    "wpwrc.symbol",
+    wpwrc.symbol,
+    "wPWRC",
+  ],
+  [
+    "wpwrc.image",
+    wpwrc.image,
+    "https://token.powerchain.energy/assets/tokens/wpwrc.png",
+  ],
+]) {
+  if (actual !== wanted) {
+    failures.push(
+      `metadata:${label}:expected=${wanted}:actual=${String(actual)}`,
+    );
+  }
+}
+
+if (
+  !fs.existsSync(
+    "assets/tokens/wpwrc.png",
+  )
+) {
+  failures.push(
+    "metadata:wpwrc-icon-missing",
+  );
+}
+
 for (const invariant of [
   "PWRC_METADATA",
   "assertCanonicalPwrcMetadata",
   "token.powerchain.energy",
   "PWRC_METADATA_IDENTITY_CHANGED",
+  "WPWRC_METADATA_IDENTITY_CHANGED",
+  "assertCanonicalWpwrcMetadata",
+  "WPWRC_METADATA",
 ]) {
   if (!metadata.includes(invariant)) {
     failures.push(

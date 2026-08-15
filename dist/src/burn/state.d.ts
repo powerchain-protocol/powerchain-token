@@ -1,3 +1,0 @@
-export type QuarterlyBurnState = "PLANNED" | "PRECHECKED" | "SUI_BRIDGE_PAUSE_SUBMITTED" | "SUI_BRIDGE_PAUSED" | "SUI_BURN_INTENT_SUBMITTED" | "SUI_BURN_INTENT_FINALIZED" | "SOLANA_SIMULATED" | "SOLANA_SUBMITTED" | "SOLANA_FINALIZED" | "SUI_CEILING_SUBMITTED" | "SUI_CEILING_FINALIZED" | "RECONCILED" | "COMPLETED" | "BLOCKED";
-export declare function assertQuarterlyBurnTransition(from: QuarterlyBurnState, to: QuarterlyBurnState): void;
-//# sourceMappingURL=state.d.ts.map

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "provider": "coinbase-cdp-user-wallet",
+  "provider": "coinbase-cdp-hooks-provider",
   "optional": true,
   "defaultEnabled": false,
   "solana": {
@@ -23,8 +23,8 @@
     "localhostForbiddenInProductionProject": true
   },
   "packages": {
-    "@coinbase/cdp-react": "0.0.119",
-    "@coinbase/cdp-core": "0.0.119",
-    "@coinbase/cdp-hooks": "0.0.119"
-  }
+    "@coinbase/cdp-core": "0.0.120",
+    "@coinbase/cdp-hooks": "0.0.120"
+  },
+  "uiMode": "custom-hooks"
 }

@@ -2,5 +2,11 @@
   "name": "@powerchain/docs",
   "version": "1.0.0",
   "type": "module",
-  "scripts": { "start": "node server.mjs" }
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=26.5.1 <27"
+  },
+  "private": true
 }

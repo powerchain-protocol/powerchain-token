@@ -2,14 +2,11 @@ import type {
   PropsWithChildren,
 } from "react";
 import {
-  CDPReactProvider,
-} from "@coinbase/cdp-react";
-import {
-  AuthButton,
-} from "@coinbase/cdp-react/components/AuthButton";
-import {
+  CDPHooksProvider,
   useIsSignedIn,
+  useSignInWithEmail,
   useSolanaAddress,
+  useVerifyEmailOTP,
 } from "@coinbase/cdp-hooks";
 import type {
   PowerChainCdpUserWalletConfig,
@@ -33,7 +30,7 @@ export function PowerChainCdpUserWalletProvider({
   }
 
   return (
-    <CDPReactProvider
+    <CDPHooksProvider
       config={{
         projectId:
           config.projectId,
@@ -48,12 +45,8 @@ export function PowerChainCdpUserWalletProvider({
       }}
     >
       {children}
-    </CDPReactProvider>
+    </CDPHooksProvider>
   );
-}
-
-export function PowerChainCdpAuthButton() {
-  return <AuthButton />;
 }
 
 export function usePowerChainCdpSolanaWallet() {
@@ -76,5 +69,26 @@ export function usePowerChainCdpSolanaWallet() {
         isSignedIn &&
         solanaAddress,
       ),
+  };
+}
+
+export function usePowerChainCdpEmailAuthentication() {
+  const {
+    isSignedIn,
+  } =
+    useIsSignedIn();
+  const {
+    signInWithEmail,
+  } =
+    useSignInWithEmail();
+  const {
+    verifyEmailOTP,
+  } =
+    useVerifyEmailOTP();
+
+  return {
+    isSignedIn,
+    signInWithEmail,
+    verifyEmailOTP,
   };
 }

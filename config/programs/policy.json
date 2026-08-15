@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "solana": {
+    "tokenVerifier": {
+      "programId": "PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu",
+      "canonicalMint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+      "tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "verificationOnly": true,
+      "mintInstruction": false,
+      "transferInstruction": false,
+      "authorityMutation": false
+    },
+    "bridgeAdmin": {
+      "programId": "7JAV3PsxkHh5oKAFDMKqVpKaV2P2P5Vj3Qv15hH8wPwr",
+      "singletonStatePdaSeed": "bridge-state",
+      "startsPaused": true,
+      "governorOperatorRoleSeparation": true,
+      "twoStepGovernorTransfer": true,
+      "pauseOnGovernorAcceptance": true,
+      "monetaryCustodyInstructions": false,
+      "mintInstruction": false,
+      "releaseInstruction": false
+    }
+  },
+  "sui": {
+    "wrappedController": {
+      "startsPaused": true,
+      "maxWrappedBaseUnits": "18446000000000000000",
+      "replayProtection": true,
+      "zeroMessageDigestRejected": true,
+      "zeroSolanaRecipientRejected": true,
+      "zeroSuiRecipientRejected": true,
+      "twoStepGovernorTransfer": true,
+      "pauseOnGovernorAcceptance": true,
+      "sequenceOverflowProtection": true,
+      "operatorInitializedAtGenesis": false,
+      "operatorRequiredBeforeUnpause": true,
+      "governorOperatorRoleSeparation": true
+    }
+  },
+  "policySha256": "d001fc2f47e5bb50e1edcb4163cdb6f42b49401ff337ddd9a0f535670d0303e5"
+}

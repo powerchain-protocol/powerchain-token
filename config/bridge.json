@@ -13,7 +13,11 @@
     "genesisSupplyBaseUnits": "0",
     "maxBaseUnits": "18446000000000000000",
     "replayProtection": "on-chain consumed 32-byte Solana message digest",
-    "burnEvidence": "BridgeBurned event with sequence, sender, 32-byte Solana recipient and base-unit amount"
+    "burnEvidence": "BridgeBurned event with sequence, sender, 32-byte Solana recipient and base-unit amount",
+    "metadata": {
+      "uri": "https://token.powerchain.energy/metadata/wpwrc.json",
+      "image": "https://token.powerchain.energy/assets/tokens/wpwrc.png"
+    }
   },
   "ratio": {
     "canonicalBaseUnitsPerWrappedBaseUnit": "1"

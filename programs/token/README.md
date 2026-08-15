@@ -33,3 +33,14 @@ Anchor 1.x IDL generation is enabled through the crate's `idl-build` feature.
 
 A strict deployment build requires the private keypair whose public key matches
 the program source identity. Do not commit that keypair.
+
+
+## v29 verifier event
+
+`verify_profile` remains mutation-free and now emits `ProfileVerified` after the
+canonical PWRC base mint checks pass. The event records the verified mint,
+Token-2022 program, decimals, supply, 250 bps native fee and maximum native fee.
+
+Token-2022 extension decoding and authority verification still remain in the
+release/client verification layer; the Anchor verifier intentionally does not
+gain token authority or mutation instructions.

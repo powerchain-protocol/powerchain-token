@@ -5,8 +5,12 @@
   "buildReady": false,
   "buildManifestVerified": false,
   "deploymentEvidenceReady": false,
+  "nativeTokenAttestationReady": false,
+  "releaseEvidenceReady": false,
   "releaseAuthorized": false,
   "authorizationConsumed": false,
+  "feeAuthoritiesConfigured": false,
+  "feeAuthorityPolicyReady": false,
   "releaseState": "SOURCE_READY",
   "readyForMainnet": false,
   "blockers": [
@@ -18,7 +22,10 @@
     "reports/mainnet-build-manifest.json",
     "reports/mainnet-build-manifest.json:not-verified",
     "config/mainnet/evidence.json:not-verified",
+    "config/mainnet/native-token-attestation.json:not-verified",
+    "config/mainnet/token-fee-authorities.json:not-verified",
     "config/mainnet/release-authorization.json:not-verified",
-    "config/mainnet/release-consumption.json:not-verified"
+    "config/mainnet/release-consumption.json:not-verified",
+    "token-transfer-fee-authorities:not-configured"
   ]
 }

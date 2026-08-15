@@ -9,8 +9,32 @@
     "./fees": "./src/fees.ts",
     "./metadata": "./src/metadata.ts",
     "./solana": "./src/solana.ts",
-    "./sui": "./src/sui.ts"
+    "./sui": "./src/sui.ts",
+    "./bridge-settlement": "./src/bridge-settlement.ts",
+    "./bridge-plan": "./src/bridge-plan.ts",
+    "./bridge-reconciliation": "./src/bridge-reconciliation.ts",
+    "./bridge-recovery": "./src/bridge-recovery.ts",
+    "./bridge-audit": "./src/bridge-audit.ts",
+    "./bridge-risk": "./src/bridge-risk.ts",
+    "./bridge-governance": "./src/bridge-governance.ts",
+    "./bridge-safety": "./src/bridge-safety.ts",
+    "./bridge-policy": "./src/bridge-policy.ts",
+    "./native-token": "./src/native-token.ts",
+    "./native-token-consensus": "./src/native-token-consensus.ts",
+    "./native-token-attestation": "./src/native-token-attestation.ts",
+    "./helius": "./src/helius.ts",
+    "./utility": "./src/utility.ts",
+    "./compute-security": "./src/compute-security.ts",
+    "./native-transfer-intent": "./src/native-transfer-intent.ts",
+    "./native-token-policy": "./src/native-token-policy.ts",
+    "./helpers": "./src/helpers.ts",
+    "./native-transfer-fee-evidence": "./src/native-transfer-fee-evidence.ts",
+    "./token-amount": "./src/token-amount.ts",
+    "./token-policy": "./src/token-policy.ts"
   },
   "description": "Canonical PowerChain PWRC protocol policy and cross-chain invariants.",
-  "sideEffects": false
+  "sideEffects": false,
+  "engines": {
+    "node": ">=26.5.1 <27"
+  }
 }

@@ -1,4 +1,5 @@
 import "dotenv/config";
+process.env.WS_NO_UTF_8_VALIDATE ??= "1";
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
@@ -62,6 +63,33 @@ const server =
           req.url ?? "/",
           `http://${host}:${port}`,
         );
+
+      if (
+        url.pathname ===
+          "/health" ||
+        url.pathname ===
+          "/ready"
+      ) {
+        res.writeHead(
+          200,
+          {
+            "content-type":
+              "application/json; charset=utf-8",
+            "cache-control":
+              "no-store",
+            "x-content-type-options":
+              "nosniff",
+          },
+        );
+        res.end(
+          JSON.stringify({
+            ok: true,
+            ready: true,
+            version: "1.0.0",
+          }),
+        );
+        return;
+      }
 
       if (
         url.pathname.startsWith(
@@ -196,9 +224,42 @@ const server =
         },
       );
 
-      fs.createReadStream(
-        resolved,
-      ).pipe(res);
+      const stream =
+        fs.createReadStream(
+          resolved,
+        );
+
+      stream.once(
+        "error",
+        (error) => {
+          process.stderr.write(
+            `PWRC_CLIENT_STATIC_READ_ERROR:${error.code ?? "UNKNOWN"}:${relative}\n`,
+          );
+
+          if (!res.headersSent) {
+            res.writeHead(
+              500,
+              {
+                "content-type":
+                  "application/json; charset=utf-8",
+                "cache-control":
+                  "no-store",
+              },
+            );
+          }
+
+          if (!res.writableEnded) {
+            res.end(
+              JSON.stringify({
+                error:
+                  "PWRC_CLIENT_STATIC_READ_FAILED",
+              }),
+            );
+          }
+        },
+      );
+
+      stream.pipe(res);
     },
   );
 

@@ -1,7 +1,6 @@
 import fs from "node:fs";
 
 const failures = [];
-
 const root =
   JSON.parse(
     fs.readFileSync(
@@ -9,7 +8,6 @@ const root =
       "utf8",
     ),
   );
-
 const workspace =
   fs.readFileSync(
     "pnpm-workspace.yaml",
@@ -17,7 +15,7 @@ const workspace =
   );
 
 const expectedEngine =
-  ">=22.22.3 <23 || >=24.18.1 <25 || >=26.5.1 <27";
+  ">=26.5.1 <27";
 
 if (
   root.engines?.node !==
@@ -30,17 +28,40 @@ if (
 
 if (
   root.packageManager !==
-    "pnpm@10.21.0"
+    "pnpm@11.18.0"
 ) {
   failures.push(
     "pnpm-policy:package-manager",
   );
 }
 
+if (
+  root.engines?.pnpm !==
+    ">=11.18.0 <12"
+) {
+  failures.push(
+    "pnpm-policy:pnpm-engine",
+  );
+}
+
+for (const [file, expected] of [
+  [".nvmrc", "26.5.1"],
+  [".node-version", "26.5.1"],
+]) {
+  if (
+    !fs.existsSync(file) ||
+    fs.readFileSync(file, "utf8").trim() !==
+      expected
+  ) {
+    failures.push(
+      `pnpm-policy:node-version-file:${file}`,
+    );
+  }
+}
+
 for (const dependency of [
   "bufferutil@4.1.0",
-  "esbuild@0.25.12",
-  "utf-8-validate@6.0.6",
+  "esbuild@0.28.1",
 ]) {
   if (
     !workspace.includes(
@@ -53,9 +74,24 @@ for (const dependency of [
   }
 }
 
+for (const dependency of [
+  "bigint-buffer",
+  "utf-8-validate",
+]) {
+  if (
+    !workspace.includes(
+      dependency,
+    )
+  ) {
+    failures.push(
+      `pnpm-policy:ignored-build:${dependency}`,
+    );
+  }
+}
+
 if (
   workspace.includes(
-    "dangerouslyAllowAllBuilds"
+    "dangerouslyAllowAllBuilds",
   )
 ) {
   failures.push(
@@ -73,17 +109,16 @@ console.log(
       nodeEngine:
         expectedEngine,
       localNodeBaseline:
-        "22.22.3",
+        "26.5.1",
       pnpm:
-        "10.21.0",
-      pnpmForcesNodeDownload:
-        false,
-      strictDepBuilds:
-        true,
+        "11.18.0",
       approvedBuilds: [
         "bufferutil@4.1.0",
-        "esbuild@0.25.12",
-        "utf-8-validate@6.0.6",
+        "esbuild@0.28.1",
+      ],
+      ignoredBuilds: [
+        "bigint-buffer",
+        "utf-8-validate",
       ],
       failures,
     },

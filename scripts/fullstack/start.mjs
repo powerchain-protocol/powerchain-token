@@ -1,4 +1,5 @@
 import "dotenv/config";
+process.env.WS_NO_UTF_8_VALIDATE ??= "1";
 import {
   spawn,
 } from "node:child_process";
@@ -229,7 +230,7 @@ const client =
 
 try {
   await waitForHttp(
-    `http://${host}:${clientPort}/`,
+    `http://${host}:${clientPort}/health`,
     8_000,
   );
 } catch (error) {
@@ -239,6 +240,17 @@ try {
     );
   }
   throw error;
+}
+
+try {
+  await waitForHttp(
+    `http://${host}:${clientPort}/`,
+    4_000,
+  );
+} catch (error) {
+  process.stderr.write(
+    `PWRC_FULLSTACK_CLIENT_ROOT_WARNING:${error instanceof Error ? error.message : "unknown"}\n`,
+  );
 }
 
 process.stderr.write(

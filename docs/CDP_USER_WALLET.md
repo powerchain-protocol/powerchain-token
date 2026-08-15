@@ -24,36 +24,30 @@ secrets, or bridge executor credentials in this browser integration.
 
 ## Provider
 
+PowerChain uses the hooks-first CDP provider:
+
 ```tsx
-import {
-  resolvePowerChainCdpUserWalletConfig,
-} from "@powerchain/cdp-user-wallet";
 import {
   PowerChainCdpUserWalletProvider,
 } from "@powerchain/cdp-user-wallet/react";
-
-const config =
-  resolvePowerChainCdpUserWalletConfig({
-    POWERCHAIN_CDP_USER_WALLET_ENABLED: "true",
-    POWERCHAIN_CDP_PROJECT_ID: "your-project-id",
-    POWERCHAIN_CDP_APP_NAME: "PowerChain",
-  });
-
-export function Providers({
-  children,
-}: React.PropsWithChildren) {
-  return (
-    <PowerChainCdpUserWalletProvider
-      config={config}
-    >
-      {children}
-    </PowerChainCdpUserWalletProvider>
-  );
-}
 ```
 
-PowerChain enables only Solana account creation on login and opts out of CDP SDK
-analytics by default.
+Internally this uses `CDPHooksProvider` from `@coinbase/cdp-hooks`, with
+`solana.createOnLogin: true`. This avoids relying on the `CDPReactProvider`
+declaration surface while preserving authentication and Solana wallet hooks.
+
+For authentication UI, build a PowerChain-styled flow with:
+
+```tsx
+const {
+  isSignedIn,
+  signInWithEmail,
+  verifyEmailOTP,
+} = usePowerChainCdpEmailAuthentication();
+```
+
+This is intentionally hooks-first instead of importing the prebuilt
+`AuthButton` component.
 
 ## CDP Portal domain allowlist
 

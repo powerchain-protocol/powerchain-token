@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "canonical": true,
+  "node": {
+    "version": "26.5.1",
+    "channel": "current",
+    "engine": ">=26.5.1 <27"
+  },
+  "nvm": {
+    "version": "0.40.6"
+  },
+  "npm": {
+    "version": "11.17.0",
+    "bundledWithNode": "26.5.1"
+  },
+  "pnpm": {
+    "version": "11.18.0",
+    "engine": ">=11.18.0 <12",
+    "packageManager": "pnpm@11.18.0"
+  },
+  "policy": {
+    "exactNodeFiles": true,
+    "lockfileGeneratedOnlyByInstall": true,
+    "noFabricatedLockfile": true,
+    "corepackBundledWithNode": false,
+    "pnpmInstallMethod": "npm-global-or-pnpm-standalone",
+    "packageManagerPinnedInPackageJson": true
+  }
+}

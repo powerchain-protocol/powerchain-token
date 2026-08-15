@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "capturedAt": "2026-01-01T00:00:00.000Z",
+  "sourceTreeSha256": "<64-hex-source-tree-sha256>",
+  "cluster": "mainnet-beta",
+  "verified": true,
+  "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+  "nativePolicySha256": "af5fc80addc709e247e3604a698fa2a3efecdd94e148458aceb45cc40ea90f33",
+  "expectedGenesisHash": "<reviewed-mainnet-genesis-hash>",
+  "providerFamilies": [
+    "helius",
+    "<independent-provider-family>"
+  ],
+  "transferFeeAuthorityPolicy": {
+    "transferFeeConfigAuthority": "<base58-public-key-or-null>",
+    "withdrawWithheldAuthority": "<base58-public-key-or-null>"
+  },
+  "transferFeeAuthorityPolicySha256": "<64-hex-reviewed-fee-authority-policy-sha256>",
+  "observerCount": 2,
+  "consensusSha256": "<64-hex>",
+  "attestationSha256": "<64-hex>",
+  "slotRange": {
+    "min": "1",
+    "max": "1",
+    "skew": "0"
+  },
+  "epochs": [
+    "1"
+  ],
+  "epochSkew": "0",
+  "evaluationAt": "2026-01-01T00:00:00.000Z",
+  "observationRanges": [
+    {
+      "observer": "primary",
+      "slotStart": "1",
+      "slotEnd": "1",
+      "slotSpan": "0"
+    },
+    {
+      "observer": "secondary",
+      "slotStart": "1",
+      "slotEnd": "1",
+      "slotSpan": "0"
+    }
+  ],
+  "cache": "miss",
+  "publicWrites": false
+}

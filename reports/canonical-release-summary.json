@@ -1,0 +1,70 @@
+{
+  "name": "PowerChain",
+  "version": "1.0.0",
+  "canonical": true,
+  "improvements": {
+    "reviewedTransferFeeAuthorityPolicy": true,
+    "authorityPolicyDomain": "POWERCHAIN_MAINNET_TRANSFER_FEE_AUTHORITY_POLICY_V1",
+    "safeExampleConfigured": false,
+    "envOnlyReleaseGateRemoved": true,
+    "nativeAttestationBindsAuthorityPolicySha": true,
+    "envAuthorityOverrideMustMatchReviewedPolicy": true,
+    "sealUsesCreateOnlyWrite": true,
+    "authorityAddressesInvented": false
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 80,
+      "passed": 80,
+      "failed": 0,
+      "failures": []
+    },
+    "manifestBindings": 130,
+    "generatorDuplicates": 0,
+    "verifierDuplicates": 0,
+    "javascriptSyntaxFiles": 159,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 87,
+    "authorityPolicySourceTestsPassed": 3,
+    "dependencyInstallRun": false,
+    "dependencyAwareTypecheckRun": false,
+    "workspaceTestsRun": false,
+    "cargoBuildRun": false,
+    "anchorBuildRun": false,
+    "suiMoveBuildRun": false
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "buildManifestVerified": false,
+    "deploymentEvidenceReady": false,
+    "nativeTokenAttestationReady": false,
+    "releaseEvidenceReady": false,
+    "releaseAuthorized": false,
+    "authorizationConsumed": false,
+    "feeAuthoritiesConfigured": false,
+    "feeAuthorityPolicyReady": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "reports/mainnet-build-manifest.json",
+      "reports/mainnet-build-manifest.json:not-verified",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/native-token-attestation.json:not-verified",
+      "config/mainnet/token-fee-authorities.json:not-verified",
+      "config/mainnet/release-authorization.json:not-verified",
+      "config/mainnet/release-consumption.json:not-verified",
+      "token-transfer-fee-authorities:not-configured"
+    ]
+  },
+  "sourceTreeSha256": "7d303f00a3cd47a827f1413d64d74d401b89086a98605016791321194b7f9b34"
+}

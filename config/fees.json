@@ -3,7 +3,11 @@
   "nativeToken2022Fee": {
     "basisPoints": 250,
     "maximumFeeTokens": "1000000",
-    "maximumFeeBaseUnits": "1000000000000000"
+    "maximumFeeBaseUnits": "1000000000000000",
+    "rounding": "ceil",
+    "feeCapStartsAtGrossTokens": "40000000",
+    "feeCapStartsAtGrossBaseUnits": "40000000000000000",
+    "appliesOnSolanaTransfer": true
   },
   "serviceFee": {
     "basisPoints": 250,
@@ -38,6 +42,8 @@
     "serviceFeeDoesNotReduceBridgeBacking": true,
     "grossUpPwrcServiceFeeTransfer": true,
     "serviceFeeIsSeparateSourceDebit": true,
-    "serviceFeeNeverReducesNttPrincipal": true
+    "serviceFeeNeverReducesNttPrincipal": true,
+    "canonicalSupplyBaseUnits": "18446000000000000000",
+    "allAmountsUseBaseUnits": true
   }
 }

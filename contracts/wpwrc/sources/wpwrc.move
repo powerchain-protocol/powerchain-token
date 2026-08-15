@@ -16,6 +16,14 @@ const E_MESSAGE_ALREADY_CONSUMED: u64 = 5;
 const E_SOLANA_RECIPIENT_LENGTH: u64 = 6;
 const E_SUPPLY_LIMIT: u64 = 7;
 const E_INSUFFICIENT_WRAPPED_SUPPLY: u64 = 8;
+const E_ZERO_ADDRESS: u64 = 9;
+const E_ZERO_MESSAGE_DIGEST: u64 = 10;
+const E_ZERO_SOLANA_RECIPIENT: u64 = 11;
+const E_SEQUENCE_OVERFLOW: u64 = 12;
+const E_ROLE_SEPARATION: u64 = 13;
+const E_GOVERNOR_TRANSFER_PENDING: u64 = 14;
+const E_OPERATOR_UNINITIALIZED: u64 = 15;
+const E_NO_STATE_CHANGE: u64 = 16;
 
 const MESSAGE_DIGEST_BYTES: u64 = 32;
 const SOLANA_ADDRESS_BYTES: u64 = 32;
@@ -34,8 +42,10 @@ public struct BridgeController has key {
     id: UID,
     treasury: TreasuryCap<WPWRC>,
     governor: address,
+    pending_governor: address,
     operator: address,
     paused: bool,
+    admin_sequence: u64,
     wrapped_supply_base_units: u64,
     mint_sequence: u64,
     burn_sequence: u64,
@@ -61,6 +71,22 @@ public struct OperatorChanged has copy, drop {
     new_operator: address,
 }
 
+public struct GovernorChanged has copy, drop {
+    previous_governor: address,
+    new_governor: address,
+}
+
+public struct GovernorTransferProposed has copy, drop {
+    governor: address,
+    pending_governor: address,
+    admin_sequence: u64,
+}
+
+public struct GovernorTransferCancelled has copy, drop {
+    cancelled_governor: address,
+    admin_sequence: u64,
+}
+
 public struct PauseChanged has copy, drop {
     paused: bool,
 }
@@ -82,8 +108,10 @@ fun init(witness: WPWRC, ctx: &mut TxContext) {
         id: object::new(ctx),
         treasury,
         governor: sender,
-        operator: sender,
+        pending_governor: @0x0,
+        operator: @0x0,
         paused: true,
+        admin_sequence: 1,
         wrapped_supply_base_units: 0,
         mint_sequence: 0,
         burn_sequence: 0,
@@ -103,12 +131,94 @@ public fun set_operator(
 ) {
     assert_governor(controller, ctx);
 
+    assert!(new_operator != @0x0, E_ZERO_ADDRESS);
+    assert!(new_operator != controller.governor, E_ROLE_SEPARATION);
+    if (controller.pending_governor != @0x0) {
+        assert!(new_operator != controller.pending_governor, E_ROLE_SEPARATION);
+    };
+
     let previous_operator = controller.operator;
+    assert!(new_operator != previous_operator, E_NO_STATE_CHANGE);
+
     controller.operator = new_operator;
+    controller.admin_sequence =
+        checked_next_sequence(controller.admin_sequence);
 
     event::emit(OperatorChanged {
         previous_operator,
         new_operator,
+    });
+}
+
+
+
+public fun transfer_governor(
+    controller: &mut BridgeController,
+    new_governor: address,
+    ctx: &TxContext,
+) {
+    assert_governor(controller, ctx);
+    assert!(new_governor != @0x0, E_ZERO_ADDRESS);
+    assert!(new_governor != controller.governor, E_ROLE_SEPARATION);
+    assert!(new_governor != controller.operator, E_ROLE_SEPARATION);
+    assert!(
+        controller.pending_governor == @0x0,
+        E_GOVERNOR_TRANSFER_PENDING
+    );
+
+    controller.pending_governor = new_governor;
+    controller.admin_sequence =
+        checked_next_sequence(controller.admin_sequence);
+
+    event::emit(GovernorTransferProposed {
+        governor: controller.governor,
+        pending_governor: new_governor,
+        admin_sequence: controller.admin_sequence,
+    });
+}
+
+public fun accept_governor(
+    controller: &mut BridgeController,
+    ctx: &TxContext,
+) {
+    let sender = tx_context::sender(ctx);
+
+    assert!(controller.pending_governor != @0x0, E_ZERO_ADDRESS);
+    assert!(sender == controller.pending_governor, E_UNAUTHORIZED);
+    assert!(sender != controller.operator, E_ROLE_SEPARATION);
+
+    let previous_governor = controller.governor;
+    controller.governor = sender;
+    controller.pending_governor = @0x0;
+    controller.paused = true;
+    controller.admin_sequence =
+        checked_next_sequence(controller.admin_sequence);
+
+    event::emit(GovernorChanged {
+        previous_governor,
+        new_governor: sender,
+    });
+
+    event::emit(PauseChanged {
+        paused: true,
+    });
+}
+
+public fun cancel_governor_transfer(
+    controller: &mut BridgeController,
+    ctx: &TxContext,
+) {
+    assert_governor(controller, ctx);
+    assert!(controller.pending_governor != @0x0, E_ZERO_ADDRESS);
+
+    let cancelled_governor = controller.pending_governor;
+    controller.pending_governor = @0x0;
+    controller.admin_sequence =
+        checked_next_sequence(controller.admin_sequence);
+
+    event::emit(GovernorTransferCancelled {
+        cancelled_governor,
+        admin_sequence: controller.admin_sequence,
     });
 }
 
@@ -118,7 +228,26 @@ public fun set_paused(
     ctx: &TxContext,
 ) {
     assert_governor(controller, ctx);
+    assert!(controller.paused != paused, E_NO_STATE_CHANGE);
+
+    if (!paused) {
+        assert!(
+            controller.operator != @0x0,
+            E_OPERATOR_UNINITIALIZED
+        );
+        assert!(
+            controller.operator != controller.governor,
+            E_ROLE_SEPARATION
+        );
+        assert!(
+            controller.pending_governor == @0x0,
+            E_GOVERNOR_TRANSFER_PENDING
+        );
+    };
+
     controller.paused = paused;
+    controller.admin_sequence =
+        checked_next_sequence(controller.admin_sequence);
 
     event::emit(PauseChanged {
         paused,
@@ -139,9 +268,14 @@ public fun mint_from_solana(
     assert_operator(controller, ctx);
     assert!(!controller.paused, E_PAUSED);
     assert!(amount_base_units > 0, E_ZERO_AMOUNT);
+    assert!(recipient != @0x0, E_ZERO_ADDRESS);
     assert!(
         vector::length(&source_message) == MESSAGE_DIGEST_BYTES,
         E_MESSAGE_DIGEST_LENGTH
+    );
+    assert_nonzero_bytes(
+        &source_message,
+        E_ZERO_MESSAGE_DIGEST
     );
     let key = message_key(&source_message);
 
@@ -150,13 +284,18 @@ public fun mint_from_solana(
         E_MESSAGE_ALREADY_CONSUMED
     );
 
-    let next_supply =
-        controller.wrapped_supply_base_units + amount_base_units;
-
     assert!(
-        next_supply <= WPWRC_MAX_BASE_UNITS,
+        controller.wrapped_supply_base_units <= WPWRC_MAX_BASE_UNITS,
         E_SUPPLY_LIMIT
     );
+    assert!(
+        amount_base_units <=
+            WPWRC_MAX_BASE_UNITS - controller.wrapped_supply_base_units,
+        E_SUPPLY_LIMIT
+    );
+
+    let next_supply =
+        controller.wrapped_supply_base_units + amount_base_units;
 
     table::add(
         &mut controller.consumed_messages,
@@ -165,7 +304,8 @@ public fun mint_from_solana(
     );
 
     controller.wrapped_supply_base_units = next_supply;
-    controller.mint_sequence = controller.mint_sequence + 1;
+    controller.mint_sequence =
+        checked_next_sequence(controller.mint_sequence);
 
     let minted = coin::mint(
         &mut controller.treasury,
@@ -199,6 +339,10 @@ public fun burn_for_solana(
         vector::length(&solana_recipient) == SOLANA_ADDRESS_BYTES,
         E_SOLANA_RECIPIENT_LENGTH
     );
+    assert_nonzero_bytes(
+        &solana_recipient,
+        E_ZERO_SOLANA_RECIPIENT
+    );
 
     let amount_base_units =
         coin::value(&wrapped);
@@ -219,7 +363,7 @@ public fun burn_for_solana(
     controller.wrapped_supply_base_units =
         controller.wrapped_supply_base_units - amount_base_units;
     controller.burn_sequence =
-        controller.burn_sequence + 1;
+        checked_next_sequence(controller.burn_sequence);
 
     event::emit(BridgeBurned {
         sequence: controller.burn_sequence,
@@ -247,12 +391,73 @@ public fun operator(
     controller.operator
 }
 
+public fun pending_governor(
+    controller: &BridgeController,
+): address {
+    controller.pending_governor
+}
+
+public fun admin_sequence(
+    controller: &BridgeController,
+): u64 {
+    controller.admin_sequence
+}
+
 public fun paused(
     controller: &BridgeController,
 ): bool {
     controller.paused
 }
 
+
+public fun mint_sequence(
+    controller: &BridgeController,
+): u64 {
+    controller.mint_sequence
+}
+
+public fun burn_sequence(
+    controller: &BridgeController,
+): u64 {
+    controller.burn_sequence
+}
+
+public fun message_consumed(
+    controller: &BridgeController,
+    source_message: &vector<u8>,
+): bool {
+    let key = message_key(source_message);
+    table::contains(
+        &controller.consumed_messages,
+        key
+    )
+}
+
+
+
+fun checked_next_sequence(
+    sequence: u64,
+): u64 {
+    assert!(sequence < 0xffffffffffffffff, E_SEQUENCE_OVERFLOW);
+    sequence + 1
+}
+
+fun assert_nonzero_bytes(
+    bytes: &vector<u8>,
+    error_code: u64,
+) {
+    let mut index = 0;
+    let mut has_nonzero = false;
+
+    while (index < vector::length(bytes)) {
+        if (*vector::borrow(bytes, index) != 0) {
+            has_nonzero = true;
+        };
+        index = index + 1;
+    };
+
+    assert!(has_nonzero, error_code);
+}
 
 fun message_key(
     bytes: &vector<u8>,
@@ -301,6 +506,10 @@ fun assert_operator(
     controller: &BridgeController,
     ctx: &TxContext,
 ) {
+    assert!(
+        controller.operator != @0x0,
+        E_OPERATOR_UNINITIALIZED
+    );
     assert!(
         tx_context::sender(ctx) == controller.operator,
         E_UNAUTHORIZED

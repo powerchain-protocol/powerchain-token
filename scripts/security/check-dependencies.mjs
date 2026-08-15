@@ -7,6 +7,12 @@ const pkg =
       "utf8",
     ),
   );
+const workspace =
+  fs.readFileSync(
+    "pnpm-workspace.yaml",
+    "utf8",
+  );
+
 const failures = [];
 
 if (
@@ -29,20 +35,74 @@ if (
   );
 }
 
-const workspace =
-  fs.readFileSync(
-    "pnpm-workspace.yaml",
-    "utf8",
-  );
-
 if (
-  workspace.includes(
-    "bigint-buffer@1.1.5",
-  )
+  pkg.pnpm?.overrides?.[
+    "utf-8-validate"
+  ] !== "5.0.10"
 ) {
   failures.push(
-    "vulnerable-bigint-build-approved",
+    "utf-8-validate-override",
   );
+}
+
+const approvedSection =
+  workspace
+    .split(
+      "onlyBuiltDependencies:",
+    )[1]
+    ?.split(
+      "ignoredBuiltDependencies:",
+    )[0] ??
+  "";
+
+const ignoredSection =
+  workspace
+    .split(
+      "ignoredBuiltDependencies:",
+    )[1]
+    ?.split(
+      "\n#",
+    )[0] ??
+  "";
+
+for (const dependency of [
+  "bufferutil@4.1.0",
+  "esbuild@0.28.1",
+]) {
+  if (
+    !approvedSection.includes(
+      dependency,
+    )
+  ) {
+    failures.push(
+      `dependency-build-approved:${dependency}`,
+    );
+  }
+}
+
+for (const dependency of [
+  "bigint-buffer",
+  "utf-8-validate",
+]) {
+  if (
+    !ignoredSection.includes(
+      dependency,
+    )
+  ) {
+    failures.push(
+      `dependency-build-not-ignored:${dependency}`,
+    );
+  }
+
+  if (
+    approvedSection.includes(
+      dependency,
+    )
+  ) {
+    failures.push(
+      `dependency-build-must-not-be-approved:${dependency}`,
+    );
+  }
 }
 
 console.log(
@@ -54,6 +114,16 @@ console.log(
         "1.0.0",
       anchorClient:
         "@coral-xyz/anchor@0.32.1",
+      dependencyBuildPolicy: {
+        approved: [
+          "bufferutil@4.1.0",
+          "esbuild@0.28.1",
+        ],
+        explicitlyIgnored: [
+          "bigint-buffer",
+          "utf-8-validate",
+        ],
+      },
       failures,
     },
     null,

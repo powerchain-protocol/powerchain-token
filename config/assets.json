@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "canonical": true,
+  "assets": {
+    "PWRC": {
+      "name": "PowerChain",
+      "symbol": "PWRC",
+      "chain": "solana",
+      "network": "mainnet-beta",
+      "decimals": 9,
+      "mint": "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
+      "metadata": "https://token.powerchain.energy/metadata/metadata.json",
+      "image": "https://token.powerchain.energy/assets/tokens/pwrc-logo.png",
+      "standard": "Token-2022",
+      "fixedSupply": true,
+      "supplyBaseUnits": "18446000000000000000",
+      "tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "extensions": [
+        "TransferFeeConfig",
+        "MetadataPointer",
+        "TokenMetadata"
+      ]
+    },
+    "wPWRC": {
+      "name": "Wrapped PowerChain",
+      "symbol": "wPWRC",
+      "chain": "sui",
+      "network": "mainnet",
+      "decimals": 9,
+      "genesisSupplyBaseUnits": "0",
+      "canonicalAsset": "PWRC",
+      "canonicalBaseUnitsPerWrappedBaseUnit": "1",
+      "metadata": "https://token.powerchain.energy/metadata/wpwrc.json",
+      "image": "https://token.powerchain.energy/assets/tokens/wpwrc.png",
+      "localAssetPath": "assets/tokens/wpwrc.png",
+      "imageSha256": "54c4c3783133636cd0aa798be3aa0a7ed786289b6bae0ac3e1f61e712d8a58b4",
+      "standard": "Sui Coin",
+      "wrapped": true,
+      "canonicalSupplyOrigin": "solana:PWRC",
+      "maxWrappedSupplyBaseUnits": "18446000000000000000",
+      "supplyModel": "mint-on-verified-lock-burn-before-release"
+    }
+  },
+  "tokenPolicy": {
+    "domain": "POWERCHAIN_PWRC_TOKEN_POLICY_V1",
+    "sha256": "cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4"
+  }
+}

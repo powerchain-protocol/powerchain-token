@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "upgrade": {
+    "bidirectionalBridgeQuotes": true,
+    "suiToSolanaFeeDirectionFixed": true,
+    "conservationStateExpanded": true,
+    "solanaBridgeAdminHardened": true,
+    "suiGovernanceHardened": true,
+    "sdkBridgeExport": true,
+    "openApiPaths": 23,
+    "fullProgramGate": true
+  },
+  "validation": {
+    "productionChecks": {
+      "ok": true,
+      "version": "1.0.0",
+      "checks": 43,
+      "passed": 43,
+      "failed": 0,
+      "failures": []
+    },
+    "javascriptSyntaxFiles": 83,
+    "shellSyntaxFiles": 8,
+    "typescriptSyntaxFiles": 36,
+    "cargoAvailable": false,
+    "cargoFmtCheckPassed": false,
+    "anchorAvailable": false,
+    "suiAvailable": false,
+    "rustBuildRun": false,
+    "anchorBuildRun": false,
+    "suiMoveBuildRun": false,
+    "dependencyAwarePnpmTypecheckRun": false
+  },
+  "mainnetStatus": {
+    "ok": true,
+    "version": "1.0.0",
+    "codeReady": true,
+    "buildReady": false,
+    "buildManifestVerified": false,
+    "deploymentEvidenceReady": false,
+    "releaseAuthorized": false,
+    "authorizationConsumed": false,
+    "releaseState": "SOURCE_READY",
+    "readyForMainnet": false,
+    "blockers": [
+      "pnpm-lock.yaml",
+      "Cargo.lock",
+      "contracts/wpwrc/Move.lock",
+      "target/deploy/pwrc_lock.so",
+      "target/deploy/pwrc_token.so",
+      "reports/mainnet-build-manifest.json",
+      "reports/mainnet-build-manifest.json:not-verified",
+      "config/mainnet/evidence.json:not-verified",
+      "config/mainnet/release-authorization.json:not-verified",
+      "config/mainnet/release-consumption.json:not-verified"
+    ]
+  },
+  "sourceTreeSha256": "442ac4ea9ebb7a451d04199ee7cbbaad674fc6e6f0c344fddbc1cd758fd35213"
+}

@@ -1,1 +1,0 @@
-{"version":3,"file":"explorer.d.ts","sourceRoot":"","sources":["../../../../packages/native-token-client/src/explorer.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,EACV,iBAAiB,EAClB,MAAM,kBAAkB,CAAC;AAqB1B,eAAO,MAAM,kBAAkB;2BAErB,MAAM,YACH,iBAAiB,KAEzB,MAAM;gCAOE,MAAM,YACN,iBAAiB,KAEzB,MAAM;sCAOI,MAAM,YACR,iBAAiB,KAEzB,MAAM;CAKD,CAAC"}

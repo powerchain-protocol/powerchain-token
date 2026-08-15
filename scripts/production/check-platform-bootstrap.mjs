@@ -38,7 +38,7 @@ if (
   root.version !==
     "1.0.0" ||
   root.packageManager !==
-    "pnpm@10.21.0"
+    "pnpm@11.18.0"
 ) {
   failures.push(
     "bootstrap:root-package-policy",

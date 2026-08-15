@@ -1,4 +1,5 @@
 import "dotenv/config";
+process.env.WS_NO_UTF_8_VALIDATE ??= "1";
 import http from "node:http";
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -22,7 +23,35 @@ import {
 import {
   bridgeStatus,
   quoteSolanaToSuiBridge,
+  quoteSuiToSolanaBridge,
 } from "./lib/bridge-routes.mjs";
+import {
+  bridgeLifecyclePolicy,
+} from "./lib/bridge-lifecycle.mjs";
+import {
+  bridgeExecutionPolicy,
+} from "./lib/bridge-plan.mjs";
+import {
+  bridgeReconciliationPolicy,
+} from "./lib/bridge-reconciliation.mjs";
+import {
+  bridgeRecoveryPolicy,
+} from "./lib/bridge-recovery.mjs";
+import {
+  bridgeAuditPolicy,
+} from "./lib/bridge-audit.mjs";
+import {
+  bridgeRiskPolicy,
+} from "./lib/bridge-risk.mjs";
+import {
+  bridgeGovernancePolicy,
+} from "./lib/bridge-governance.mjs";
+import {
+  bridgeSafetyPolicy,
+} from "./lib/bridge-safety.mjs";
+import {
+  bridgePolicyConfigSurface,
+} from "./lib/bridge-policy-config.mjs";
 import {
   devnetStatus,
   mainnetStatus,
@@ -35,6 +64,26 @@ import {
 import {
   publicMetadataState,
 } from "./lib/metadata.mjs";
+import {
+  nativePwrcPolicy,
+} from "./lib/native-token.mjs";
+import {
+  canonicalTokenPolicy,
+  canonicalTokenProfile,
+} from "./lib/token-policy.mjs";
+import {
+  nativeTransferRuntimePolicy,
+  utilityRuntimePolicy,
+} from "./lib/token-runtime.mjs";
+import {
+  liveNativePwrcAttestation,
+  nativePwrcVerificationConfig,
+} from "./lib/native-attestation.mjs";
+import {
+  heliusConfigStatus,
+  heliusHealth,
+  heliusPwrcAsset,
+} from "./lib/helius.mjs";
 import {
   resolveServiceFeeRecipient,
 } from "./lib/service-fee-recipients.mjs";
@@ -114,9 +163,49 @@ const checkRate =
       60_000,
   });
 
+const expensiveApiRateLimit =
+  Number(
+    process.env.PWRC_EXPENSIVE_API_RATE_LIMIT ??
+    "20",
+  );
+
+if (
+  !Number.isSafeInteger(
+    expensiveApiRateLimit,
+  ) ||
+  expensiveApiRateLimit <
+    1 ||
+  expensiveApiRateLimit >
+    apiRateLimit
+) {
+  throw new Error(
+    "PWRC_EXPENSIVE_API_RATE_LIMIT_INVALID",
+  );
+}
+
+const checkExpensiveRate =
+  createFixedWindowRateLimiter({
+    limit:
+      expensiveApiRateLimit,
+    windowMs:
+      60_000,
+    maxBuckets:
+      10_000,
+  });
+
+const expensivePaths =
+  new Set([
+    "/api/v1/token/native-attestation",
+    "/api/v1/integrations/helius/health",
+    "/api/v1/data/solana/pwrc/helius/asset",
+  ]);
+
+
 const cacheableHeadPaths =
   new Set([
     "/api/v1/token",
+    "/api/v1/token/native-policy",
+    "/api/v1/token/policy",
     "/api/v1/metadata",
     "/api/v1/openapi.json",
   ]);
@@ -408,6 +497,51 @@ const server =
           `http://${host}:${port}`,
         );
 
+
+if (
+  expensivePaths.has(
+    url.pathname,
+  )
+) {
+  const expensiveRate =
+    checkExpensiveRate(
+      ip,
+    );
+
+  res.setHeader(
+    "x-expensive-ratelimit-remaining",
+    String(
+      expensiveRate.remaining,
+    ),
+  );
+
+  if (
+    !expensiveRate.allowed
+  ) {
+    return errorResponse(
+      res,
+      429,
+      "PWRC_EXPENSIVE_ROUTE_RATE_LIMITED",
+      id,
+      {
+        "retry-after":
+          String(
+            Math.max(
+              1,
+              Math.ceil(
+                (
+                  expensiveRate.resetAt -
+                  Date.now()
+                ) /
+                1000,
+              ),
+            ),
+          ),
+      },
+    );
+  }
+}
+
       const isHead =
         req.method ===
           "HEAD";
@@ -681,6 +815,121 @@ fetch("/api/v1").then(r=>r.json()).then(api=>{
         );
       }
 
+
+
+
+if (
+  url.pathname ===
+    "/api/v1/token/transfer-policy"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...nativeTransferRuntimePolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/token/utility-policy"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...utilityRuntimePolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/token/native-verification"
+) {
+  try {
+    return json(
+      res,
+      200,
+      {
+        ...nativePwrcVerificationConfig(),
+        requestId:
+          id,
+      },
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      503,
+      error instanceof Error
+        ? error.message
+        : "PWRC_NATIVE_VERIFICATION_CONFIG_UNAVAILABLE",
+      id,
+    );
+  }
+}
+
+if (
+  url.pathname ===
+    "/api/v1/token/native-attestation"
+) {
+  try {
+    return json(
+      res,
+      200,
+      {
+        ...await liveNativePwrcAttestation(),
+        requestId:
+          id,
+      },
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      503,
+      error instanceof Error
+        ? error.message
+        : "PWRC_NATIVE_ATTESTATION_UNAVAILABLE",
+      id,
+    );
+  }
+}
+
+if (
+  url.pathname ===
+    "/api/v1/token/policy"
+) {
+  return jsonCached(
+    req,
+    res,
+    {
+      ...canonicalTokenPolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/token/native-policy"
+) {
+  return jsonCached(
+    req,
+    res,
+    {
+      ...nativePwrcPolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
       if (
         url.pathname ===
           "/api/v1/token"
@@ -689,28 +938,9 @@ fetch("/api/v1").then(r=>r.json()).then(api=>{
           req,
           res,
           {
-            version:
-              "1.0.0",
-            name:
-              "PowerChain",
-            symbol:
-              "PWRC",
-            mint:
-              "PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc",
-            tokenProgram:
-              "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
-            metadataProgram:
-              "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
-            decimals:
-              9,
-            genesisSupplyTokens:
-              "18446000000",
-            genesisSupplyBaseUnits:
-              "18446000000000000000",
-            nativeTransferFeeBps:
-              250,
-            nativeTransferFeeCapTokens:
-              "1000000",
+            ...canonicalTokenProfile(),
+            requestId:
+              id,
           },
           {
             maxAge:
@@ -734,6 +964,79 @@ fetch("/api/v1").then(r=>r.json()).then(api=>{
           },
         );
       }
+
+
+if (
+  url.pathname ===
+    "/api/v1/integrations/helius/health"
+) {
+  try {
+    return json(
+      res,
+      200,
+      {
+        ...await heliusHealth(),
+        requestId:
+          id,
+      },
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      503,
+      error instanceof Error
+        ? error.message
+        : "PWRC_HELIUS_HEALTH_UNAVAILABLE",
+      id,
+    );
+  }
+}
+
+if (
+  url.pathname ===
+    "/api/v1/integrations/helius"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...heliusConfigStatus(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/data/solana/pwrc/helius/asset"
+) {
+  try {
+    return json(
+      res,
+      200,
+      {
+        version:
+          "1.0.0",
+        provider:
+          "helius-das",
+        asset:
+          await heliusPwrcAsset(),
+        requestId:
+          id,
+      },
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      503,
+      error instanceof Error
+        ? error.message
+        : "PWRC_HELIUS_UNAVAILABLE",
+      id,
+    );
+  }
+}
 
       if (
         url.pathname ===
@@ -855,6 +1158,200 @@ fetch("/api/v1").then(r=>r.json()).then(api=>{
           );
         }
       }
+
+
+if (
+  url.pathname ===
+    "/api/v1/bridge/quote/sui-to-solana"
+) {
+  try {
+    return json(
+      res,
+      200,
+      {
+        ...quoteSuiToSolanaBridge({
+          amountBaseUnits:
+            url.searchParams.get(
+              "amountBaseUnits",
+            ),
+          serviceEnabled,
+          serviceBps,
+          serviceRecipient:
+            resolveServiceFeeRecipient(
+              "bridge-sui-to-solana",
+            ),
+          quoteTtlMs,
+        }),
+        requestId:
+          id,
+      },
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      400,
+      error instanceof Error
+        ? error.message
+        : "PWRC_BRIDGE_QUOTE_INVALID",
+      id,
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+if (
+  url.pathname ===
+    "/api/v1/bridge/policy-config"
+) {
+  try {
+    return json(
+      res,
+      200,
+      {
+        ...bridgePolicyConfigSurface(),
+        requestId:
+          id,
+      },
+    );
+  } catch (error) {
+    return errorResponse(
+      res,
+      503,
+      error instanceof Error
+        ? error.message
+        : "PWRC_BRIDGE_POLICY_CONFIG_INVALID",
+      id,
+    );
+  }
+}
+
+if (
+  url.pathname ===
+    "/api/v1/bridge/safety-policy"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...bridgeSafetyPolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/bridge/governance-policy"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...bridgeGovernancePolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/bridge/risk-policy"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...bridgeRiskPolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/bridge/audit-policy"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...bridgeAuditPolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/bridge/recovery"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...bridgeRecoveryPolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/bridge/reconciliation"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...bridgeReconciliationPolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/bridge/plan"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...bridgeExecutionPolicy(),
+      requestId:
+        id,
+    },
+  );
+}
+
+if (
+  url.pathname ===
+    "/api/v1/bridge/lifecycle"
+) {
+  return json(
+    res,
+    200,
+    {
+      ...bridgeLifecyclePolicy(),
+      requestId:
+        id,
+    },
+  );
+}
 
       if (
         url.pathname ===

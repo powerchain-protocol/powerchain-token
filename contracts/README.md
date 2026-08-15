@@ -58,3 +58,15 @@ pnpm sui:publish:devnet
 ```
 
 Mainnet publication is separately confirmation-gated.
+
+## wPWRC controller hardening
+
+The wPWRC controller includes replay protection, a fixed maximum wrapped
+exposure, paused-by-default initialization, governor/operator separation,
+governor transfer, zero-address rejection, sequence views, and a consumed
+message query.
+
+`mint_from_solana` remains operator-gated and replay protected.
+`burn_for_solana` burns wPWRC before any Solana release can be considered.
+Finalized Sui evidence must still be independently verified by the Solana-side
+settlement process.

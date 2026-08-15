@@ -16,6 +16,13 @@ const rootTs =
       "utf8",
     ),
   );
+const baseTs =
+  JSON.parse(
+    fs.readFileSync(
+      "config/typescript/base.json",
+      "utf8",
+    ),
+  );
 const cdp =
   JSON.parse(
     fs.readFileSync(
@@ -34,10 +41,20 @@ const cdpTs =
 if (
   root.dependencies?.[
     "@types/node"
-  ] !== "24.13.3"
+  ] !== undefined
 ) {
   failures.push(
-    "types:root-node-types-not-direct",
+    "types:root-node-types-must-be-dev-only",
+  );
+}
+
+if (
+  root.devDependencies?.[
+    "@types/node"
+  ] !== "26.1.2"
+) {
+  failures.push(
+    "types:root-node-types-dev-dependency",
   );
 }
 
@@ -111,12 +128,24 @@ for (const lib of [
 }
 
 if (
-  cdpTs.compilerOptions
+  baseTs.compilerOptions
     ?.moduleResolution !==
+    "NodeNext" ||
+  baseTs.compilerOptions
+    ?.module !==
     "NodeNext"
 ) {
   failures.push(
-    "types:cdp-module-resolution",
+    "types:shared-module-resolution",
+  );
+}
+
+if (
+  cdpTs.extends !==
+    "../../config/typescript/base.json"
+) {
+  failures.push(
+    "types:cdp-base-config",
   );
 }
 
@@ -125,9 +154,9 @@ for (const [
   version,
 ] of Object.entries({
   "@types/react":
-    "19.2.17",
+    "19.2.18",
   "typescript":
-    "5.9.3",
+    "7.0.2",
 })) {
   if (
     cdp.devDependencies?.[
@@ -158,7 +187,7 @@ console.log(
       version:
         "1.0.0",
       rootNodeTypes:
-        "@types/node@24.13.3",
+        "@types/node@26.1.2",
       cdpAmbientTypes: [
         "react",
       ],
