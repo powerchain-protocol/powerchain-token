@@ -1,77 +1,204 @@
-# PowerChain 1.0.0
-
-All entries below are improvements to the canonical `1.0.0` release line; internal iteration labels are not release versions.
-
 # Changelog
 
-## 1.0.0
+All notable changes to the canonical PowerChain token repository are documented
+here.
 
-- Canonical PWRC Token-2022 profile with fixed 18.446B supply and 9 decimals.
-- Native Token-2022 transfer fee at 250 bps, capped at 1,000,000 PWRC.
-- Separate PowerChain service-fee layer with explicit activation and recipient.
-- Fee quote gross-up for PWRC-denominated service-fee settlement.
-- Service fees excluded from ordinary wallet transfers and bridge backing.
-- PWRC verifier identity `PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu`.
-- Solana bridge-lock and verification-only Anchor programs.
-- Sui wPWRC package scaffold with 9 decimals and zero genesis supply.
-- API/client/docs full-stack applications.
-- Mainnet fail-closed release gating.
-- Hardened Localnet/Devnet/Mainnet network resolution, dedicated/secondary RPC and WebSocket policy, Solana program-ID/keypair verification, Devnet/Mainnet deploy/verify scripts, typed Sui deployment integration, wPWRC replay protection and bridge events, health-aware full-stack startup, structured Mainnet evidence/authorization validation, expanded .env/.gitignore policy and network/integration runbooks. PWRC version remains 1.0.0.
-- Added canonical configuration drift detection, deterministic bridge operation/reconciliation traces, Devnet qualification status, Mainnet build-manifest generation, source-ID cross-checking, wPWRC source-policy verification, stricter production environment validation, and operations/security runbooks. Version remains 1.0.0.
-- Added strict API fee-quote validation, deterministic expiring quote fingerprints, bounded rate limiting, Solana service-recipient validation, semantic Devnet evidence verification, improved Sui publish-object inference, actual-file hash comparison in Mainnet evidence, and authorization-to-evidence/build SHA-256 binding. Version remains 1.0.0.
-- Added build-manifest verification against real source/artifact hashes and sizes, explicit one-time Mainnet release-authorization consumption, `CONSUMED` release state, authorization/evidence/build receipt binding, semantic Sui BridgeController type verification with dual-RPC digest comparison, and bridge-trace/state-machine regression checks. Version remains 1.0.0.
-- Integrated Coinbase CDP SQL API for Solana Mainnet PWRC analytics: fixed `solana.transfers` / `solana.instructions` query templates, mint volume, wallet owner history, Token-2022 instruction context, server-only Bearer auth, bounded 90-day/1,000-row query policy, CDP cache controls, SDK proxy client, API routes, docs and production regression checks. Version remains 1.0.0.
-- Upgraded API v1 with OpenAPI 3.1/Swagger JSON+YAML contracts, route discovery, platform/status/fee-policy endpoints, lightweight `/swagger` explorer, standardized error envelopes, API security headers, and runtime↔OpenAPI drift checks. Version remains 1.0.0.
-- Hardened root `.gitignore` and rebuilt `.env.example` with complete safe Solana/Sui/wPWRC, RPC, program-keypair path, service-fee, bridge, Coinbase CDP SQL, app-port, release-gate and telemetry configuration. Added environment documentation. Version remains 1.0.0.
-- Fixed monorepo root-source/IDL-binding validation regressions, added portable bootstrap/telemetry/layout checks, centralized the official Metaplex Token Metadata program ID, and introduced the clean `@powerchain/metaplex` workspace with pinned Umi/Token Metadata dependencies and read-only PWRC metadata helpers. Version remains 1.0.0.
-- Cleaned Metaplex layering by replacing cross-workspace source imports with the public `@powerchain/protocol/metadata` subpath, added workspace-boundary and metadata-policy gates, added SDK subpath exports, and exposed a read-only `/api/v1/metadata` endpoint with OpenAPI coverage. Version remains 1.0.0.
-- Added graceful API/client/full-stack shutdown, deterministic ETag/conditional caching for canonical token/metadata/OpenAPI responses, package-export target validation, stronger workspace dependency checks, and expanded Mainnet build-manifest coverage for package/API/metadata boundaries. Version remains 1.0.0.
-- Added docs-server production hardening, environment-variable coverage validation, blank-secret placeholder enforcement, internal workspace dependency graph/cycle validation, selective HEAD support for immutable cached API resources, and expanded Mainnet manifest coverage for runtime/environment policy. Version remains 1.0.0.
-- Added optional Coinbase CDP User Wallet React integration (Solana create-on-login, NodeNext TypeScript, analytics disabled by default), chain-specific bridge service-fee wallets for Solana and Sui source debits, forbidden stale verifier-ID scanning, safe root dotfile restoration for copied checkouts, and non-fatal legacy root `src/`/`utils/` cleanup warnings. Version remains 1.0.0.
-- Fixed the `serviceFee.recipient` TypeScript regression after migration to chain-specific `serviceFee.sourceDebits`; production validation now checks Solana and Sui fee recipients independently, and transaction review renders the correct Token-2022 vs Sui Coin source-debit program. Version remains 1.0.0.
-- Replaced deprecated transitive `uuid@8.3.2` through a targeted pnpm override to CommonJS-compatible `uuid@11.1.1`, with a production dependency-hygiene check that rejects 8.3.2 in a real pnpm lockfile. Version remains 1.0.0.
-- Fixed CDP user-wallet environment access for `noPropertyAccessFromIndexSignature`, added dotenv loading and pinned `@coral-xyz/anchor`, Axios, ws, and ws typings, added a fail-closed HTTPS/WSS allowlisted `apps/api/proxy.ts`, and strengthened chain-specific service-fee accessor typings. Version remains 1.0.0.
-- Isolated `@powerchain/cdp-user-wallet` into a browser-only TypeScript boundary, made `@types/node` a direct root runtime/tooling dependency, added package-local CDP typecheck/tests, aligned CDP frontend packages to the documented 0.0.119 family, and upgraded TypeScript/React/Node type packages within compatible majors. Version remains 1.0.0.
-- Added an explicit pnpm `ignoredBuiltDependencies` entry for `bigint-buffer`, suppressing the install warning while keeping its lifecycle script blocked; build-policy checks now fail if `bigint-buffer` is ever moved into the approved build allowlist. Version remains 1.0.0.
-- Hardened local-checkout drift recovery: CDPReactProvider now uses a runtime-checked namespace adapter for declaration-bundle mismatches, environment bootstrap merges missing template keys without overwriting values, identity checks ignore non-authoritative legacy root build/source residue, and UUID is globally overridden to 11.1.1 for fresh lockfile resolution. Version remains 1.0.0.
-- Reworked optional CDP User Wallet to a hooks-first `CDPHooksProvider` integration, removed the failing `CDPReactProvider` type dependency, added email OTP hook accessors, added client `/health` and `/ready` endpoints, static-stream diagnostics, and supervisor liveness separation. Version remains 1.0.0.
-- Aligned the legacy Solana/WebSocket peer graph by overriding `utf-8-validate` to 5.0.10, explicitly blocking its native build script, forcing `WS_NO_UTF_8_VALIDATE=1` on the Node 22 runtime, and adding a dependency-health production gate. Version remains 1.0.0.
-- Full-program upgrade: added bidirectional Solana↔Sui bridge quotes, fixed Sui→Solana fee directionality so Token-2022 fees apply on the Solana destination rather than the Sui source, strengthened conservation accounting, hardened Solana bridge administration and Sui governance/replay queries, expanded SDK/API/OpenAPI coverage, and added a full-program production invariant gate. Version remains 1.0.0.
-- Continued full-program hardening with deterministic bridge-intent IDs, an explicit finality-gated settlement state machine, terminal completion/failure semantics, replay-safe transition validation, a read-only `/api/v1/bridge/lifecycle` policy endpoint, four settlement tests, and a dedicated settlement production gate. Version remains 1.0.0.
-- Added deterministic bridge execution planning with explicit source/destination prepare, submit, finality, and reconciliation phases; monetary write steps are non-idempotent and never blindly retried, evidence requirements are direction-aware, SDK planning helpers and a read-only `/api/v1/bridge/plan` policy endpoint were added, along with four execution-plan tests and a production gate. Version remains 1.0.0.
-- Added deterministic bridge reconciliation commitments binding source finality, destination finality, principal conservation, and reconciliation SHA-256 evidence; exposed SDK reconciliation helpers and a read-only reconciliation-policy endpoint, added four reconciliation tests, and added a dedicated production gate. Version remains 1.0.0.
-- Added bridge recovery and evidence-freshness hardening: automatic monetary write retry is always disabled, uncertain source/destination writes require finality checks or manual review, finality timeouts use read-only polling, stale/future evidence is rejected, reconciliation mismatch is terminal, SDK recovery helpers and a read-only recovery-policy endpoint were added, plus four recovery tests and a production gate. Version remains 1.0.0.
-- Added deterministic bridge audit-chain hardening with event SHA-256 linking, contiguous sequence validation, correlation IDs, tamper detection, sensitive-attribute rejection, deterministic incident severity classification, SDK audit helpers, a read-only audit-policy endpoint, four audit tests, and a production gate. Version remains 1.0.0.
-- Added deterministic bridge risk controls with NORMAL/ELEVATED/PAUSE_RECOMMENDED/HALT_REQUIRED levels, pending-exposure and operation limits, stale-evidence pause recommendations, undercollateralization/reconciliation hard trips, SDK risk evaluation, a read-only risk-policy endpoint, four risk tests, and a production gate. Automatic on-chain pause remains disabled; version remains 1.0.0.
-- Added deterministic privileged bridge governance for pause/unpause/operator/governor changes with proposal hashes, minimum two approvals, expiry, duplicate/self-approval rejection, quorum readiness checks, SDK helpers, a read-only governance-policy endpoint, four governance tests, and a production gate. No public admin-write route or signer material was added; version remains 1.0.0.
-- Added an aggregate bridge safety control plane that composes governance pause state, risk decisions, source/destination finality, reconciliation verification, audit-chain validity, and recovery state into explicit new-intent, destination-submission, and completion decisions; added SDK support, a read-only safety-policy endpoint, four safety tests, and a production gate. Version remains 1.0.0.
-- Added deployment-bound bridge policy profiles with deterministic SHA-256 commitments, explicit Solana/Sui network binding, risk/evidence/governance thresholds, fail-closed environment parsing, SDK policy helpers, a read-only policy-config endpoint, four policy tests, and a production gate. Version remains 1.0.0.
-- Hardened the native Solana PWRC Token-2022 profile: added explicit mint-owner verification, canonical extension allow/deny checks, fixed-supply/authority observation verification, transfer-fee cap boundary checks, SDK native-token helpers, a read-only native-policy API, four regression tests, and a dedicated production gate. Supply, decimals, native fee policy, canonical mint, and version remain unchanged.
-- Added a read-only live Token-2022 PWRC observer in `@powerchain/sdk/native-token`, including canonical mint ownership checks, TLV extension discovery, active epoch transfer-fee inspection, MetadataPointer and TokenMetadata reads, direct `@solana/spl-token@0.4.15` SDK dependency ownership, source gates, and full-program coverage. No token write or transaction submission capability was added; version remains 1.0.0.
-- Added independent multi-RPC native PWRC consensus with normalized deterministic observation fingerprints, minimum two-observer quorum, duplicate-observer rejection, RPC divergence detection, finalized slot binding, deterministic snapshot SHA-256 commitments, SDK orchestration, four consensus tests, and a production gate. No token-write capability was added; version remains 1.0.0.
-- Added native PWRC network attestation on top of multi-RPC consensus: expected Solana genesis-hash binding, observation freshness/future-time rejection, finalized-slot skew limits, epoch binding/divergence checks, deterministic attestation SHA-256 commitments, SDK integration, four attestation tests, and a dedicated production gate. No token-write capability was added; version remains 1.0.0.
-- Integrated Helius RPC, WebSocket and DAS infrastructure for Solana Devnet/Mainnet with server-only API-key handling, deterministic endpoint construction, read-only RPC/DAS allowlists, Solana resolver integration, sanitized API status, canonical PWRC DAS route, environment templates, dedicated Helius documentation/gates, and a cleaned root README. Enhanced Transactions is intentionally not used for new functionality. Version remains 1.0.0.
-- Hardened Helius production integration with separate Devnet/Mainnet credentials, mandatory production Mainnet key resolution, bounded read-only retries for rate limits/timeouts/5xx responses, fixed 10-second 429 backoff, sanitized provider errors, live `getVersion`/`getGenesisHash`/finalized-`getSlot` health preflight, updated environment templates and documentation, and no transaction-write surface. Version remains 1.0.0.
-- Added trusted Solana network-identity enforcement and provider-family independence: configurable Devnet/Mainnet genesis hashes, Helius health genesis verification, configured native-PWRC attestation helper, rejection of same-provider secondary RPCs, regression tests/gate, and a Mainnet build-manifest binding symmetry check that requires critical native-token/Helius security files in both generation and verification policy. Version remains 1.0.0.
-- Added a live native-PWRC verification runtime that composes Helius primary RPC, an independent secondary provider, canonical Token-2022 observation, multi-RPC consensus, trusted-genesis validation, finalized slot/epoch attestation, and deterministic evidence hashes behind read-only `/api/v1/token/native-verification` and `/api/v1/token/native-attestation` routes. Added bounded runtime policy variables, tests, source gates, and a read-only Solana connection factory that does not depend on deployment program IDs. Version remains 1.0.0.
-- Expanded the native PWRC runtime with Token-2022 `TransferCheckedWithFee` transaction planning, idempotent ATA creation, unsigned wallet-owned transaction construction, Helius `getPriorityFeeEstimate`, Metaplex Fungible + Token-2022 compatibility verification, canonical off-chain metadata, deterministic PWRC utility authorizations, AI/compute abuse admission controls, expensive-route rate limiting, native-attestation single-flight/cache protection, new read-only transfer/utility policy routes, tests and production gates. Version remains 1.0.0; transaction signing/submission and Mainnet deployment evidence are still external gates.
-- Added deterministic native-PWRC transfer intents, blockhash lifetime/expiry binding, exact unsigned-message equivalence review before wallet signing, unexpected-instruction detection, bounded TTL idempotency/replay protection for utility workloads, regression tests and a transaction-integrity production gate. Version remains 1.0.0.
-- Fixed correctness/security issues in native PWRC and bridge handling: exact Token-2022 extension-set validation with duplicate/unknown-extension rejection; phase-aware bridge safety so healthy CREATED intents no longer require attention; inconsistent finality/reconciliation state detection; canonical-supply and direction↔chain-family bridge intent bounds; Buffer-free unsigned transaction comparison for browser portability; and decoded 32-byte Solana public-key validation for transfer intents. Added regression tests, release bindings and `hardening:check`. Version remains 1.0.0.
-- Hardened bridge deployment policy and API parity: canonical PWRC supply ceiling for pending exposure, explicit Solana/Sui network allowlists, cross-field governance/evidence sanity checks, API construction through the protocol policy builder with deterministic `policySha256`, closed OpenAPI schemas for bridge/native token policy objects, regression tests, release bindings, and `hardening:check`. Version remains 1.0.0.
-- Hardened native PWRC consensus and policy integrity: consensus now validates each Token-2022 observation internally and rejects equal-but-invalid RPC profiles, observer commitment ordering is locale-independent, canonical native-token policy has a deterministic `POWERCHAIN_NATIVE_PWRC_POLICY_V1` SHA-256 commitment, standalone API parity is protected by a golden fixture, `/api/v1/token/native-policy` now exposes `metaplexProgramId` and `policySha256`, and new regression/release gates were added. Version remains 1.0.0.
-- Added native PWRC observation-window consistency hardening: live RPC observers now capture finalized `slotStart`/`slotEnd`/`slotSpan`, reject slot regression and excessive intra-observation drift, fetch configured providers concurrently while remaining fail-closed, bind per-observer slot ranges into the attestation SHA-256, expose sanitized ranges through the live attestation API, add `PWRC_NATIVE_VERIFY_MAX_INTRA_SLOT_SKEW`, regression coverage, release bindings, and `hardening:check`. Version remains 1.0.0.
-- Hardened native-PWRC network attestation with exact Base58→32-byte Solana genesis-hash validation, explicit configurable epoch skew (`PWRC_NATIVE_VERIFY_MAX_EPOCH_SKEW=1`) instead of merely counting unique epochs, a single canonical SDK evaluation timestamp/policy for evaluate+assert, and attestation SHA-256 binding of `evaluationAt` and `epochSkew`. Added regression tests, release bindings and `hardening:check`. Version remains 1.0.0.
-- Hardened native PWRC fee/transaction runtime: live Token-2022 observations now capture and optionally verify `transferFeeConfigAuthority` and `withdrawWithheldAuthority`; production verification requires explicit expected authority policy without inventing addresses; transaction intent/builder paths share 400,000-CU and 1,000,000-micro-lamport priority-price ceilings; transfer policy now distinguishes transfer compatibility from actual listing/liquidity; Mainnet readiness blocks on unresolved fee-authority policy; closed OpenAPI transfer-policy schema and regression/release gates added. Also fixed a native-token test that incorrectly spread the `canonicalObservation` function instead of calling it. Version remains 1.0.0.
-- Added Mainnet native-token release-evidence binding: live attestation now exposes canonical policy SHA, trusted genesis identity, provider-family evidence and reviewed Token-2022 fee-authority policy without exposing RPC URLs; added source-tree-bound capture/verification tooling, freshness/slot/epoch/provider/authority checks, closed OpenAPI attestation schema, Mainnet state-machine gating on verified native-token evidence, exact Base58→32-byte trusted genesis validation, generated-evidence gitignore rules, manifest duplicate detection/cleanup, and `mainnet:native-evidence:check`. Real attestation evidence is intentionally not shipped. Version remains 1.0.0.
-- Hardened read-only Helius integration: added shared per-network 429 cooldown, bounded `Retry-After` handling, HTTP 408 retry support, normalized invalid-JSON errors, removed credential-bearing URLs from serializable client state, added secret-safe `toJSON()`, fail-fast genesis-first health verification, health single-flight/TTL caching, Mainnet-only canonical PWRC DAS lookup, regression/source gates, docs and release bindings. Version remains 1.0.0.
-- Upgraded on-chain program sources: Solana `pwrc-lock` now uses singleton PDA state, governor/operator role separation, two-step governor transfer with acceptance/cancellation, forced pause on governor change, checked admin sequencing and no-op rejection while retaining zero custody/mint/release instructions; the PWRC verifier now emits an auditable verification event without gaining mutation capability; Sui wPWRC adds matching two-step governance, zero-message/recipient rejection, overflow-safe supply and sequence handling. Added deterministic `POWERCHAIN_PROGRAM_POLICY_V1`, runnable source regression tests, release bindings and `programs:security:check`. Version remains 1.0.0.
-- security/runtime hardening: strict canonical JSON rejects non-finite/undefined/cyclic/non-plain commitment inputs; shared exact 32-byte Solana Base58 validation now protects transaction blockhashes, intents and utility wallets; fee quoting is fixed-supply bounded with chain-specific recipient and network-fee validation plus unreachable-net detection; utility authorizations gain a 15-minute maximum lifetime and safer spend checks; compute policy capacity must be positive; idempotency clocks are validated; Sui initialization now preserves governor/operator separation by requiring operator setup before unpause. Program policy SHA-256 updated to `d001fc2f47e5bb50e1edcb4163cdb6f42b49401ff337ddd9a0f535670d0303e5`. Version remains 1.0.0.
-- live Token-2022 fee-epoch hardening: added deterministic `POWERCHAIN_NATIVE_PWRC_TRANSFER_FEE_EPOCH_V1` evidence binding active fee basis points/cap, epoch, finalized slot, timestamp and fee authorities; native observers now return fee evidence; production unsigned transaction builders require fresh same-epoch evidence and reject stale/lagged/policy-drifted/commitment-mismatched observations; transfer-policy OpenAPI/runtime surfaces the production evidence requirement; transaction/full-program/release gates and regression tests updated. Version remains 1.0.0.
-- Strengthened canonical 1.0.0 transaction and attestation trust boundaries: native transfer intents are now fully reconstructed and re-verified before unsigned transaction review, with canonical integer encoding, mint/version, fee/net and SHA-256 commitment checks; invalid intents fail before expected-message reconstruction. Native attestation cache/single-flight state is now keyed by hashed verification configuration, cache TTL is capped by observation freshness, and `evaluationAt` freshness is rechecked on cache hits. Added canonical feature gates and source regression tests.
-- Updated the canonical 1.0.0 JavaScript toolchain to Node.js 26.5.1 with `.nvmrc`/`.node-version`, nvm 0.40.6 guidance, npm/pnpm 11.18.0, TypeScript 7.0.2, @types/node 26.1.2, tsx 4.23.1, Zod 4.4.3, @types/react 19.2.18 and Coinbase CDP core/hooks 0.0.120. Added canonical toolchain/package-version gates and strict engine/peer install policy. Solana web3.js remains intentionally on maintained 1.98.4 with SPL Token 0.4.15 instead of mixing in web3.js 2.x without a full @solana/kit migration. No lockfile or dependency install success is fabricated.
-- Refined the canonical Node 26 toolchain: pnpm is now 11.18.0, all 10 workspace package manifests carry the same `>=26.5.1 <27` Node engine, `@types/node` is dev-only, and setup no longer assumes bundled Corepack because Node stopped shipping Corepack starting with Node 25. npm remains 11.17.0 because that is the npm version bundled with Node 26.5.1.
-- Strengthened canonical PWRC 1.0.0 token identity: added deterministic `POWERCHAIN_PWRC_TOKEN_POLICY_V1` covering native PWRC and wPWRC, explicit fixed-supply/u64-headroom/fee-cap-threshold fields across config and metadata, exact integer-safe token amount conversion utilities, canonical fee-cap preview semantics, expanded wrapped-token backing metadata, source/config parity tests and release-manifest bindings. Token economics remain unchanged: 18,446,000,000 PWRC, 9 decimals, 250 bps fee, 1,000,000 PWRC max fee, zero wPWRC genesis supply.
-- Reduced canonical token drift in PowerChain 1.0.0: the API now loads and verifies `config/token-policy.json` as the single PWRC/wPWRC policy source, adds `GET /api/v1/token/policy` with a closed OpenAPI schema, derives the legacy native-only policy route from that canonical document while preserving its existing commitment, and adds `@powerchain/sdk/token` plus typed API-client access to exact amount/policy/fee helpers. Added source/API parity gates and release-manifest bindings.
-- Removed another PWRC policy drift surface: API fee calculation now derives fixed supply and native Token-2022 fee parameters from the committed canonical token policy; API and SDK quote inputs fail above the real fixed supply instead of only at `u64`; gross-up is supply-bounded; bridge identity and the compact `/api/v1/token` profile derive from the canonical policy; the compact token response now exposes policy SHA, fee-cap base units and cap threshold; added runtime-parity gates/tests and manifest bindings.
-- Bound canonical PWRC quotes and native transfer intents to the committed token-policy SHA-256; quote fingerprints now include the policy commitment, total source debit is fixed-supply bounded after service-fee gross-up, native transfer plans expose the policy SHA, and priority-fee safety now requires an explicit compute limit plus a 400,000-lamport total application ceiling. Added OpenAPI fields, source regression tests, production gates, and release-manifest bindings.
-- Hardened canonical PWRC 1.0.0 Mainnet authority evidence: replaced env-presence-only release gating with a reviewed `config/mainnet/token-fee-authorities.json` artifact committed under `POWERCHAIN_MAINNET_TRANSFER_FEE_AUTHORITY_POLICY_V1`; added a fail-closed configured=false example, deterministic sealing/verification tools, release-status integration, native-attestation policy-SHA binding, env-vs-reviewed-policy mismatch detection, source tests, production gate and manifest bindings. No transfer-fee authority address was invented.
+The project release version remains **`1.0.0`**. Historical internal hardening
+iterations are implementation history, not separate product versions.
+
+## [1.0.0]
+
+### Canonical token identity
+
+- Established **PowerChain (PWRC)** as the canonical Solana `mainnet-beta`
+  Token-2022 asset.
+- Canonical mint:
+  `PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc`.
+- Fixed supply: `18,446,000,000 PWRC`
+  (`18,446,000,000,000,000,000` base units).
+- Fixed decimals at `9`.
+- Canonical extension profile is exactly `TransferFeeConfig`,
+  `MetadataPointer`, and `TokenMetadata`.
+- Mint authority policy is revoked after genesis; freeze authority is disabled.
+- Canonical metadata URI and image are bound in token/config policy.
+- Added deterministic `POWERCHAIN_PWRC_TOKEN_POLICY_V1` policy commitment:
+  `cfaac8d0c647bf3e62da51996f07a3c96e6445697bdedbe56d38a0318fb353d4`.
+
+### Token economics and amount handling
+
+- Canonical native transfer fee fixed at `250` bps / `2.5%`.
+- Maximum native transfer fee fixed at `1,000,000 PWRC`.
+- Canonical nominal fee-cap threshold fixed at `40,000,000 PWRC` gross.
+- Clarified `feeAtMaximum` versus `feeCapped` so ceil rounding below the
+  nominal threshold does not alter the configured threshold semantics.
+- Added exact BigInt token amount parsing/formatting utilities.
+- API/SDK quote inputs now reject amounts above the actual fixed PWRC supply,
+  not merely values above `u64`.
+- Gross-up and total source-debit calculations are fixed-supply bounded.
+- API fee calculation derives economics from canonical token policy instead of
+  carrying independent numeric policy constants.
+
+### Wrapped PowerChain
+
+- Defined **Wrapped PowerChain (wPWRC)** on Sui with 9 decimals.
+- Wrapped genesis supply is zero.
+- Maximum wrapped exposure is bounded by canonical PWRC fixed supply.
+- Canonical accounting ratio is 1:1 in base units.
+- Added canonical wPWRC metadata and repository asset icon.
+- Sui bridge controller starts paused, keeps the TreasuryCap inside the
+  controller, enforces replay-protected Solana source-message evidence, and
+  burns wPWRC before Solana release processing.
+- Added two-step governor transfer, governor/operator role separation,
+  zero-address/message rejection and overflow-safe sequencing.
+
+### Solana program security
+
+- `programs/token` remains verification-only and exposes no mint/transfer/burn
+  or authority-mutation instruction.
+- Added `ProfileVerified` audit event after canonical base-mint verification.
+- `programs/pwrc-lock` is explicitly an administration/control-plane program,
+  not a monetary custody bridge.
+- Added singleton `bridge-state` PDA, paused-by-default state, distinct
+  governor/operator roles, two-step governor transfer, cancellation, forced
+  pause after governor acceptance, checked admin sequencing and no-op rejection.
+- Added deterministic program capability policy and source gates.
+- Program source identities are not treated as deployment evidence.
+
+### Native Token-2022 verification
+
+- Added exact native mint verification for mint, Token-2022 ownership, decimals,
+  supply, authorities, extension set, fee configuration and metadata identity.
+- Added independent multi-RPC observation/consensus and provider-family checks.
+- Added trusted Solana genesis identity verification.
+- Added finalized observation windows, slot/epoch divergence checks and
+  deterministic observation/attestation commitments.
+- Added Helius RPC/WebSocket/DAS read-only integration with secret-safe client
+  serialization, fixed 429 cooldown, bounded retry behavior and genesis-first
+  health verification.
+- Added live read-only native verification and attestation API surfaces.
+- Added attestation freshness and process-local single-flight/cache protection.
+
+### Transaction and quote integrity
+
+- Added Token-2022 `TransferCheckedWithFee` unsigned transaction planning.
+- Added deterministic transfer intents binding canonical mint, participants,
+  amount, fee/net, blockhash lifetime, compute policy, timestamps and SHA-256.
+- Transfer intents are reconstructed and re-verified before unsigned message
+  review; caller-supplied intent fields are not trusted.
+- Bound native transfer intents and fee quote fingerprints to the canonical
+  PWRC token-policy SHA.
+- Added live fee-epoch evidence for the production transaction-builder path.
+- Added exact unsigned-message comparison before wallet signing.
+- Added fixed application ceilings:
+  - `400,000` compute units;
+  - `1,000,000` micro-lamports/CU priority price;
+  - `400,000` lamports total priority fee.
+- Non-zero priority pricing requires an explicit compute-unit limit.
+- Signing and submission remain wallet/application-owned.
+
+### Bridge protocol and safety
+
+- Added deterministic cross-chain intents and settlement lifecycle.
+- Added explicit source/destination prepare, submit, finality and reconciliation
+  phases.
+- Added finality correlation, conservation evidence and deterministic
+  reconciliation.
+- Added fail-closed recovery rules with no blind monetary write retries.
+- Added governance, safety, risk and audit control-plane policy.
+- Added canonical supply/exposure limits, network allowlists and evidence-age
+  policy.
+- Bridge API surfaces remain read-only for monetary/admin actions.
+- Corrected direction-sensitive fee accounting:
+  - Solana→Sui uses post-Token-2022-fee principal;
+  - Sui→Solana burns wrapped principal before canonical release, with the native
+    Solana transfer fee applying on release.
+
+### Token policy API and SDK
+
+- Added `config/token-policy.json` as the canonical PWRC/wPWRC policy source.
+- Added `GET /api/v1/token/policy` with a closed OpenAPI schema.
+- Legacy `GET /api/v1/token/native-policy` now derives from the canonical policy
+  while preserving its compatibility commitment.
+- Compact `GET /api/v1/token` also derives from canonical policy.
+- Added `@powerchain/sdk/token` exact amount, fee and policy facade.
+- Added typed SDK access to token policy and bidirectional bridge quote routes.
+- Added policy/runtime/API parity gates to prevent silent drift.
+
+### Mainnet release evidence
+
+- Mainnet release lifecycle is fail-closed:
+  `SOURCE_READY → BUILD_READY → EVIDENCE_READY → AUTHORIZED → CONSUMED`.
+- Added source-tree-bound build/deployment evidence tooling.
+- Added live native-token release attestation capture and verification.
+- Added reviewed Token-2022 transfer-fee authority policy under
+  `POWERCHAIN_MAINNET_TRANSFER_FEE_AUTHORITY_POLICY_V1`.
+- Replaced environment-variable-presence release gating with a reviewed
+  `config/mainnet/token-fee-authorities.json` artifact.
+- Safe committed authority template is deliberately `configured: false`.
+- Added create-only sealing and deterministic policy verification.
+- Captured native-token evidence binds `transferFeeAuthorityPolicySha256`.
+- Optional environment authority values must exactly match reviewed policy.
+- No authority address, program deployment, signature, transaction ID or release
+  authorization is invented by the repository.
+
+### Security and runtime hardening
+
+- Canonical JSON commitment helpers reject unsupported/non-deterministic values.
+- Added exact 32-byte Base58 Solana identity validation.
+- Added fixed-supply and chain-specific recipient validation.
+- Added utility authorization TTL/replay/idempotency controls.
+- Added route rate limiting and fail-closed provider/RPC handling.
+- Added browser-safe transaction comparison.
+- Added explicit tradeability semantics:
+  transfer compatibility does not imply verified exchange listing or liquidity.
+- Kept all public token/bridge runtime operations read-only where monetary
+  signing/submission would otherwise be required.
+
+### Toolchain and dependency policy
+
+- Canonical JavaScript toolchain:
+  - Node.js `26.5.1`
+  - nvm `0.40.6`
+  - npm `11.17.0`
+  - pnpm `11.18.0`
+  - TypeScript `7.0.2`
+- Added `.nvmrc`, `.node-version`, strict engine checks and preinstall toolchain
+  guard.
+- Corrected Node 26 setup to avoid assuming bundled Corepack.
+- Propagated the Node 26 engine to workspace manifests.
+- Moved type-only dependencies such as `@types/node` into `devDependencies`.
+- Added shared strict TypeScript configuration.
+- Added strict package/build-script policy and explicit esbuild approval/pin.
+- Kept the existing compatible Solana web3.js 1.x + SPL Token stack rather than
+  performing a partial `@solana/kit` migration.
+- `pnpm-lock.yaml`, `Cargo.lock`, and `Move.lock` are generated only by real
+  toolchains; no lockfile is fabricated.
+
+### Documentation and release hygiene
+
+- Consolidated the root README around canonical `1.0.0` identity and current
+  source/release state.
+- Removed stale internal iteration labels from program README headings.
+- Clarified verification-only versus control-plane versus monetary capabilities.
+- Added focused documentation for token policy, fees, security, networks,
+  RPC/Helius, Metaplex, operations, Devnet and Mainnet.
+- Changelog is consolidated under the single canonical `1.0.0` release rather
+  than presenting internal hardening iterations as versions.
+
+### Validation status
+
+Current source/static gates are expected to pass before packaging.
+
+The following are **separate release gates** and must not be inferred from
+source/static validation:
+
+- dependency install and generated `pnpm-lock.yaml`;
+- dependency-aware TypeScript build/test;
+- `cargo fmt`, `cargo check`, `cargo test`;
+- Anchor build/test;
+- Sui Move build/test;
+- compiled Solana program binaries;
+- verified deployment evidence;
+- live native-token attestation;
+- reviewed Mainnet transfer-fee authority artifact;
+- release authorization and consumption evidence.

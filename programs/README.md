@@ -1,31 +1,58 @@
 # PowerChain Solana Programs
 
-**Version:** `1.0.0`
+**Canonical release:** `1.0.0`
 
-- `pwrc-token`: verification-only PWRC Token-2022 profile program.
-- `pwrc-lock`: bridge state/lock/release authority boundary.
+This directory contains two deliberately separate Solana program surfaces.
 
-The verifier exposes no mint instruction. The canonical PWRC mint remains the
-Token-2022 mint `PWRCRXX...G46wc`.
+## `programs/token`
 
-Strict deployment builds require program keypairs matching `declare_id!`.
-Source IDs are not Mainnet deployment evidence.
+Verification-only PWRC Token-2022 profile program.
 
+```text
+Program source identity
+PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu
+```
 
-## v29 security model
+It verifies canonical base-mint properties and emits an audit event. It has no
+PWRC mint, burn, transfer, custody, release, or authority-mutation instruction.
 
-The Solana programs deliberately separate **verification/control-plane**
-capabilities from monetary execution.
+## `programs/pwrc-lock`
 
-- `programs/token`: canonical PWRC verification only.
-- `programs/pwrc-lock`: singleton bridge administration state only.
+Bridge administration/control-plane program.
 
-Neither program includes a PWRC mint, custody, release, or transfer instruction.
+```text
+Program source identity
+7JAV3PsxkHh5oKAFDMKqVpKaV2P2P5Vj3Qv15hH8wPwr
+```
 
-The bridge-admin singleton uses PDA seed `bridge-state`, starts paused, requires
-separate governor/operator keys, and performs governor changes through
-propose/accept semantics. Accepting a new governor forces the state back to
-paused.
+It maintains singleton `bridge-state` administration state, starts paused,
+separates governor/operator roles, supports two-step governor transfer and uses
+checked sequencing.
 
-Source policy commitment:
-`config/programs/policy.json`.
+It is **not** a complete PWRC custody bridge and exposes no monetary
+lock/release/mint/transfer instruction.
+
+## Capability policy
+
+```text
+config/programs/policy.json
+```
+
+The policy records intended source/release capabilities and is not deployment
+evidence.
+
+## Build gates
+
+When Rust/Anchor tooling and dependencies are installed:
+
+```bash
+cargo fmt --check
+cargo check
+cargo test
+anchor build
+anchor test
+```
+
+Do not claim a successful build or deployment from source/static checks alone.
+A Mainnet program identity requires matching compiled artifact, keypair/public
+identity and independently verified deployment evidence.

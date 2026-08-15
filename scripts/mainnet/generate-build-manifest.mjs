@@ -14,6 +14,14 @@ function sha256(
 
 const inputs = [
   "package.json",
+  "scripts/production/check-documentation.mjs",
+  "swagger/README.md",
+  "programs/token/README.md",
+  "programs/pwrc-lock/README.md",
+  "programs/README.md",
+  "contracts/README.md",
+  "CHANGELOG.md",
+  "README.md",
   "scripts/production/check-install-policy.mjs",
   "scripts/production/check-typescript-config.mjs",
   "scripts/bootstrap/preinstall.mjs",

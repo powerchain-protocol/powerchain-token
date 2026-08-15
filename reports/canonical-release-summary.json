@@ -2,38 +2,27 @@
   "name": "PowerChain",
   "version": "1.0.0",
   "canonical": true,
-  "improvements": {
-    "reviewedTransferFeeAuthorityPolicy": true,
-    "authorityPolicyDomain": "POWERCHAIN_MAINNET_TRANSFER_FEE_AUTHORITY_POLICY_V1",
-    "safeExampleConfigured": false,
-    "envOnlyReleaseGateRemoved": true,
-    "nativeAttestationBindsAuthorityPolicySha": true,
-    "envAuthorityOverrideMustMatchReviewedPolicy": true,
-    "sealUsesCreateOnlyWrite": true,
-    "authorityAddressesInvented": false
+  "documentationUpdate": {
+    "rootReadmeRewritten": true,
+    "changelogConsolidated": true,
+    "programReadmesUpdated": true,
+    "contractsReadmeUpdated": true,
+    "openApiReadmeUpdated": true,
+    "documentationGateAdded": true,
+    "productionDocumentationGate": true,
+    "criticalDocumentationManifestBindings": true
   },
   "validation": {
     "productionChecks": {
       "ok": true,
-      "version": "1.0.0",
-      "checks": 80,
-      "passed": 80,
-      "failed": 0,
-      "failures": []
+      "checks": 81,
+      "passed": 81,
+      "failed": 0
     },
-    "manifestBindings": 130,
+    "documentationCheck": true,
+    "manifestBindings": 138,
     "generatorDuplicates": 0,
-    "verifierDuplicates": 0,
-    "javascriptSyntaxFiles": 159,
-    "shellSyntaxFiles": 8,
-    "typescriptSyntaxFiles": 87,
-    "authorityPolicySourceTestsPassed": 3,
-    "dependencyInstallRun": false,
-    "dependencyAwareTypecheckRun": false,
-    "workspaceTestsRun": false,
-    "cargoBuildRun": false,
-    "anchorBuildRun": false,
-    "suiMoveBuildRun": false
+    "verifierDuplicates": 0
   },
   "mainnetStatus": {
     "ok": true,
@@ -66,5 +55,5 @@
       "token-transfer-fee-authorities:not-configured"
     ]
   },
-  "sourceTreeSha256": "7d303f00a3cd47a827f1413d64d74d401b89086a98605016791321194b7f9b34"
+  "sourceTreeSha256": "7c5e91da66b1d18931f3bcb6893272451530925bd933072c6953d06fd21fa4b5"
 }

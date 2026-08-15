@@ -1,46 +1,49 @@
 # PWRC Token Verifier
 
-**Version:** `1.0.0`
+**Canonical release:** `1.0.0`
 
-Program source identity:
+Source program identity:
 
 ```text
 PWRCpWCpQ8BRn3pzMnvaTzMK9Q2GsxuLx7QgJgduLSu
 ```
 
-Canonical mint:
+Canonical PWRC mint:
 
 ```text
 PWRCRXXZxbg6FdQZfK3PMD7KP8xfxs9acvifJiG46wc
 ```
 
-The program is **verification-only**. It has no mint instruction.
+## Capability
 
-`verify_profile` checks the canonical mint address, Token-2022 program,
-9 decimals, exact fixed supply, revoked mint authority, and disabled freeze
-authority. Extension-specific release verification remains in the off-chain
-release verifier because Anchor's token-interface Mint account represents the
-common base mint structure.
+The program is **verification-only**.
+
+`verify_profile` verifies the canonical mint account, Token-2022 ownership,
+9 decimals, exact fixed supply, revoked mint authority and disabled freeze
+authority. After successful base-mint verification it emits `ProfileVerified`.
+
+The verifier has no instruction for:
+
+- minting;
+- burning;
+- transferring;
+- custody/release;
+- setting authorities.
+
+Token-2022 extension decoding and reviewed transfer-fee authority verification
+remain in the release/client verification layer.
 
 ## Build
 
+When Rust/Anchor dependencies are available:
+
 ```bash
-anchor build --program-name pwrc_token
+cargo fmt --check
+cargo check -p pwrc-token
 cargo test -p pwrc-token
+anchor build --program-name pwrc_token
 ```
 
-Anchor 1.x IDL generation is enabled through the crate's `idl-build` feature.
-
-A strict deployment build requires the private keypair whose public key matches
-the program source identity. Do not commit that keypair.
-
-
-## v29 verifier event
-
-`verify_profile` remains mutation-free and now emits `ProfileVerified` after the
-canonical PWRC base mint checks pass. The event records the verified mint,
-Token-2022 program, decimals, supply, 250 bps native fee and maximum native fee.
-
-Token-2022 extension decoding and authority verification still remain in the
-release/client verification layer; the Anchor verifier intentionally does not
-gain token authority or mutation instructions.
+A successful source/static gate is not an Anchor build, deployment, or Mainnet
+verification claim. Deployment identity requires the matching program keypair,
+compiled artifact and independent RPC evidence.

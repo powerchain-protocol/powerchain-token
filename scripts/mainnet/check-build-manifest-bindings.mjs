@@ -281,6 +281,14 @@ const critical = [
   "scripts/mainnet/seal-token-fee-authorities.mjs",
   "scripts/production/check-token-fee-authority-policy.mjs",
   "tests/token-fee-authority-policy-source.test.mjs",
+  "README.md",
+  "CHANGELOG.md",
+  "contracts/README.md",
+  "programs/README.md",
+  "programs/pwrc-lock/README.md",
+  "programs/token/README.md",
+  "swagger/README.md",
+  "scripts/production/check-documentation.mjs",
 ];
 
 for (const file of critical) {

@@ -50,6 +50,7 @@
     "devnet:preflight": "node scripts/devnet/preflight.mjs",
     "devnet:status": "node scripts/devnet/status.mjs",
     "devnet:verify:evidence": "node scripts/devnet/verify-evidence.mjs",
+    "docs:check": "node scripts/production/check-documentation.mjs",
     "docs:runtime:check": "node scripts/production/check-docs-runtime.mjs",
     "env:check": "node scripts/production/check-env.mjs",
     "env:coverage:check": "node scripts/production/check-env-coverage.mjs",

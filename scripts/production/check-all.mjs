@@ -87,7 +87,8 @@ const checks=[
   "scripts/production/check-runtime-dependencies-proxy.mjs",
   "scripts/production/check-types-boundaries.mjs",
   "scripts/packages/check-build-script-policy.mjs",
-  "scripts/security/check-dependencies.mjs"
+  "scripts/security/check-dependencies.mjs",
+  "scripts/production/check-documentation.mjs",
 ];
 const failures=[];
 for(const script of checks){
