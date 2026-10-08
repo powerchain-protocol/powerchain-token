@@ -9,7 +9,7 @@
   "dependencies": {
     "@powerchain/protocol": "workspace:*",
     "@powerchain/sdk": "workspace:*",
-    "axios": "1.19.0"
+    "axios": "1.20.0"
   },
   "engines": {
     "node": ">=26.5.1 <27"
